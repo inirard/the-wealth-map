@@ -72,7 +72,7 @@ export default function DashboardPage() {
                  <Image
                     src="https://placehold.co/600x400.png"
                     alt="Financial planning illustration"
-                    data-ai-hint="financial planning"
+                    data-ai-hint="financial planning illustration"
                     fill
                     className="object-cover"
                     priority

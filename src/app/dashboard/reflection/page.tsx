@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo } from 'react';
@@ -60,12 +59,13 @@ export default function ReflectionPage() {
             currentReflections.map(r => (r.id === id ? { ...r, content } : r))
         );
     };
-    
+
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
-        
         setLsReflections(reflections);
+
+        console.log("Reflections ao gerar:", reflections);
 
         try {
             const insight = await generateInsights({
@@ -87,7 +87,7 @@ export default function ReflectionPage() {
             setIsLoading(false);
         }
     };
-    
+
     const canGenerate = useMemo(() => {
         return reflections.some(r => r.content && r.content.trim() !== '');
     }, [reflections]);
@@ -95,12 +95,12 @@ export default function ReflectionPage() {
     if (isInitialLoad) {
         return (
             <div className="space-y-8">
-                 <Skeleton className="h-12 w-1/2" />
-                 <Skeleton className="h-8 w-3/4" />
-                 <Card><CardContent className="p-6"><Skeleton className="h-48 w-full" /></CardContent></Card>
-                 <Card><CardContent className="p-6"><Skeleton className="h-24 w-full" /></CardContent></Card>
+                <Skeleton className="h-12 w-1/2" />
+                <Skeleton className="h-8 w-3/4" />
+                <Card><CardContent className="p-6"><Skeleton className="h-48 w-full" /></CardContent></Card>
+                <Card><CardContent className="p-6"><Skeleton className="h-24 w-full" /></CardContent></Card>
             </div>
-        )
+        );
     }
 
     return (
@@ -110,7 +110,7 @@ export default function ReflectionPage() {
                 <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
             </div>
 
-             <Card>
+            <Card>
                 <CardHeader>
                     <CardTitle>{t('how_did_you_feel')}</CardTitle>
                     <CardDescription>{t('how_did_you_feel_desc')}</CardDescription>
@@ -118,7 +118,7 @@ export default function ReflectionPage() {
                 <CardContent>
                     <div className="flex flex-wrap gap-4">
                         {emotionalStates.map((state) => (
-                             <Button
+                            <Button
                                 key={state.label}
                                 variant={mood === state.emoji ? "default" : "outline"}
                                 className={cn(
@@ -162,7 +162,7 @@ export default function ReflectionPage() {
             </div>
 
             <Card className="bg-primary/5">
-                 <CardHeader>
+                <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Sparkles className="h-6 w-6 text-primary" />
                         {t('ai_coach_title')}
@@ -172,6 +172,11 @@ export default function ReflectionPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
+                    {/* Debug visual */}
+                    <div className="mb-4 text-xs text-muted-foreground">
+                        isLoading: {String(isLoading)} | canGenerate: {String(canGenerate)} | reflections: {reflections.length}
+                    </div>
+
                     {isLoading ? (
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-full" />
@@ -184,14 +189,14 @@ export default function ReflectionPage() {
                             <p className="text-foreground/90 italic">{aiInsight.analysis}</p>
                         </div>
                     ) : (
-                         <p className="text-sm text-muted-foreground">{t('ai_coach_prompt')}</p>
+                        <p className="text-sm text-muted-foreground">{t('ai_coach_prompt')}</p>
                     )}
                 </CardContent>
                 <CardFooter>
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <span tabIndex={canGenerate ? -1 : 0}>
+                                <span>
                                     <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
                                         {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
                                     </Button>
@@ -206,7 +211,6 @@ export default function ReflectionPage() {
                     </TooltipProvider>
                 </CardFooter>
             </Card>
-
         </div>
     );
 }
