@@ -55,7 +55,7 @@ export default function TrackerPage() {
         type: "expense",
         date: undefined
     });
-  }, [transactionSchema, form]);
+  }, [transactionSchema, form.reset]);
 
   function onSubmit(values: z.infer<typeof transactionSchema>) {
     const newTransaction: Transaction = {
