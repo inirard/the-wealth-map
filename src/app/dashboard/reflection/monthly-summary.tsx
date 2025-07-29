@@ -56,22 +56,27 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
             <CardDescription>{t('monthly_summary_desc')}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-3">
-            <div className="flex items-start gap-4 rounded-lg bg-background p-4">
-                {summary.balance >= 0 ? 
-                    <TrendingUp className="h-8 w-8 text-green-600" /> : 
-                    <TrendingDown className="h-8 w-8 text-destructive" />
-                }
-                <div>
-                    <p className="font-semibold text-foreground">{t('your_balance_this_month')}</p>
-                    <p className={cn("text-2xl font-bold", summary.balance >= 0 ? 'text-green-600' : 'text-destructive')}>
+            <Card className="flex flex-col">
+                <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
+                     {summary.balance >= 0 ? 
+                        <TrendingUp className="h-8 w-8 text-green-600 flex-shrink-0" /> : 
+                        <TrendingDown className="h-8 w-8 text-destructive flex-shrink-0" />
+                    }
+                    <CardTitle className="text-base font-semibold">{t('your_balance_this_month')}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow flex items-end">
+                    <p className={cn("text-3xl font-bold", summary.balance >= 0 ? 'text-green-600' : 'text-destructive')}>
                         €{summary.balance.toFixed(2)}
                     </p>
-                </div>
-            </div>
-            <div className="flex items-start gap-4 rounded-lg bg-background p-4">
-                <Target className="h-8 w-8 text-primary" />
-                <div>
-                     <p className="font-semibold text-foreground">{t('next_goal_focus')}</p>
+                </CardContent>
+            </Card>
+
+            <Card className="flex flex-col">
+                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
+                    <Target className="h-8 w-8 text-primary flex-shrink-0" />
+                    <CardTitle className="text-base font-semibold">{t('next_goal_focus')}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
                     {summary.closestGoal ? (
                         <p className="text-sm text-muted-foreground">
                             {t('next_goal_desc', { 
@@ -82,21 +87,24 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                     ) : (
                         <p className="text-sm text-muted-foreground">{t('no_upcoming_goals')}</p>
                     )}
-                </div>
-            </div>
-            <div className="flex items-start gap-4 rounded-lg bg-background p-4">
-                <Activity className="h-8 w-8 text-accent" />
-                 <div>
-                    <p className="font-semibold text-foreground">{t('focus_area_title')}</p>
-                    {summary.lowestWheelArea ? (
+                </CardContent>
+            </Card>
+
+            <Card className="flex flex-col">
+                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
+                    <Activity className="h-8 w-8 text-accent flex-shrink-0" />
+                    <CardTitle className="text-base font-semibold">{t('focus_area_title')}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                     {summary.lowestWheelArea ? (
                         <p className="text-sm text-muted-foreground">
                            {t('focus_area_desc', { area: summary.lowestWheelArea.label })}
                         </p>
                     ) : (
                          <p className="text-sm text-muted-foreground">{t('complete_wealth_wheel')}</p>
                     )}
-                </div>
-            </div>
+                </CardContent>
+            </Card>
         </CardContent>
     </Card>
   );
