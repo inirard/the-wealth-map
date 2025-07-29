@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -29,12 +29,12 @@ export default function ReflectionPage() {
     const { t, language } = useI18n();
     const { toast } = useToast();
 
-    const reflectionPrompts = [
+    const reflectionPrompts = React.useMemo(() => [
         { id: 'wins', prompt: t('wins_prompt') },
         { id: 'challenges', prompt: t('challenges_prompt') },
         { id: 'improvements', prompt: t('improvements_prompt') },
         { id: 'gratitude', prompt: t('gratitude_prompt') },
-    ];
+    ], [t]);
 
     const [reflections, setReflections] = useLocalStorage<Reflection[]>(
         'reflections', 
@@ -49,24 +49,37 @@ export default function ReflectionPage() {
 
     const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    
+    // Local state to track input changes immediately
+    const [currentReflections, setCurrentReflections] = useState<Reflection[]>(reflections);
 
+    useEffect(() => {
+        setCurrentReflections(reflections);
+    }, [reflections]);
+    
     const handleContentChange = (id: string, content: string) => {
-        const newReflections = reflections.map(r => 
+        const newReflections = currentReflections.map(r => 
             r.id === id ? { ...r, content } : r
         );
-        setReflections(newReflections);
+        setCurrentReflections(newReflections);
+    };
+
+    const handleBlur = () => {
+        setReflections(currentReflections);
     };
 
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
         try {
+            // Ensure the latest reflections are saved before generating
+            setReflections(currentReflections);
             const insight = await generateInsights({
                 language,
                 goals,
                 transactions,
                 wheelData,
-                reflections,
+                reflections: currentReflections,
             });
             setAiInsight(insight);
         } catch (error) {
@@ -81,7 +94,7 @@ export default function ReflectionPage() {
         }
     };
 
-    const canGenerate = reflections.some(r => r.content.trim() !== '');
+    const canGenerate = currentReflections.some(r => r.content.trim() !== '');
 
     return (
         <div className="space-y-8">
@@ -122,17 +135,18 @@ export default function ReflectionPage() {
             />
 
             <div className="grid gap-6 md:grid-cols-2">
-                {reflections.map((reflection) => (
-                    <Card key={reflection.id}>
+                {reflectionPrompts.map((prompt) => (
+                    <Card key={prompt.id}>
                         <CardHeader>
-                            <CardTitle>{reflection.prompt}</CardTitle>
+                            <CardTitle>{prompt.prompt}</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <Label htmlFor={reflection.id} className="sr-only">{reflection.prompt}</Label>
+                            <Label htmlFor={prompt.id} className="sr-only">{prompt.prompt}</Label>
                             <Textarea
-                                id={reflection.id}
-                                value={reflection.content}
-                                onChange={(e) => handleContentChange(reflection.id, e.target.value)}
+                                id={prompt.id}
+                                value={currentReflections.find(r => r.id === prompt.id)?.content || ''}
+                                onChange={(e) => handleContentChange(prompt.id, e.target.value)}
+                                onBlur={handleBlur}
                                 placeholder={t('write_reflections_placeholder')}
                                 className="min-h-[150px] text-base"
                             />
