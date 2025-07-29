@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useSidebar } from '@/components/ui/sidebar';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
 
 const navItems = [
@@ -40,10 +41,12 @@ export default function AppSidebar() {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
+  const [name, setName] = useLocalStorage('username', '');
 
   const handleResetData = () => {
     window.localStorage.clear();
-    window.location.reload();
+    setName('');
+    window.location.href = '/';
   };
 
   return (
