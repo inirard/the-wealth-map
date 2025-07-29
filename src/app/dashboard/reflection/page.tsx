@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -44,7 +44,7 @@ export default function ReflectionPage() {
     const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
-
+    
     useEffect(() => {
         const initialData = reflectionPrompts.map(p => {
             const saved = lsReflections.find(s => s.id === p.id);
@@ -64,8 +64,6 @@ export default function ReflectionPage() {
         setIsLoading(true);
         setAiInsight(null);
         setLsReflections(reflections);
-
-        console.log("Reflections ao gerar:", reflections);
 
         try {
             const insight = await generateInsights({
@@ -91,7 +89,7 @@ export default function ReflectionPage() {
     const canGenerate = useMemo(() => {
         return reflections.some(r => r.content && r.content.trim() !== '');
     }, [reflections]);
-
+    
     if (isInitialLoad) {
         return (
             <div className="space-y-8">
@@ -172,11 +170,6 @@ export default function ReflectionPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {/* Debug visual */}
-                    <div className="mb-4 text-xs text-muted-foreground">
-                        isLoading: {String(isLoading)} | canGenerate: {String(canGenerate)} | reflections: {reflections.length}
-                    </div>
-
                     {isLoading ? (
                         <div className="space-y-2">
                             <Skeleton className="h-4 w-full" />
