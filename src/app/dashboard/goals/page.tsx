@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Trash2, Target, Heart } from "lucide-react";
+import { Calendar as CalendarIcon, Trash2, Target, Heart, Edit } from "lucide-react";
 
 import type { Goal } from '@/lib/types';
 import { Button } from '@/components/ui/button';
@@ -26,6 +26,7 @@ export default function GoalsPage() {
   const { t } = useI18n();
 
   const goalSchema = useMemo(() => z.object({
+    id: z.string().optional(),
     name: z.string().min(3, t('goal_name_error')),
     targetAmount: z.coerce.number().min(1, t('target_amount_error')),
     currentAmount: z.coerce.number().min(0).optional(),
@@ -37,6 +38,7 @@ export default function GoalsPage() {
 
   const [goals, setGoals] = useLocalStorage<Goal[]>('goals', []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   const form = useForm<z.infer<typeof goalSchema>>({
     resolver: zodResolver(goalSchema),
@@ -47,26 +49,51 @@ export default function GoalsPage() {
       targetDate: undefined,
       importance: "",
     },
-    resetOptions: {
-      keepValues: false,
-    }
   });
 
   React.useEffect(() => {
-    form.reset();
-  }, [goalSchema, form]);
+    if (isDialogOpen) {
+      if (editingGoal) {
+        form.reset({
+            ...editingGoal,
+            targetDate: new Date(editingGoal.targetDate),
+        });
+      } else {
+        form.reset({
+            name: "",
+            targetAmount: 0,
+            currentAmount: 0,
+            targetDate: undefined,
+            importance: "",
+        });
+      }
+    }
+  }, [isDialogOpen, editingGoal, form]);
 
   function onSubmit(values: z.infer<typeof goalSchema>) {
-    const newGoal: Goal = {
-      id: new Date().toISOString(),
-      name: values.name,
-      targetAmount: values.targetAmount,
-      currentAmount: values.currentAmount || 0,
-      targetDate: values.targetDate.toISOString(),
-      importance: values.importance || "",
-    };
-    setGoals([...goals, newGoal]);
+    if (editingGoal) {
+        const updatedGoals = goals.map(g => g.id === editingGoal.id ? {
+            ...g,
+            ...values,
+            targetDate: values.targetDate.toISOString(),
+            currentAmount: values.currentAmount || 0,
+            importance: values.importance || "",
+        } : g);
+        setGoals(updatedGoals);
+    } else {
+        const newGoal: Goal = {
+          id: new Date().toISOString(),
+          name: values.name,
+          targetAmount: values.targetAmount,
+          currentAmount: values.currentAmount || 0,
+          targetDate: values.targetDate.toISOString(),
+          importance: values.importance || "",
+        };
+        setGoals([...goals, newGoal]);
+    }
+    
     form.reset();
+    setEditingGoal(null);
     setIsDialogOpen(false);
   }
 
@@ -74,17 +101,22 @@ export default function GoalsPage() {
     setGoals(goals.filter(goal => goal.id !== id));
   };
   
+  const handleOpenDialog = (goal: Goal | null = null) => {
+    setEditingGoal(goal);
+    setIsDialogOpen(true);
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">{t('goals_mapping')}</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button>{t('add_new_goal')}</Button>
+            <Button onClick={() => handleOpenDialog()}>{t('add_new_goal')}</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{t('create_new_goal')}</DialogTitle>
+              <DialogTitle>{editingGoal ? t('edit_goal') : t('create_new_goal')}</DialogTitle>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -116,7 +148,7 @@ export default function GoalsPage() {
                     <FormItem><FormLabel>{t('why_is_it_important')}</FormLabel><FormControl><Textarea placeholder={t('importance_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <DialogFooter>
-                  <Button type="submit">{t('add_goal')}</Button>
+                  <Button type="submit">{editingGoal ? t('save_changes') : t('add_goal')}</Button>
                 </DialogFooter>
               </form>
             </Form>
@@ -136,9 +168,14 @@ export default function GoalsPage() {
                         <Target className="h-6 w-6 text-primary" />
                         {goal.name}
                     </div>
-                    <Button variant="ghost" size="icon" onClick={() => deleteGoal(goal.id)}>
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
+                     <div className="flex items-center">
+                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(goal)}>
+                            <Edit className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => deleteGoal(goal.id)}>
+                            <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                    </div>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow space-y-4">
