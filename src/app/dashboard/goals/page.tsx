@@ -68,7 +68,7 @@ export default function GoalsPage() {
         });
       }
     }
-  }, [isDialogOpen, editingGoal, form]);
+  }, [isDialogOpen, editingGoal, form.reset]);
 
   function onSubmit(values: z.infer<typeof goalSchema>) {
     if (editingGoal) {
