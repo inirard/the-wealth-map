@@ -21,8 +21,8 @@ export default function QuotesPage() {
     return (
         <div className="flex flex-col items-center justify-center min-h-[70vh] text-center gap-8">
             <div>
-                <h1 className="text-3xl font-bold font-headline">Quotes & Affirmations</h1>
-                <p className="text-muted-foreground mt-2">Find inspiration to fuel your financial journey.</p>
+                <h1 className="text-3xl font-bold font-headline">Citações & Afirmações</h1>
+                <p className="text-muted-foreground mt-2">Encontre inspiração para impulsionar a sua jornada financeira.</p>
             </div>
             
             <Card className="max-w-3xl w-full shadow-xl">
@@ -38,7 +38,7 @@ export default function QuotesPage() {
 
             <Button onClick={getNewQuote} size="lg">
                 <RefreshCw className="mr-2 h-4 w-4" />
-                New Quote
+                Nova Citação
             </Button>
         </div>
     );
