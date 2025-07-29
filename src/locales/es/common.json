@@ -112,5 +112,12 @@
   "no_upcoming_goals": "No hay metas futuras establecidas. ¡Añade una para empezar a seguir!",
   "focus_area_title": "Área de Enfoque de Riqueza",
   "focus_area_desc": "Tu área de mejora este mes es {{area}}. Considera pequeñas acciones para mejorar.",
-  "complete_wealth_wheel": "Completa la Rueda de la Riqueza para ver tu área de enfoque."
+  "complete_wealth_wheel": "Completa la Rueda de la Riqueza para ver tu área de enfoque.",
+  "ai_coach_title": "Asesor Financiero de IA",
+  "ai_coach_description": "Obtén ideas y motivación personalizadas basadas en tus datos mensuales. Tus datos son privados y solo se usan para este análisis.",
+  "ai_coach_prompt": "Escribe algunos de tus logros y desafíos, luego haz clic en el botón para obtener un análisis personalizado de tu asesor de IA.",
+  "ai_coach_button": "Generar Análisis de IA",
+  "ai_coach_loading": "Analizando...",
+  "ai_error_title": "Falló el Análisis de IA",
+  "ai_error_description": "No se pudieron generar las ideas. Por favor, revisa tu conexión a internet e inténtalo de nuevo."
 }

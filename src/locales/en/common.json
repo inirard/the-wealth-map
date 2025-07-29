@@ -112,5 +112,12 @@
   "no_upcoming_goals": "No upcoming goals set. Add one to start tracking!",
   "focus_area_title": "Wealth Focus Area",
   "focus_area_desc": "Your area for improvement this month is {{area}}. Consider small actions to improve.",
-  "complete_wealth_wheel": "Complete the Wealth Wheel to see your focus area."
+  "complete_wealth_wheel": "Complete the Wealth Wheel to see your focus area.",
+  "ai_coach_title": "AI Financial Coach",
+  "ai_coach_description": "Get personalized insights and motivation based on your monthly data. Your data is private and only used for this analysis.",
+  "ai_coach_prompt": "Write down some of your wins and challenges, then click the button to get a personalized analysis from your AI coach.",
+  "ai_coach_button": "Generate AI Analysis",
+  "ai_coach_loading": "Analyzing...",
+  "ai_error_title": "AI Analysis Failed",
+  "ai_error_description": "Could not generate insights. Please check your internet connection and try again."
 }

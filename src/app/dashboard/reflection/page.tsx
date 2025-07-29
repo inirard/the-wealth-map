@@ -1,9 +1,9 @@
 
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import type { Reflection, Goal, Transaction, WealthWheelData } from '@/lib/types';
 import { Label } from '@/components/ui/label';
@@ -11,6 +11,10 @@ import { cn } from "@/lib/utils";
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks/use-i18n';
 import MonthlySummary from './monthly-summary';
+import { generateInsights, GenerateInsightsOutput } from '@/ai/flows/generate-insights-flow';
+import { Sparkles, Bot } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from '@/components/ui/skeleton';
 
 const emotionalStates = [
     { emoji: '😃', label: 'excellent' },
@@ -21,7 +25,8 @@ const emotionalStates = [
 ];
 
 export default function ReflectionPage() {
-    const { t } = useI18n();
+    const { t, language } = useI18n();
+    const { toast } = useToast();
 
     const reflectionPrompts = [
         { id: 'wins', prompt: t('wins_prompt') },
@@ -36,10 +41,13 @@ export default function ReflectionPage() {
     );
     const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
     
-    // Fetching all necessary data for the summary
+    // Fetching all necessary data for the summary and AI analysis
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
+
+    const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleContentChange = (id: string, content: string) => {
         const newReflections = reflections.map(r => 
@@ -47,6 +55,32 @@ export default function ReflectionPage() {
         );
         setReflections(newReflections);
     };
+
+    const handleGenerateInsights = async () => {
+        setIsLoading(true);
+        setAiInsight(null);
+        try {
+            const insight = await generateInsights({
+                language,
+                goals,
+                transactions,
+                wheelData,
+                reflections,
+            });
+            setAiInsight(insight);
+        } catch (error) {
+            console.error("Error generating AI insights:", error);
+            toast({
+                variant: "destructive",
+                title: t('ai_error_title'),
+                description: t('ai_error_description'),
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const canGenerate = reflections.some(r => r.content.trim().length > 5);
 
     return (
         <div className="space-y-8">
@@ -105,6 +139,40 @@ export default function ReflectionPage() {
                     </Card>
                 ))}
             </div>
+
+            <Card className="bg-primary/5">
+                 <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                        <Sparkles className="h-6 w-6 text-primary" />
+                        {t('ai_coach_title')}
+                    </CardTitle>
+                    <CardDescription>
+                        {t('ai_coach_description')}
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    {isLoading ? (
+                        <div className="space-y-2">
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-full" />
+                            <Skeleton className="h-4 w-3/4" />
+                        </div>
+                    ) : aiInsight ? (
+                        <div className="flex items-start gap-4">
+                            <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                            <p className="text-foreground/90 italic">{aiInsight.analysis}</p>
+                        </div>
+                    ) : (
+                         <p className="text-sm text-muted-foreground">{t('ai_coach_prompt')}</p>
+                    )}
+                </CardContent>
+                <CardFooter>
+                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
+                        {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
+                    </Button>
+                </CardFooter>
+            </Card>
+
         </div>
     );
 }

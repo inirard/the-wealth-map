@@ -1,0 +1,100 @@
+'use server';
+/**
+ * @fileOverview An AI flow to generate financial insights based on user data.
+ *
+ * - generateInsights - A function that handles the financial analysis process.
+ * - GenerateInsightsInput - The input type for the generateInsights function.
+ * - GenerateInsightsOutput - The return type for the generateInsights function.
+ */
+
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types';
+
+const GoalSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  targetAmount: z.number(),
+  currentAmount: z.number(),
+  targetDate: z.string(),
+  importance: z.string(),
+});
+
+const TransactionSchema = z.object({
+  id: z.string(),
+  description: z.string(),
+  amount: z.number(),
+  type: z.enum(['income', 'expense']),
+  date: z.string(),
+});
+
+const WealthWheelDataSchema = z.object({
+  id: z.string(),
+  label: z.string(),
+  value: z.number(),
+  description: z.string(),
+});
+
+const ReflectionSchema = z.object({
+    id: z.string(),
+    prompt: z.string(),
+    content: z.string(),
+});
+
+const GenerateInsightsInputSchema = z.object({
+  language: z.enum(['pt', 'en', 'es', 'fr']),
+  goals: z.array(GoalSchema),
+  transactions: z.array(TransactionSchema),
+  wheelData: z.array(WealthWheelDataSchema),
+  reflections: z.array(ReflectionSchema),
+});
+export type GenerateInsightsInput = z.infer<typeof GenerateInsightsInputSchema>;
+
+
+const GenerateInsightsOutputSchema = z.object({
+  analysis: z.string().describe('A concise, encouraging, and actionable financial analysis paragraph for the user. It should be in the language specified in the input.'),
+});
+export type GenerateInsightsOutput = z.infer<typeof GenerateInsightsOutputSchema>;
+
+
+export async function generateInsights(input: GenerateInsightsInput): Promise<GenerateInsightsOutput> {
+  return generateInsightsFlow(input);
+}
+
+const prompt = ai.definePrompt({
+  name: 'generateInsightsPrompt',
+  input: {schema: GenerateInsightsInputSchema},
+  output: {schema: GenerateInsightsOutputSchema},
+  prompt: `
+    You are a friendly and positive financial coach for the "The Wealth Map" app.
+    Your task is to provide a short, personalized, and encouraging analysis for the user based on their financial data.
+    The response must be in the specified language: {{language}}.
+
+    Here is the user's data:
+    - Goals: {{jsonStringify goals}}
+    - Transactions: {{jsonStringify transactions}}
+    - Wealth Wheel Assessment: {{jsonStringify wheelData}}
+    - Personal Reflections: {{jsonStringify reflections}}
+
+    Based on this data, please generate a single paragraph of analysis that does the following:
+    1.  Acknowledge a specific positive point from their reflections or a goal they are progressing on.
+    2.  Gently point out a potential area for improvement, linking it to their transactions or their lowest-scoring Wealth Wheel category.
+    3.  Suggest one small, concrete, and actionable step they could take next month.
+    4.  End with a motivational and encouraging sentence.
+
+    Keep the tone light, supportive, and non-judgmental. Do not sound like a robot. Write as a human coach would.
+    The entire analysis should be a single paragraph.
+  `,
+});
+
+const generateInsightsFlow = ai.defineFlow(
+  {
+    name: 'generateInsightsFlow',
+    inputSchema: GenerateInsightsInputSchema,
+    outputSchema: GenerateInsightsOutputSchema,
+  },
+  async (input) => {
+    const {output} = await prompt(input);
+    return output!;
+  }
+);

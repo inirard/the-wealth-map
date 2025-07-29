@@ -112,5 +112,12 @@
   "no_upcoming_goals": "Aucun objectif à venir défini. Ajoutez-en un pour commencer le suivi !",
   "focus_area_title": "Domaine de Richesse à Améliorer",
   "focus_area_desc": "Votre domaine à améliorer ce mois-ci est {{area}}. Envisagez de petites actions pour progresser.",
-  "complete_wealth_wheel": "Complétez la Roue de la Richesse pour voir votre domaine d'amélioration."
+  "complete_wealth_wheel": "Complétez la Roue de la Richesse pour voir votre domaine d'amélioration.",
+  "ai_coach_title": "Coach Financier IA",
+  "ai_coach_description": "Obtenez des perspectives et une motivation personnalisées basées sur vos données mensuelles. Vos données sont privées et utilisées uniquement pour cette analyse.",
+  "ai_coach_prompt": "Notez quelques-unes de vos réussites et de vos défis, puis cliquez sur le bouton pour obtenir une analyse personnalisée de votre coach IA.",
+  "ai_coach_button": "Générer l'Analyse IA",
+  "ai_coach_loading": "Analyse en cours...",
+  "ai_error_title": "L'Analyse IA a Échoué",
+  "ai_error_description": "Impossible de générer les perspectives. Veuillez vérifier votre connexion Internet et réessayer."
 }
