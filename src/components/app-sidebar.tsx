@@ -29,12 +29,12 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 
 
 const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/dashboard/goals', icon: Target, label: 'Goal Mapping' },
-  { href: '/dashboard/wealth-wheel', icon: Donut, label: 'Wealth Wheel' },
-  { href: '/dashboard/tracker', icon: ListChecks, label: 'Monthly Tracker' },
-  { href: '/dashboard/reflection', icon: BookOpen, label: 'Reflection' },
-  { href: '/dashboard/quotes', icon: Quote, label: 'Affirmations' },
+  { href: '/dashboard', icon: LayoutDashboard, label: 'Painel de Controlo' },
+  { href: '/dashboard/goals', icon: Target, label: 'Mapeamento de Metas' },
+  { href: '/dashboard/wealth-wheel', icon: Donut, label: 'Roda da Riqueza' },
+  { href: '/dashboard/tracker', icon: ListChecks, label: 'Rastreador Mensal' },
+  { href: '/dashboard/reflection', icon: BookOpen, label: 'Reflexão' },
+  { href: '/dashboard/quotes', icon: Quote, label: 'Afirmações' },
 ];
 
 export default function AppSidebar() {
@@ -84,22 +84,22 @@ export default function AppSidebar() {
             onClick={() => setResetDialogOpen(true)}
           >
             <Trash2 />
-            <span className="group-data-[collapsible=icon]:hidden">Reset Data</span>
+            <span className="group-data-[collapsible=icon]:hidden">Apagar Dados</span>
           </Button>
         </SidebarFooter>
       </Sidebar>
       <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Tem a certeza absoluta?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete all your data from this browser.
+              Esta ação não pode ser desfeita. Isto irá apagar permanentemente todos os seus dados deste navegador.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
             <AlertDialogAction onClick={handleResetData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Yes, reset data
+              Sim, apagar dados
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -74,36 +74,36 @@ export default function TrackerPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold font-headline">Monthly Tracker</h1>
+        <h1 className="text-3xl font-bold font-headline">Rastreador Mensal</h1>
         <div className="flex gap-2">
             <Button variant="outline" onClick={handleExport} disabled={transactions.length === 0}>
-                <Download className="mr-2 h-4 w-4" /> Export CSV
+                <Download className="mr-2 h-4 w-4" /> Exportar CSV
             </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild><Button>Add Transaction</Button></DialogTrigger>
+              <DialogTrigger asChild><Button>Adicionar Transação</Button></DialogTrigger>
               <DialogContent>
-                <DialogHeader><DialogTitle>Add a New Transaction</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle>Adicionar Nova Transação</DialogTitle></DialogHeader>
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField control={form.control} name="description" render={({ field }) => (
-                      <FormItem><FormLabel>Description</FormLabel><FormControl><Input placeholder="e.g., Groceries" {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>Descrição</FormLabel><FormControl><Input placeholder="Ex: Compras de supermercado" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="amount" render={({ field }) => (
-                      <FormItem><FormLabel>Amount ($)</FormLabel><FormControl><Input type="number" step="0.01" placeholder="55.75" {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>Valor (€)</FormLabel><FormControl><Input type="number" step="0.01" placeholder="55.75" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="type" render={({ field }) => (
-                      <FormItem className="space-y-3"><FormLabel>Type</FormLabel><FormControl>
+                      <FormItem className="space-y-3"><FormLabel>Tipo</FormLabel><FormControl>
                         <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex space-x-4">
-                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="income" /></FormControl><FormLabel className="font-normal">Income</FormLabel></FormItem>
-                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="expense" /></FormControl><FormLabel className="font-normal">Expense</FormLabel></FormItem>
+                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="income" /></FormControl><FormLabel className="font-normal">Rendimento</FormLabel></FormItem>
+                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="expense" /></FormControl><FormLabel className="font-normal">Despesa</FormLabel></FormItem>
                         </RadioGroup>
                       </FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="date" render={({ field }) => (
-                      <FormItem className="flex flex-col"><FormLabel>Date</FormLabel><Popover>
+                      <FormItem className="flex flex-col"><FormLabel>Data</FormLabel><Popover>
                         <PopoverTrigger asChild><FormControl>
                           <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                            {field.value ? (format(field.value, "PPP")) : (<span>Pick a date</span>)}
+                            {field.value ? (format(field.value, "PPP")) : (<span>Escolha uma data</span>)}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl></PopoverTrigger>
@@ -112,7 +112,7 @@ export default function TrackerPage() {
                         </PopoverContent>
                       </Popover><FormMessage /></FormItem>
                     )} />
-                    <DialogFooter><Button type="submit">Add Transaction</Button></DialogFooter>
+                    <DialogFooter><Button type="submit">Adicionar Transação</Button></DialogFooter>
                   </form>
                 </Form>
               </DialogContent>
@@ -121,19 +121,19 @@ export default function TrackerPage() {
       </div>
       
       <div className="grid gap-4 md:grid-cols-3">
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Total Income</CardTitle><TrendingUp className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-green-600">${totalIncome.toFixed(2)}</div></CardContent></Card>
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Total Expenses</CardTitle><TrendingDown className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-red-600">${totalExpenses.toFixed(2)}</div></CardContent></Card>
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Balance</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold">${balance.toFixed(2)}</div></CardContent></Card>
+        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Rendimento Total</CardTitle><TrendingUp className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-green-600">€{totalIncome.toFixed(2)}</div></CardContent></Card>
+        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Despesas Totais</CardTitle><TrendingDown className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-red-600">€{totalExpenses.toFixed(2)}</div></CardContent></Card>
+        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Saldo</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold">€{balance.toFixed(2)}</div></CardContent></Card>
       </div>
       
       <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead className="text-right">Amount</TableHead>
+                <TableHead>Data</TableHead>
+                <TableHead>Descrição</TableHead>
+                <TableHead>Tipo</TableHead>
+                <TableHead className="text-right">Valor</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -145,11 +145,11 @@ export default function TrackerPage() {
                     <TableCell className="font-medium">{t.description}</TableCell>
                     <TableCell>
                       <span className={cn("px-2 py-1 rounded-full text-xs", t.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')}>
-                        {t.type}
+                        {t.type === 'income' ? 'Rendimento' : 'Despesa'}
                       </span>
                     </TableCell>
                     <TableCell className={cn("text-right", t.type === 'income' ? 'text-green-600' : 'text-red-600')}>
-                      ${t.amount.toFixed(2)}
+                      €{t.amount.toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="icon" onClick={() => deleteTransaction(t.id)}>
@@ -160,7 +160,7 @@ export default function TrackerPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center">No transactions yet.</TableCell>
+                  <TableCell colSpan={5} className="h-24 text-center">Ainda não há transações.</TableCell>
                 </TableRow>
               )}
             </TableBody>
