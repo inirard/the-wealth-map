@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
@@ -10,14 +10,15 @@ import { useI18n } from '@/hooks/use-i18n';
 
 export default function QuotesPage() {
     const { t } = useI18n();
-    const quotes = defaultQuotes.map(q => ({
+    const quotes = useMemo(() => defaultQuotes.map(q => ({
         quote: t(q.quote),
         author: q.author
-    }));
+    })), [t]);
 
     const [quote, setQuote] = useState({ quote: '', author: '' });
 
     const getNewQuote = useCallback(() => {
+        if (quotes.length === 0) return;
         const randomIndex = Math.floor(Math.random() * quotes.length);
         setQuote(quotes[randomIndex]);
     }, [quotes]);
