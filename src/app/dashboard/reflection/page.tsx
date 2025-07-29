@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,20 +36,20 @@ export default function ReflectionPage() {
         { id: 'gratitude', prompt: t('gratitude_prompt') },
     ], [t]);
 
-    const [savedReflections, setSavedReflections] = useLocalStorage<Reflection[]>('reflections', []);
-    const [reflections, setReflections] = useState<Reflection[]>([]);
-
+    const [reflections, setReflections] = useLocalStorage<Reflection[]>('reflections', []);
+    const [currentReflections, setCurrentReflections] = useState<Reflection[]>([]);
+    
     useEffect(() => {
         const initialReflections = reflectionPrompts.map(p => {
-            const saved = savedReflections.find(s => s.id === p.id);
+            const saved = reflections.find(s => s.id === p.id);
             return {
                 id: p.id,
                 prompt: p.prompt,
                 content: saved?.content || '',
             };
         });
-        setReflections(initialReflections);
-    }, [reflectionPrompts, savedReflections]);
+        setCurrentReflections(initialReflections);
+    }, [reflectionPrompts, reflections]);
 
 
     const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
@@ -62,18 +62,17 @@ export default function ReflectionPage() {
     const [isLoading, setIsLoading] = useState(false);
     
     const handleContentChange = (id: string, content: string) => {
-        setReflections(currentReflections =>
-            currentReflections.map(r => 
-                r.id === id ? { ...r, content } : r
-            )
+        setCurrentReflections(prev =>
+            prev.map(r => (r.id === id ? { ...r, content } : r))
         );
     };
-
+    
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
         
-        setSavedReflections(reflections);
+        // Persist the current state to localStorage before generating
+        setReflections(currentReflections);
 
         try {
             const insight = await generateInsights({
@@ -81,7 +80,7 @@ export default function ReflectionPage() {
                 goals,
                 transactions,
                 wheelData,
-                reflections,
+                reflections: currentReflections,
             });
             setAiInsight(insight);
         } catch (error) {
@@ -96,7 +95,7 @@ export default function ReflectionPage() {
         }
     };
 
-    const canGenerate = reflections.some(r => r.content.trim() !== '');
+    const canGenerate = currentReflections.some(r => r.content.trim() !== '');
 
     return (
         <div className="space-y-8">
@@ -137,7 +136,7 @@ export default function ReflectionPage() {
             />
 
             <div className="grid gap-6 md:grid-cols-2">
-                {reflections.map((reflection) => (
+                {currentReflections.map((reflection) => (
                     <Card key={reflection.id}>
                         <CardHeader>
                             <CardTitle>{reflection.prompt}</CardTitle>
@@ -186,7 +185,7 @@ export default function ReflectionPage() {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <span tabIndex={0}>
+                                <span tabIndex={canGenerate ? -1 : 0}>
                                     <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
                                         {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
                                     </Button>
