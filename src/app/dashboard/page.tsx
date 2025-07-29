@@ -70,10 +70,10 @@ export default function DashboardPage() {
             </div>
             <div className="relative h-60 md:h-auto">
                  <Image
-                    src="/images/financial-planning-illustration.png"
+                    src="/financial-planning-illustration.png"
                     alt="Financial planning illustration"
                     fill
-                    className="object-cover brightness-90"
+                    className="object-cover"
                     priority
                 />
             </div>
