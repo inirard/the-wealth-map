@@ -35,43 +35,36 @@ export default function ReflectionPage() {
         { id: 'improvements', prompt: t('improvements_prompt') },
         { id: 'gratitude', prompt: t('gratitude_prompt') },
     ], [t]);
-    
-    // Simplified state management for reflections
+
     const [reflections, setReflections] = useState<Reflection[]>([]);
-    const [initialLoad, setInitialLoad] = useState(true);
     const [lsReflections, setLsReflections] = useLocalStorage<Reflection[]>('reflections', []);
+    const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
+    const [goals] = useLocalStorage<Goal[]>('goals', []);
+    const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
+    const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
+    const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     useEffect(() => {
-      if(initialLoad) {
         const initialData = reflectionPrompts.map(p => {
             const saved = lsReflections.find(s => s.id === p.id);
             return { id: p.id, prompt: p.prompt, content: saved?.content || '' };
         });
         setReflections(initialData);
-        setInitialLoad(false);
-      }
-    }, [reflectionPrompts, lsReflections, initialLoad]);
+        setIsInitialLoad(false);
+    }, [reflectionPrompts]); // lsReflections is intentionally omitted to load only once
 
-
-    const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
-    const [goals] = useLocalStorage<Goal[]>('goals', []);
-    const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
-    const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
-
-    const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    
     const handleContentChange = (id: string, content: string) => {
         setReflections(prev =>
             prev.map(r => (r.id === id ? { ...r, content } : r))
         );
     };
-    
+
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
         
-        // Persist the current state to localStorage before generating insights
         setLsReflections(reflections);
 
         try {
@@ -95,12 +88,11 @@ export default function ReflectionPage() {
         }
     };
     
-    // Correctly computes based on the live state
     const canGenerate = useMemo(() => {
         return reflections.some(r => r.content && r.content.trim() !== '');
     }, [reflections]);
 
-    if (initialLoad) {
+    if (isInitialLoad) {
         return (
             <div className="space-y-8">
                  <Skeleton className="h-12 w-1/2" />
