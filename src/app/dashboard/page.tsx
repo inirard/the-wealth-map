@@ -70,8 +70,9 @@ export default function DashboardPage() {
             </div>
             <div className="relative h-60 md:h-auto">
                  <Image
-                    src="/financial-planning-illustration.png"
+                    src="https://placehold.co/600x400.png"
                     alt="Financial planning illustration"
+                    data-ai-hint="financial planning"
                     fill
                     className="object-cover"
                     priority
