@@ -35,25 +35,25 @@ export default function ReflectionPage() {
         { id: 'improvements', prompt: t('improvements_prompt') },
         { id: 'gratitude', prompt: t('gratitude_prompt') },
     ], [t]);
-
-    const [savedReflections, setSavedReflections] = useLocalStorage<Reflection[]>('reflections', []);
-    const [currentReflections, setCurrentReflections] = useState<Reflection[]>([]);
+    
+    // Simplified state management for reflections
+    const [reflections, setReflections] = useState<Reflection[]>([]);
+    const [initialLoad, setInitialLoad] = useState(true);
+    const [lsReflections, setLsReflections] = useLocalStorage<Reflection[]>('reflections', []);
 
     useEffect(() => {
-        const initialReflections = reflectionPrompts.map(p => {
-            const saved = savedReflections.find(s => s.id === p.id);
-            return {
-                id: p.id,
-                prompt: p.prompt,
-                content: saved?.content || '',
-            };
+      if(initialLoad) {
+        const initialData = reflectionPrompts.map(p => {
+            const saved = lsReflections.find(s => s.id === p.id);
+            return { id: p.id, prompt: p.prompt, content: saved?.content || '' };
         });
-        setCurrentReflections(initialReflections);
-    }, [reflectionPrompts]);
+        setReflections(initialData);
+        setInitialLoad(false);
+      }
+    }, [reflectionPrompts, lsReflections, initialLoad]);
 
 
     const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
-    
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
@@ -62,7 +62,7 @@ export default function ReflectionPage() {
     const [isLoading, setIsLoading] = useState(false);
     
     const handleContentChange = (id: string, content: string) => {
-        setCurrentReflections(prev =>
+        setReflections(prev =>
             prev.map(r => (r.id === id ? { ...r, content } : r))
         );
     };
@@ -71,7 +71,8 @@ export default function ReflectionPage() {
         setIsLoading(true);
         setAiInsight(null);
         
-        setSavedReflections(currentReflections);
+        // Persist the current state to localStorage before generating insights
+        setLsReflections(reflections);
 
         try {
             const insight = await generateInsights({
@@ -79,7 +80,7 @@ export default function ReflectionPage() {
                 goals,
                 transactions,
                 wheelData,
-                reflections: currentReflections,
+                reflections,
             });
             setAiInsight(insight);
         } catch (error) {
@@ -93,10 +94,22 @@ export default function ReflectionPage() {
             setIsLoading(false);
         }
     };
-
+    
+    // Correctly computes based on the live state
     const canGenerate = useMemo(() => {
-        return currentReflections.some(r => r.content && r.content.trim() !== '');
-    }, [currentReflections]);
+        return reflections.some(r => r.content && r.content.trim() !== '');
+    }, [reflections]);
+
+    if (initialLoad) {
+        return (
+            <div className="space-y-8">
+                 <Skeleton className="h-12 w-1/2" />
+                 <Skeleton className="h-8 w-3/4" />
+                 <Card><CardContent className="p-6"><Skeleton className="h-48 w-full" /></CardContent></Card>
+                 <Card><CardContent className="p-6"><Skeleton className="h-24 w-full" /></CardContent></Card>
+            </div>
+        )
+    }
 
     return (
         <div className="space-y-8">
@@ -137,7 +150,7 @@ export default function ReflectionPage() {
             />
 
             <div className="grid gap-6 md:grid-cols-2">
-                {currentReflections.length > 0 && currentReflections.map((reflection) => (
+                {reflections.length > 0 && reflections.map((reflection) => (
                     <Card key={reflection.id}>
                         <CardHeader>
                             <CardTitle>{reflection.prompt}</CardTitle>
