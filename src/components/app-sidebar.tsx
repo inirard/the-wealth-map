@@ -13,7 +13,6 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import {
@@ -71,13 +70,10 @@ export default function AppSidebar() {
     <>
       <Sidebar>
         <SidebarHeader>
-          <div className="flex items-center justify-between">
-              <Link href="/dashboard" className="flex items-center gap-2">
-                <CircleDollarSign className="h-8 w-8 text-primary" />
-                <span className="text-xl font-semibold text-primary group-data-[collapsible=icon]:hidden">Wealth Map</span>
-              </Link>
-              <SidebarTrigger className="hidden sm:flex" />
-          </div>
+          <Link href="/dashboard" className="flex items-center gap-2">
+            <CircleDollarSign className="h-8 w-8 text-primary" />
+            <span className="text-xl font-semibold text-primary group-data-[collapsible=icon]:hidden">Wealth Map</span>
+          </Link>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
