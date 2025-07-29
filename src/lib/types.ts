@@ -1,3 +1,4 @@
+
 export interface Goal {
   id: string;
   name: string;
@@ -19,6 +20,7 @@ export interface WealthWheelData {
   id: string;
   label: string;
   value: number;
+  description: string;
 }
 
 export interface Reflection {
