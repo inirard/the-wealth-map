@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -83,10 +83,14 @@ export default function TrackerPage() {
     return { totalIncome, totalExpenses, balance };
   }, [transactions]);
   
-  const handleExport = () => {
-    const dataToExport = transactions.map(t => ({...t, type: t.type === 'income' ? t('income') : t('expense')}));
+  const handleExport = useCallback(() => {
+    const dataToExport = transactions.map(t => ({
+        ...t, 
+        date: format(new Date(t.date), "yyyy-MM-dd"),
+        type: t.type === 'income' ? t('income') : t('expense')
+    }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
-  };
+  }, [transactions, t]);
 
   return (
     <div className="space-y-8">
