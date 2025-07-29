@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, PanelLeft } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -13,6 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import {
@@ -70,10 +71,13 @@ export default function AppSidebar() {
     <>
       <Sidebar>
         <SidebarHeader>
-          <Link href="/dashboard" className="flex items-center gap-2">
-            <CircleDollarSign className="h-8 w-8 text-primary" />
-            <span className="text-xl font-semibold text-primary">Wealth Map</span>
-          </Link>
+          <div className="flex items-center justify-between">
+              <Link href="/dashboard" className="flex items-center gap-2">
+                <CircleDollarSign className="h-8 w-8 text-primary" />
+                <span className="text-xl font-semibold text-primary group-data-[collapsible=icon]:hidden">Wealth Map</span>
+              </Link>
+              <SidebarTrigger className="hidden sm:flex" />
+          </div>
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
@@ -83,7 +87,7 @@ export default function AppSidebar() {
                   asChild
                   isActive={pathname === item.href}
                   onClick={() => setOpenMobile(false)}
-                  tooltip={{ children: item.label }}
+                  tooltip={item.label}
                 >
                   <Link href={item.href}>
                     <item.icon />
