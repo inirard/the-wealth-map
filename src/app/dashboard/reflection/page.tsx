@@ -36,12 +36,12 @@ export default function ReflectionPage() {
         { id: 'gratitude', prompt: t('gratitude_prompt') },
     ], [t]);
 
-    const [reflections, setReflections] = useLocalStorage<Reflection[]>('reflections', []);
+    const [savedReflections, setSavedReflections] = useLocalStorage<Reflection[]>('reflections', []);
     const [currentReflections, setCurrentReflections] = useState<Reflection[]>([]);
-    
+
     useEffect(() => {
         const initialReflections = reflectionPrompts.map(p => {
-            const saved = reflections.find(s => s.id === p.id);
+            const saved = savedReflections.find(s => s.id === p.id);
             return {
                 id: p.id,
                 prompt: p.prompt,
@@ -49,7 +49,7 @@ export default function ReflectionPage() {
             };
         });
         setCurrentReflections(initialReflections);
-    }, [reflectionPrompts, reflections]);
+    }, [reflectionPrompts]);
 
 
     const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
@@ -71,8 +71,7 @@ export default function ReflectionPage() {
         setIsLoading(true);
         setAiInsight(null);
         
-        // Persist the current state to localStorage before generating
-        setReflections(currentReflections);
+        setSavedReflections(currentReflections);
 
         try {
             const insight = await generateInsights({
@@ -95,7 +94,9 @@ export default function ReflectionPage() {
         }
     };
 
-    const canGenerate = currentReflections.some(r => r.content.trim() !== '');
+    const canGenerate = useMemo(() => {
+        return currentReflections.some(r => r.content && r.content.trim() !== '');
+    }, [currentReflections]);
 
     return (
         <div className="space-y-8">
@@ -136,7 +137,7 @@ export default function ReflectionPage() {
             />
 
             <div className="grid gap-6 md:grid-cols-2">
-                {currentReflections.map((reflection) => (
+                {currentReflections.length > 0 && currentReflections.map((reflection) => (
                     <Card key={reflection.id}>
                         <CardHeader>
                             <CardTitle>{reflection.prompt}</CardTitle>
