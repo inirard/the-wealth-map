@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -29,40 +29,31 @@ export default function ReflectionPage() {
     const { t, language } = useI18n();
     const { toast } = useToast();
 
-    const reflectionPrompts = React.useMemo(() => [
+    const reflectionPrompts = useMemo(() => [
         { id: 'wins', prompt: t('wins_prompt') },
         { id: 'challenges', prompt: t('challenges_prompt') },
         { id: 'improvements', prompt: t('improvements_prompt') },
         { id: 'gratitude', prompt: t('gratitude_prompt') },
     ], [t]);
 
-    const [savedReflections, setSavedReflections] = useLocalStorage<Reflection[]>(
-        'reflections', 
-        reflectionPrompts.map(p => ({ id: p.id, prompt: p.prompt, content: '' }))
-    );
+    const [savedReflections, setSavedReflections] = useLocalStorage<Reflection[]>('reflections', []);
+    const [reflections, setReflections] = useState<Reflection[]>([]);
 
-    // State to manage the textareas' content in real-time
-    const [currentReflections, setCurrentReflections] = useState<Reflection[]>([]);
-
-    // Initialize local state from localStorage only once
     useEffect(() => {
-        setCurrentReflections(savedReflections);
-    }, []);
-
-    // Update prompts if language changes
-    useEffect(() => {
-        setCurrentReflections(prevReflections =>
-            reflectionPrompts.map(p => {
-                const existing = prevReflections.find(r => r.id === p.id);
-                return { ...p, content: existing?.content || '' };
-            })
-        );
-    }, [reflectionPrompts]);
+        const initialReflections = reflectionPrompts.map(p => {
+            const saved = savedReflections.find(s => s.id === p.id);
+            return {
+                id: p.id,
+                prompt: p.prompt,
+                content: saved?.content || '',
+            };
+        });
+        setReflections(initialReflections);
+    }, [reflectionPrompts, savedReflections]);
 
 
     const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
     
-    // Fetching all necessary data for the summary and AI analysis
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
@@ -71,18 +62,18 @@ export default function ReflectionPage() {
     const [isLoading, setIsLoading] = useState(false);
     
     const handleContentChange = (id: string, content: string) => {
-        const newReflections = currentReflections.map(r => 
-            r.id === id ? { ...r, content } : r
+        setReflections(currentReflections =>
+            currentReflections.map(r => 
+                r.id === id ? { ...r, content } : r
+            )
         );
-        setCurrentReflections(newReflections);
     };
 
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
         
-        // Save the current reflections to localStorage before generating insights
-        setSavedReflections(currentReflections);
+        setSavedReflections(reflections);
 
         try {
             const insight = await generateInsights({
@@ -90,7 +81,7 @@ export default function ReflectionPage() {
                 goals,
                 transactions,
                 wheelData,
-                reflections: currentReflections,
+                reflections,
             });
             setAiInsight(insight);
         } catch (error) {
@@ -105,7 +96,7 @@ export default function ReflectionPage() {
         }
     };
 
-    const canGenerate = currentReflections.some(r => r.content.trim() !== '');
+    const canGenerate = reflections.some(r => r.content.trim() !== '');
 
     return (
         <div className="space-y-8">
@@ -146,17 +137,17 @@ export default function ReflectionPage() {
             />
 
             <div className="grid gap-6 md:grid-cols-2">
-                {reflectionPrompts.map((prompt) => (
-                    <Card key={prompt.id}>
+                {reflections.map((reflection) => (
+                    <Card key={reflection.id}>
                         <CardHeader>
-                            <CardTitle>{prompt.prompt}</CardTitle>
+                            <CardTitle>{reflection.prompt}</CardTitle>
                         </CardHeader>
                         <CardContent>
-                            <Label htmlFor={prompt.id} className="sr-only">{prompt.prompt}</Label>
+                            <Label htmlFor={reflection.id} className="sr-only">{reflection.prompt}</Label>
                             <Textarea
-                                id={prompt.id}
-                                value={currentReflections.find(r => r.id === prompt.id)?.content || ''}
-                                onChange={(e) => handleContentChange(prompt.id, e.target.value)}
+                                id={reflection.id}
+                                value={reflection.content}
+                                onChange={(e) => handleContentChange(reflection.id, e.target.value)}
                                 placeholder={t('write_reflections_placeholder')}
                                 className="min-h-[150px] text-base"
                             />
