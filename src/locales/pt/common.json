@@ -103,5 +103,14 @@
   "quote5": "Não é quanto dinheiro você faz, mas quanto dinheiro você guarda, quão arduamente ele trabalha para si e por quantas gerações o mantém.",
   "quote6": "Riqueza é a capacidade de experienciar a vida plenamente.",
   "quote7": "Você deve ganhar controlo sobre o seu dinheiro ou a falta dele irá controlá-lo para sempre.",
-  "quote8": "Vou contar-lhe o segredo para ficar rico em Wall Street. Tente ser ganancioso quando os outros estão com medo. E tente ter medo quando os outros estão gananciosos."
+  "quote8": "Vou contar-lhe o segredo para ficar rico em Wall Street. Tente ser ganancioso quando os outros estão com medo. E tente ter medo quando os outros estão gananciosos.",
+  "monthly_summary": "Resumo do Mês",
+  "monthly_summary_desc": "Uma visão geral automática do seu progresso, com base nos dados que inseriu.",
+  "your_balance_this_month": "O seu balanço este mês",
+  "next_goal_focus": "Foco na Próxima Meta",
+  "next_goal_desc": "Continue a progredir na sua meta '{{goalName}}'. Já está a {{progress}}% do caminho!",
+  "no_upcoming_goals": "Não há metas futuras definidas. Adicione uma para começar a acompanhar!",
+  "focus_area_title": "Área de Foco da Riqueza",
+  "focus_area_desc": "A sua área para desenvolvimento este mês é {{area}}. Considere pequenas ações para melhorar.",
+  "complete_wealth_wheel": "Preencha a Roda da Riqueza para ver a sua área de foco."
 }

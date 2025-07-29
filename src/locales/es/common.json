@@ -103,5 +103,14 @@
   "quote5": "No es cuánto dinero ganas, sino cuánto dinero conservas, qué tan duro trabaja para ti y por cuántas generaciones lo conservas.",
   "quote6": "La riqueza es la capacidad de experimentar la vida plenamente.",
   "quote7": "Debes obtener control sobre tu dinero o la falta de él te controlará para siempre.",
-  "quote8": "Te diré el secreto para hacerte rico en Wall Street. Intenta ser codicioso cuando otros son temerosos. Y trata de ser temeroso cuando otros son codiciosos."
+  "quote8": "Te diré el secreto para hacerte rico en Wall Street. Intenta ser codicioso cuando otros son temerosos. Y trata de ser temeroso cuando otros son codiciosos.",
+  "monthly_summary": "Resumen del Mes",
+  "monthly_summary_desc": "Un resumen automático de tu progreso, basado en los datos que has introducido.",
+  "your_balance_this_month": "Tu saldo este mes",
+  "next_goal_focus": "Enfoque en la Próxima Meta",
+  "next_goal_desc": "Sigue avanzando en tu meta '{{goalName}}'. ¡Ya estás al {{progress}}% del camino!",
+  "no_upcoming_goals": "No hay metas futuras establecidas. ¡Añade una para empezar a seguir!",
+  "focus_area_title": "Área de Enfoque de Riqueza",
+  "focus_area_desc": "Tu área de mejora este mes es {{area}}. Considera pequeñas acciones para mejorar.",
+  "complete_wealth_wheel": "Completa la Rueda de la Riqueza para ver tu área de enfoque."
 }

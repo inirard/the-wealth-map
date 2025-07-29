@@ -5,11 +5,12 @@ import React from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
-import type { Reflection } from '@/lib/types';
+import type { Reflection, Goal, Transaction, WealthWheelData } from '@/lib/types';
 import { Label } from '@/components/ui/label';
 import { cn } from "@/lib/utils";
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks/use-i18n';
+import MonthlySummary from './monthly-summary';
 
 const emotionalStates = [
     { emoji: '😃', label: 'excellent' },
@@ -34,6 +35,11 @@ export default function ReflectionPage() {
         reflectionPrompts.map(p => ({ id: p.id, prompt: p.prompt, content: '' }))
     );
     const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
+    
+    // Fetching all necessary data for the summary
+    const [goals] = useLocalStorage<Goal[]>('goals', []);
+    const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
+    const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
 
     const handleContentChange = (id: string, content: string) => {
         const newReflections = reflections.map(r => 
@@ -73,6 +79,12 @@ export default function ReflectionPage() {
                     </div>
                 </CardContent>
             </Card>
+
+            <MonthlySummary
+                goals={goals}
+                transactions={transactions}
+                wheelData={wheelData}
+            />
 
             <div className="grid gap-6 md:grid-cols-2">
                 {reflections.map((reflection) => (

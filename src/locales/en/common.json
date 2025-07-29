@@ -103,5 +103,14 @@
   "quote5": "It's not how much money you make, but how much money you keep, how hard it works for you, and how many generations you keep it for.",
   "quote6": "Wealth is the ability to fully experience life.",
   "quote7": "You must gain control over your money or the lack of it will forever control you.",
-  "quote8": "I will tell you the secret to getting rich on Wall Street. You try to be greedy when others are fearful. And you try to be fearful when others are greedy."
+  "quote8": "I will tell you the secret to getting rich on Wall Street. You try to be greedy when others are fearful. And you try to be fearful when others are greedy.",
+  "monthly_summary": "Monthly Summary",
+  "monthly_summary_desc": "An automatic overview of your progress, based on the data you've entered.",
+  "your_balance_this_month": "Your balance this month",
+  "next_goal_focus": "Next Goal Focus",
+  "next_goal_desc": "Keep pushing on your '{{goalName}}' goal. You're {{progress}}% of the way there!",
+  "no_upcoming_goals": "No upcoming goals set. Add one to start tracking!",
+  "focus_area_title": "Wealth Focus Area",
+  "focus_area_desc": "Your area for improvement this month is {{area}}. Consider small actions to improve.",
+  "complete_wealth_wheel": "Complete the Wealth Wheel to see your focus area."
 }

@@ -103,5 +103,14 @@
   "quote5": "Ce n'est pas combien d'argent vous gagnez, mais combien d'argent vous gardez, à quel point il travaille pour vous, et pour combien de générations vous le gardez.",
   "quote6": "La richesse est la capacité de vivre pleinement la vie.",
   "quote7": "Vous devez prendre le contrôle de votre argent ou son absence vous contrôlera pour toujours.",
-  "quote8": "Je vais vous dire le secret pour devenir riche à Wall Street. Essayez d'être avide quand les autres sont craintifs. Et essayez d'être craintif quand les autres sont avides."
+  "quote8": "Je vais vous dire le secret pour devenir riche à Wall Street. Essayez d'être avide quand les autres sont craintifs. Et essayez d'être craintif quand les autres sont avides.",
+  "monthly_summary": "Résumé du Mois",
+  "monthly_summary_desc": "Un aperçu automatique de vos progrès, basé sur les données que vous avez saisies.",
+  "your_balance_this_month": "Votre solde ce mois-ci",
+  "next_goal_focus": "Objectif Suivant",
+  "next_goal_desc": "Continuez à progresser sur votre objectif '{{goalName}}'. Vous êtes à {{progress}}% du chemin !",
+  "no_upcoming_goals": "Aucun objectif à venir défini. Ajoutez-en un pour commencer le suivi !",
+  "focus_area_title": "Domaine de Richesse à Améliorer",
+  "focus_area_desc": "Votre domaine à améliorer ce mois-ci est {{area}}. Envisagez de petites actions pour progresser.",
+  "complete_wealth_wheel": "Complétez la Roue de la Richesse pour voir votre domaine d'amélioration."
 }
