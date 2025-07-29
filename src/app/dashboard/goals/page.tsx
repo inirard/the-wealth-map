@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,7 +25,7 @@ import { useI18n } from '@/hooks/use-i18n';
 export default function GoalsPage() {
   const { t } = useI18n();
 
-  const goalSchema = z.object({
+  const goalSchema = useMemo(() => z.object({
     name: z.string().min(3, t('goal_name_error')),
     targetAmount: z.coerce.number().min(1, t('target_amount_error')),
     currentAmount: z.coerce.number().min(0).optional(),
@@ -33,7 +33,7 @@ export default function GoalsPage() {
       required_error: t('target_date_error'),
     }),
     importance: z.string().min(10, t('importance_error')).optional(),
-  });
+  }), [t]);
 
   const [goals, setGoals] = useLocalStorage<Goal[]>('goals', []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -47,7 +47,14 @@ export default function GoalsPage() {
       targetDate: undefined,
       importance: "",
     },
+    resetOptions: {
+      keepValues: false,
+    }
   });
+
+  React.useEffect(() => {
+    form.reset();
+  }, [goalSchema, form]);
 
   function onSubmit(values: z.infer<typeof goalSchema>) {
     const newGoal: Goal = {

@@ -26,12 +26,12 @@ import { useI18n } from '@/hooks/use-i18n';
 export default function TrackerPage() {
   const { t } = useI18n();
 
-  const transactionSchema = z.object({
+  const transactionSchema = useMemo(() => z.object({
     description: z.string().min(2, t('description_error')),
     amount: z.coerce.number().min(0.01, t('amount_error')),
     type: z.enum(["income", "expense"], { required_error: t('transaction_type_error') }),
     date: z.date({ required_error: t('date_error') }),
-  });
+  }), [t]);
 
   const [transactions, setTransactions] = useLocalStorage<Transaction[]>('transactions', []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -43,7 +43,14 @@ export default function TrackerPage() {
       amount: 0,
       type: "expense",
     },
+    resetOptions: {
+      keepValues: false,
+    }
   });
+
+  React.useEffect(() => {
+    form.reset();
+  }, [transactionSchema, form]);
 
   function onSubmit(values: z.infer<typeof transactionSchema>) {
     const newTransaction: Transaction = {
