@@ -42,12 +42,22 @@ export default function ReflectionPage() {
     );
 
     // State to manage the textareas' content in real-time
-    const [currentReflections, setCurrentReflections] = useState<Reflection[]>(savedReflections);
+    const [currentReflections, setCurrentReflections] = useState<Reflection[]>([]);
 
+    // Initialize local state from localStorage only once
     useEffect(() => {
-        // Update the local state if the data from localStorage changes (e.g., due to language change)
         setCurrentReflections(savedReflections);
-    }, [savedReflections]);
+    }, []);
+
+    // Update prompts if language changes
+    useEffect(() => {
+        setCurrentReflections(prevReflections =>
+            reflectionPrompts.map(p => {
+                const existing = prevReflections.find(r => r.id === p.id);
+                return { ...p, content: existing?.content || '' };
+            })
+        );
+    }, [reflectionPrompts]);
 
 
     const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
