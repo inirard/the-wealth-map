@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -53,18 +53,20 @@ export default function ReflectionPage() {
         });
         setReflections(initialData);
         setIsInitialLoad(false);
-    }, [reflectionPrompts]); // lsReflections is intentionally omitted to load only once
+    // lsReflections is part of the dependency array to re-initialize if it changes from another tab.
+    }, [reflectionPrompts, lsReflections]);
 
     const handleContentChange = (id: string, content: string) => {
-        setReflections(prev =>
-            prev.map(r => (r.id === id ? { ...r, content } : r))
+        setReflections(currentReflections =>
+            currentReflections.map(r => (r.id === id ? { ...r, content } : r))
         );
     };
-
+    
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
         
+        // Persist the current reflections to localStorage before generating insights
         setLsReflections(reflections);
 
         try {
