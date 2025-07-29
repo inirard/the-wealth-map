@@ -1,17 +1,22 @@
 import type { Transaction } from './types';
 
-export function exportToCsv(filename: string, rows: Transaction[]) {
+// This type helps us handle the translated 'type' field for export
+type ExportableTransaction = Omit<Transaction, 'type'> & {
+    type: string; 
+};
+
+export function exportToCsv(filename: string, rows: ExportableTransaction[]) {
   if (!rows || !rows.length) {
     return;
   }
   const separator = ',';
-  const keys = ['date', 'description', 'type', 'amount'];
+  const keys: (keyof ExportableTransaction)[] = ['date', 'description', 'type', 'amount'];
   const csvContent =
     keys.join(separator) +
     '\n' +
     rows.map(row => {
       return keys.map(k => {
-        let cell: string | number = row[k as keyof Transaction] ?? '';
+        let cell: string | number = row[k] ?? '';
         
         if (typeof cell === 'string' && cell.includes(separator)) {
           cell = `"${cell.replace(/"/g, '""')}"`;

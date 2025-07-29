@@ -49,7 +49,12 @@ export default function TrackerPage() {
   });
 
   React.useEffect(() => {
-    form.reset();
+    form.reset({
+        description: "",
+        amount: 0,
+        type: "expense",
+        date: undefined
+    });
   }, [transactionSchema, form]);
 
   function onSubmit(values: z.infer<typeof transactionSchema>) {
@@ -79,7 +84,8 @@ export default function TrackerPage() {
   }, [transactions]);
   
   const handleExport = () => {
-    exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, transactions);
+    const dataToExport = transactions.map(t => ({...t, type: t.type === 'income' ? t('income') : t('expense')}));
+    exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
   };
 
   return (
@@ -159,7 +165,7 @@ export default function TrackerPage() {
                         {t.type === 'income' ? t('income') : t('expense')}
                       </span>
                     </TableCell>
-                    <TableCell className={cn("text-right", t.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                    <TableCell className={cn("text-right font-semibold", t.type === 'income' ? 'text-green-600' : 'text-destructive')}>
                       €{t.amount.toFixed(2)}
                     </TableCell>
                     <TableCell>
