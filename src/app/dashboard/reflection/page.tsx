@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -36,10 +36,20 @@ export default function ReflectionPage() {
         { id: 'gratitude', prompt: t('gratitude_prompt') },
     ], [t]);
 
-    const [reflections, setReflections] = useLocalStorage<Reflection[]>(
+    const [savedReflections, setSavedReflections] = useLocalStorage<Reflection[]>(
         'reflections', 
         reflectionPrompts.map(p => ({ id: p.id, prompt: p.prompt, content: '' }))
     );
+
+    // State to manage the textareas' content in real-time
+    const [currentReflections, setCurrentReflections] = useState<Reflection[]>(savedReflections);
+
+    useEffect(() => {
+        // Update the local state if the data from localStorage changes (e.g., due to language change)
+        setCurrentReflections(savedReflections);
+    }, [savedReflections]);
+
+
     const [mood, setMood] = useLocalStorage<string | null>('monthlyMood', null);
     
     // Fetching all necessary data for the summary and AI analysis
@@ -51,22 +61,26 @@ export default function ReflectionPage() {
     const [isLoading, setIsLoading] = useState(false);
     
     const handleContentChange = (id: string, content: string) => {
-        const newReflections = reflections.map(r => 
+        const newReflections = currentReflections.map(r => 
             r.id === id ? { ...r, content } : r
         );
-        setReflections(newReflections);
+        setCurrentReflections(newReflections);
     };
 
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
+        
+        // Save the current reflections to localStorage before generating insights
+        setSavedReflections(currentReflections);
+
         try {
             const insight = await generateInsights({
                 language,
                 goals,
                 transactions,
                 wheelData,
-                reflections,
+                reflections: currentReflections,
             });
             setAiInsight(insight);
         } catch (error) {
@@ -81,7 +95,7 @@ export default function ReflectionPage() {
         }
     };
 
-    const canGenerate = reflections.some(r => r.content.trim() !== '');
+    const canGenerate = currentReflections.some(r => r.content.trim() !== '');
 
     return (
         <div className="space-y-8">
@@ -131,7 +145,7 @@ export default function ReflectionPage() {
                             <Label htmlFor={prompt.id} className="sr-only">{prompt.prompt}</Label>
                             <Textarea
                                 id={prompt.id}
-                                value={reflections.find(r => r.id === prompt.id)?.content || ''}
+                                value={currentReflections.find(r => r.id === prompt.id)?.content || ''}
                                 onChange={(e) => handleContentChange(prompt.id, e.target.value)}
                                 placeholder={t('write_reflections_placeholder')}
                                 className="min-h-[150px] text-base"
