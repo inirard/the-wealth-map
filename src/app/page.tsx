@@ -23,11 +23,11 @@ export default function CoverPage() {
           The Wealth Map
         </h1>
         <p className="mt-4 max-w-2xl text-lg md:text-xl text-foreground/80">
-          Your interactive digital planner for navigating the journey to financial freedom.
+          Seu planejador digital interativo para navegar na jornada para a liberdade financeira.
         </p>
         <Link href="/dashboard" passHref>
           <Button size="lg" className="mt-10 group bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-transform transform hover:scale-105">
-            Start Your Journey
+            Comece Sua Jornada
             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
         </Link>
