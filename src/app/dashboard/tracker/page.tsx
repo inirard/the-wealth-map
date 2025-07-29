@@ -84,10 +84,10 @@ export default function TrackerPage() {
   }, [transactions]);
   
   const handleExport = useCallback(() => {
-    const dataToExport = transactions.map(t => ({
-        ...t, 
-        date: format(new Date(t.date), "yyyy-MM-dd"),
-        type: t.type === 'income' ? t('income') : t('expense')
+    const dataToExport = transactions.map(transaction => ({
+        ...transaction, 
+        date: format(new Date(transaction.date), "yyyy-MM-dd"),
+        type: transaction.type === 'income' ? t('income') : t('expense')
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
   }, [transactions, t]);
@@ -160,20 +160,20 @@ export default function TrackerPage() {
             </TableHeader>
             <TableBody>
               {transactions.length > 0 ? (
-                transactions.map(t => (
-                  <TableRow key={t.id}>
-                    <TableCell>{format(new Date(t.date), "PPP")}</TableCell>
-                    <TableCell className="font-medium">{t.description}</TableCell>
+                transactions.map(transaction => (
+                  <TableRow key={transaction.id}>
+                    <TableCell>{format(new Date(transaction.date), "PPP")}</TableCell>
+                    <TableCell className="font-medium">{transaction.description}</TableCell>
                     <TableCell>
-                      <span className={cn("px-2 py-1 rounded-full text-xs", t.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')}>
-                        {t.type === 'income' ? t('income') : t('expense')}
+                      <span className={cn("px-2 py-1 rounded-full text-xs", transaction.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')}>
+                        {transaction.type === 'income' ? t('income') : t('expense')}
                       </span>
                     </TableCell>
-                    <TableCell className={cn("text-right font-semibold", t.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                      €{t.amount.toFixed(2)}
+                    <TableCell className={cn("text-right font-semibold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                      €{transaction.amount.toFixed(2)}
                     </TableCell>
                     <TableCell>
-                      <Button variant="ghost" size="icon" onClick={() => deleteTransaction(t.id)}>
+                      <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
                         <Trash2 className="h-4 w-4 text-muted-foreground" />
                       </Button>
                     </TableCell>
