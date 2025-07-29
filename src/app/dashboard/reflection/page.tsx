@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -50,36 +50,23 @@ export default function ReflectionPage() {
     const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     
-    // Local state to track input changes immediately
-    const [currentReflections, setCurrentReflections] = useState<Reflection[]>(reflections);
-
-    useEffect(() => {
-        setCurrentReflections(reflections);
-    }, [reflections]);
-    
     const handleContentChange = (id: string, content: string) => {
-        const newReflections = currentReflections.map(r => 
+        const newReflections = reflections.map(r => 
             r.id === id ? { ...r, content } : r
         );
-        setCurrentReflections(newReflections);
-    };
-
-    const handleBlur = () => {
-        setReflections(currentReflections);
+        setReflections(newReflections);
     };
 
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
         try {
-            // Ensure the latest reflections are saved before generating
-            setReflections(currentReflections);
             const insight = await generateInsights({
                 language,
                 goals,
                 transactions,
                 wheelData,
-                reflections: currentReflections,
+                reflections,
             });
             setAiInsight(insight);
         } catch (error) {
@@ -94,7 +81,7 @@ export default function ReflectionPage() {
         }
     };
 
-    const canGenerate = currentReflections.some(r => r.content.trim() !== '');
+    const canGenerate = reflections.some(r => r.content.trim() !== '');
 
     return (
         <div className="space-y-8">
@@ -144,9 +131,8 @@ export default function ReflectionPage() {
                             <Label htmlFor={prompt.id} className="sr-only">{prompt.prompt}</Label>
                             <Textarea
                                 id={prompt.id}
-                                value={currentReflections.find(r => r.id === prompt.id)?.content || ''}
+                                value={reflections.find(r => r.id === prompt.id)?.content || ''}
                                 onChange={(e) => handleContentChange(prompt.id, e.target.value)}
-                                onBlur={handleBlur}
                                 placeholder={t('write_reflections_placeholder')}
                                 className="min-h-[150px] text-base"
                             />
