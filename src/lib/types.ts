@@ -1,0 +1,27 @@
+export interface Goal {
+  id: string;
+  name: string;
+  targetAmount: number;
+  currentAmount: number;
+  targetDate: string;
+}
+
+export interface Transaction {
+  id: string;
+  description: string;
+  amount: number;
+  type: 'income' | 'expense';
+  date: string;
+}
+
+export interface WealthWheelData {
+  id: string;
+  label: string;
+  value: number;
+}
+
+export interface Reflection {
+  id: string;
+  prompt: string;
+  content: string;
+}
