@@ -72,7 +72,7 @@ export default function DashboardPage() {
                  <Image
                     src="https://placehold.co/600x400.png"
                     alt="Financial planning illustration"
-                    layout="fill"
+                    fill
                     objectFit="cover"
                     className="brightness-90"
                     data-ai-hint="financial planning"
