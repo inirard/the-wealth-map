@@ -53,7 +53,6 @@ export default function ReflectionPage() {
         });
         setReflections(initialData);
         setIsInitialLoad(false);
-    // lsReflections is part of the dependency array to re-initialize if it changes from another tab.
     }, [reflectionPrompts, lsReflections]);
 
     const handleContentChange = (id: string, content: string) => {
@@ -66,7 +65,6 @@ export default function ReflectionPage() {
         setIsLoading(true);
         setAiInsight(null);
         
-        // Persist the current reflections to localStorage before generating insights
         setLsReflections(reflections);
 
         try {
