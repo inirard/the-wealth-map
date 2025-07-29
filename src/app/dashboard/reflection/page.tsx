@@ -15,6 +15,7 @@ import { generateInsights, GenerateInsightsOutput } from '@/ai/flows/generate-in
 import { Sparkles, Bot } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 const emotionalStates = [
     { emoji: '😃', label: 'excellent' },
@@ -80,7 +81,7 @@ export default function ReflectionPage() {
         }
     };
 
-    const canGenerate = reflections.some(r => r.content.trim().length > 5);
+    const canGenerate = reflections.some(r => r.content.trim() !== '');
 
     return (
         <div className="space-y-8">
@@ -167,9 +168,22 @@ export default function ReflectionPage() {
                     )}
                 </CardContent>
                 <CardFooter>
-                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
-                        {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
-                    </Button>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <span tabIndex={0}>
+                                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
+                                        {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
+                                    </Button>
+                                </span>
+                            </TooltipTrigger>
+                            {!canGenerate && (
+                                <TooltipContent>
+                                    <p>{t('ai_coach_disabled_tooltip')}</p>
+                                </TooltipContent>
+                            )}
+                        </Tooltip>
+                    </TooltipProvider>
                 </CardFooter>
             </Card>
 

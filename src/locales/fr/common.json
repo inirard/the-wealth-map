@@ -119,5 +119,6 @@
   "ai_coach_button": "Générer l'Analyse IA",
   "ai_coach_loading": "Analyse en cours...",
   "ai_error_title": "L'Analyse IA a Échoué",
-  "ai_error_description": "Impossible de générer les perspectives. Veuillez vérifier votre connexion Internet et réessayer."
+  "ai_error_description": "Impossible de générer les perspectives. Veuillez vérifier votre connexion Internet et réessayer.",
+  "ai_coach_disabled_tooltip": "Veuillez remplir au moins un champ de réflexion pour activer l'analyse IA."
 }

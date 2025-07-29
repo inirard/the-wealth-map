@@ -119,5 +119,6 @@
   "ai_coach_button": "Generate AI Analysis",
   "ai_coach_loading": "Analyzing...",
   "ai_error_title": "AI Analysis Failed",
-  "ai_error_description": "Could not generate insights. Please check your internet connection and try again."
+  "ai_error_description": "Could not generate insights. Please check your internet connection and try again.",
+  "ai_coach_disabled_tooltip": "Please fill in at least one reflection field to enable AI analysis."
 }
