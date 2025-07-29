@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -7,11 +8,13 @@ import { CircleDollarSign, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useI18n } from '@/hooks/use-i18n';
 
 export default function CoverPage() {
   const [name, setName] = useLocalStorage('username', '');
   const [tempName, setTempName] = useState('');
   const router = useRouter();
+  const { t } = useI18n();
 
   useEffect(() => {
     if (name) {
@@ -53,20 +56,20 @@ export default function CoverPage() {
           The Wealth Map
         </h1>
         <p className="mt-4 max-w-2xl text-lg text-foreground/80 md:text-xl">
-          Seu planejador digital interativo para navegar na jornada para a liberdade financeira.
+          {t('welcome_subtitle')}
         </p>
 
         <div className="mt-10 w-full space-y-4">
             <Input 
                 type="text" 
-                placeholder="Qual é o seu nome?"
+                placeholder={t('what_is_your_name')}
                 value={tempName}
                 onChange={(e) => setTempName(e.target.value)}
                 onKeyPress={handleKeyPress}
                 className="h-12 text-center text-lg"
             />
             <Button size="lg" className="group w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-transform transform hover:scale-105" onClick={handleStart} disabled={!tempName.trim()}>
-                Comece Sua Jornada
+                {t('start_your_journey')}
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Button>
         </div>

@@ -1,6 +1,7 @@
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
+import { I18nProvider } from '@/hooks/use-i18n';
 
 export const metadata: Metadata = {
   title: 'The Wealth Map - Digital Planner',
@@ -29,8 +30,10 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="font-body antialiased">
-          {children}
-          <Toaster />
+          <I18nProvider>
+            {children}
+            <Toaster />
+          </I18nProvider>
       </body>
     </html>
   );

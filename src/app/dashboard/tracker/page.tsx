@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo } from 'react';
@@ -20,15 +21,18 @@ import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-
-const transactionSchema = z.object({
-  description: z.string().min(2, "Description must be at least 2 characters."),
-  amount: z.coerce.number().min(0.01, "Amount must be greater than 0."),
-  type: z.enum(["income", "expense"], { required_error: "You need to select a transaction type." }),
-  date: z.date({ required_error: "A date is required." }),
-});
+import { useI18n } from '@/hooks/use-i18n';
 
 export default function TrackerPage() {
+  const { t } = useI18n();
+
+  const transactionSchema = z.object({
+    description: z.string().min(2, t('description_error')),
+    amount: z.coerce.number().min(0.01, t('amount_error')),
+    type: z.enum(["income", "expense"], { required_error: t('transaction_type_error') }),
+    date: z.date({ required_error: t('date_error') }),
+  });
+
   const [transactions, setTransactions] = useLocalStorage<Transaction[]>('transactions', []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -74,36 +78,36 @@ export default function TrackerPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold font-headline">Rastreador Mensal</h1>
+        <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
         <div className="flex gap-2">
             <Button variant="outline" onClick={handleExport} disabled={transactions.length === 0}>
-                <Download className="mr-2 h-4 w-4" /> Exportar CSV
+                <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
             </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild><Button>Adicionar Transação</Button></DialogTrigger>
+              <DialogTrigger asChild><Button>{t('add_transaction')}</Button></DialogTrigger>
               <DialogContent>
-                <DialogHeader><DialogTitle>Adicionar Nova Transação</DialogTitle></DialogHeader>
+                <DialogHeader><DialogTitle>{t('add_new_transaction')}</DialogTitle></DialogHeader>
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                     <FormField control={form.control} name="description" render={({ field }) => (
-                      <FormItem><FormLabel>Descrição</FormLabel><FormControl><Input placeholder="Ex: Compras de supermercado" {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>{t('description')}</FormLabel><FormControl><Input placeholder={t('description_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="amount" render={({ field }) => (
-                      <FormItem><FormLabel>Valor (€)</FormLabel><FormControl><Input type="number" step="0.01" placeholder="55.75" {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>{t('amount')} (€)</FormLabel><FormControl><Input type="number" step="0.01" placeholder="55.75" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="type" render={({ field }) => (
-                      <FormItem className="space-y-3"><FormLabel>Tipo</FormLabel><FormControl>
+                      <FormItem className="space-y-3"><FormLabel>{t('type')}</FormLabel><FormControl>
                         <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex space-x-4">
-                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="income" /></FormControl><FormLabel className="font-normal">Rendimento</FormLabel></FormItem>
-                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="expense" /></FormControl><FormLabel className="font-normal">Despesa</FormLabel></FormItem>
+                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="income" /></FormControl><FormLabel className="font-normal">{t('income')}</FormLabel></FormItem>
+                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="expense" /></FormControl><FormLabel className="font-normal">{t('expense')}</FormLabel></FormItem>
                         </RadioGroup>
                       </FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="date" render={({ field }) => (
-                      <FormItem className="flex flex-col"><FormLabel>Data</FormLabel><Popover>
+                      <FormItem className="flex flex-col"><FormLabel>{t('date')}</FormLabel><Popover>
                         <PopoverTrigger asChild><FormControl>
                           <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                            {field.value ? (format(field.value, "PPP")) : (<span>Escolha uma data</span>)}
+                            {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
                             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                           </Button>
                         </FormControl></PopoverTrigger>
@@ -112,7 +116,7 @@ export default function TrackerPage() {
                         </PopoverContent>
                       </Popover><FormMessage /></FormItem>
                     )} />
-                    <DialogFooter><Button type="submit">Adicionar Transação</Button></DialogFooter>
+                    <DialogFooter><Button type="submit">{t('add_transaction')}</Button></DialogFooter>
                   </form>
                 </Form>
               </DialogContent>
@@ -121,19 +125,19 @@ export default function TrackerPage() {
       </div>
       
       <div className="grid gap-4 md:grid-cols-3">
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Rendimento Total</CardTitle><TrendingUp className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-green-600">€{totalIncome.toFixed(2)}</div></CardContent></Card>
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Despesas Totais</CardTitle><TrendingDown className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-red-600">€{totalExpenses.toFixed(2)}</div></CardContent></Card>
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">Saldo</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold">€{balance.toFixed(2)}</div></CardContent></Card>
+        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_income')}</CardTitle><TrendingUp className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-green-600">€{totalIncome.toFixed(2)}</div></CardContent></Card>
+        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_expenses')}</CardTitle><TrendingDown className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-red-600">€{totalExpenses.toFixed(2)}</div></CardContent></Card>
+        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('balance')}</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold">€{balance.toFixed(2)}</div></CardContent></Card>
       </div>
       
       <Card>
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Data</TableHead>
-                <TableHead>Descrição</TableHead>
-                <TableHead>Tipo</TableHead>
-                <TableHead className="text-right">Valor</TableHead>
+                <TableHead>{t('date')}</TableHead>
+                <TableHead>{t('description')}</TableHead>
+                <TableHead>{t('type')}</TableHead>
+                <TableHead className="text-right">{t('amount')}</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -145,7 +149,7 @@ export default function TrackerPage() {
                     <TableCell className="font-medium">{t.description}</TableCell>
                     <TableCell>
                       <span className={cn("px-2 py-1 rounded-full text-xs", t.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')}>
-                        {t.type === 'income' ? 'Rendimento' : 'Despesa'}
+                        {t.type === 'income' ? t('income') : t('expense')}
                       </span>
                     </TableCell>
                     <TableCell className={cn("text-right", t.type === 'income' ? 'text-green-600' : 'text-red-600')}>
@@ -160,7 +164,7 @@ export default function TrackerPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center">Ainda não há transações.</TableCell>
+                  <TableCell colSpan={5} className="h-24 text-center">{t('no_transactions_yet')}</TableCell>
                 </TableRow>
               )}
             </TableBody>

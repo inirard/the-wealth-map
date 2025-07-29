@@ -9,23 +9,26 @@ import type { Reflection } from '@/lib/types';
 import { Label } from '@/components/ui/label';
 import { cn } from "@/lib/utils";
 import { Button } from '@/components/ui/button';
-
-const reflectionPrompts = [
-    { id: 'wins', prompt: 'Quais foram as minhas vitórias financeiras este mês?' },
-    { id: 'challenges', prompt: 'Que desafios financeiros enfrentei?' },
-    { id: 'improvements', prompt: 'Que passo posso dar para melhorar no próximo mês?' },
-    { id: 'gratitude', prompt: 'Pelo que sou grato(a) na minha vida financeira?' },
-];
+import { useI18n } from '@/hooks/use-i18n';
 
 const emotionalStates = [
-    { emoji: '😃', label: 'Excelente' },
-    { emoji: '🙂', label: 'Bom' },
-    { emoji: '😐', label: 'Neutro' },
-    { emoji: '😟', label: 'Desafiador' },
-    { emoji: '😫', label: 'Difícil' },
+    { emoji: '😃', label: 'excellent' },
+    { emoji: '🙂', label: 'good' },
+    { emoji: '😐', label: 'neutral' },
+    { emoji: '😟', label: 'challenging' },
+    { emoji: '😫', label: 'difficult' },
 ];
 
 export default function ReflectionPage() {
+    const { t } = useI18n();
+
+    const reflectionPrompts = [
+        { id: 'wins', prompt: t('wins_prompt') },
+        { id: 'challenges', prompt: t('challenges_prompt') },
+        { id: 'improvements', prompt: t('improvements_prompt') },
+        { id: 'gratitude', prompt: t('gratitude_prompt') },
+    ];
+
     const [reflections, setReflections] = useLocalStorage<Reflection[]>(
         'reflections', 
         reflectionPrompts.map(p => ({ id: p.id, prompt: p.prompt, content: '' }))
@@ -42,14 +45,14 @@ export default function ReflectionPage() {
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold font-headline">Reflexão & Motivação</h1>
-                <p className="text-muted-foreground mt-2">Tire um tempo para refletir sobre a sua jornada. Reconhecer o seu progresso e os seus desafios é a chave para o crescimento.</p>
+                <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
+                <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
             </div>
 
              <Card>
                 <CardHeader>
-                    <CardTitle>Como se sentiu em relação às suas finanças este mês?</CardTitle>
-                    <CardDescription>Selecione o emoji que melhor representa o seu estado emocional.</CardDescription>
+                    <CardTitle>{t('how_did_you_feel')}</CardTitle>
+                    <CardDescription>{t('how_did_you_feel_desc')}</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <div className="flex flex-wrap gap-4">
@@ -64,7 +67,7 @@ export default function ReflectionPage() {
                                 onClick={() => setMood(state.emoji)}
                             >
                                 <span>{state.emoji}</span>
-                                <span className="text-sm font-normal">{state.label}</span>
+                                <span className="text-sm font-normal">{t(state.label)}</span>
                             </Button>
                         ))}
                     </div>
@@ -83,7 +86,7 @@ export default function ReflectionPage() {
                                 id={reflection.id}
                                 value={reflection.content}
                                 onChange={(e) => handleContentChange(reflection.id, e.target.value)}
-                                placeholder="Escreva aqui as suas reflexões..."
+                                placeholder={t('write_reflections_placeholder')}
                                 className="min-h-[150px] text-base"
                             />
                         </CardContent>
@@ -93,5 +96,3 @@ export default function ReflectionPage() {
         </div>
     );
 }
-
-    

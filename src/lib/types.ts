@@ -28,3 +28,6 @@ export interface Reflection {
   prompt: string;
   content: string;
 }
+
+export type Language = 'pt' | 'en' | 'es' | 'fr';
+

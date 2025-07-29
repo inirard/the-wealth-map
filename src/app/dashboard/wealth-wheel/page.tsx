@@ -11,15 +11,7 @@ import { PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, RadarChart } from "r
 import type { WealthWheelData } from '@/lib/types';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
-
-const defaultWheelData: WealthWheelData[] = [
-    { id: 'income', label: 'Rendimento', value: 5, description: "Salário, freelancers, rendas, etc." },
-    { id: 'savings', label: 'Poupança', value: 5, description: "Fundo de emergência, poupança para metas, etc." },
-    { id: 'investing', label: 'Investimento', value: 5, description: "Ações, fundos, imóveis, etc." },
-    { id: 'debt', label: 'Gestão de Dívidas', value: 5, description: "Crédito habitação, cartão de crédito, empréstimos, etc." },
-    { id: 'knowledge', label: 'Conhecimento Financeiro', value: 5, description: "Literacia sobre investimentos, impostos, planeamento, etc." },
-    { id: 'giving', label: 'Doação / Caridade', value: 5, description: "Contribuições para causas, voluntariado, etc." },
-];
+import { useI18n } from '@/hooks/use-i18n';
 
 const chartConfig = {
     value: {
@@ -29,6 +21,17 @@ const chartConfig = {
 };
 
 export default function WealthWheelPage() {
+    const { t } = useI18n();
+    
+    const defaultWheelData: WealthWheelData[] = [
+        { id: 'income', label: t('income'), value: 5, description: t('income_desc') },
+        { id: 'savings', label: t('savings'), value: 5, description: t('savings_desc') },
+        { id: 'investing', label: t('investing'), value: 5, description: t('investing_desc') },
+        { id: 'debt', label: t('debt_management'), value: 5, description: t('debt_management_desc') },
+        { id: 'knowledge', label: t('financial_knowledge'), value: 5, description: t('financial_knowledge_desc') },
+        { id: 'giving', label: t('giving'), value: 5, description: t('giving_desc') },
+    ];
+
     const [wheelData, setWheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', defaultWheelData);
 
     const handleSliderChange = (id: string, value: number[]) => {
@@ -41,14 +44,14 @@ export default function WealthWheelPage() {
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-bold font-headline">Avaliação da Roda da Riqueza</h1>
-                <p className="text-muted-foreground mt-2">Avalie a sua satisfação (1-10) em cada área para visualizar o seu equilíbrio financeiro.</p>
+                <h1 className="text-3xl font-bold font-headline">{t('wealth_wheel_assessment')}</h1>
+                <p className="text-muted-foreground mt-2">{t('wealth_wheel_assessment_desc')}</p>
             </div>
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
                 <Card className="lg:col-span-3">
                     <CardHeader>
-                        <CardTitle>A sua Roda da Riqueza</CardTitle>
+                        <CardTitle>{t('your_wealth_wheel')}</CardTitle>
                     </CardHeader>
                     <CardContent className="h-[400px]">
                         <ChartContainer config={chartConfig} className="w-full h-full">
@@ -68,8 +71,8 @@ export default function WealthWheelPage() {
 
                 <Card className="lg:col-span-2">
                     <CardHeader>
-                        <CardTitle>Avalie as Suas Áreas</CardTitle>
-                        <CardDescription>Ajuste os seletores para refletir a sua satisfação atual.</CardDescription>
+                        <CardTitle>{t('rate_your_areas')}</CardTitle>
+                        <CardDescription>{t('rate_your_areas_desc')}</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-6 pt-2">
                         <TooltipProvider>

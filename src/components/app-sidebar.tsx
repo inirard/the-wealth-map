@@ -1,9 +1,10 @@
+
 "use client";
 
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2 } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -14,6 +15,12 @@ import {
   SidebarMenuButton,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,22 +33,32 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useSidebar } from '@/components/ui/sidebar';
 import { useLocalStorage } from '@/hooks/use-local-storage';
+import { useI18n } from '@/hooks/use-i18n';
+import type { Language } from '@/lib/types';
 
-
-const navItems = [
-  { href: '/dashboard', icon: LayoutDashboard, label: 'Painel de Controlo' },
-  { href: '/dashboard/goals', icon: Target, label: 'Mapeamento de Metas' },
-  { href: '/dashboard/wealth-wheel', icon: Donut, label: 'Roda da Riqueza' },
-  { href: '/dashboard/tracker', icon: ListChecks, label: 'Rastreador Mensal' },
-  { href: '/dashboard/reflection', icon: BookOpen, label: 'Reflexão' },
-  { href: '/dashboard/quotes', icon: Quote, label: 'Afirmações' },
-];
 
 export default function AppSidebar() {
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
-  const [name, setName] = useLocalStorage('username', '');
+  const [, setName] = useLocalStorage('username', '');
+  const { t, language, setLanguage } = useI18n();
+
+  const navItems = [
+    { href: '/dashboard', icon: LayoutDashboard, label: t('dashboard') },
+    { href: '/dashboard/goals', icon: Target, label: t('goals_mapping') },
+    { href: '/dashboard/wealth-wheel', icon: Donut, label: t('wealth_wheel') },
+    { href: '/dashboard/tracker', icon: ListChecks, label: t('monthly_tracker') },
+    { href: '/dashboard/reflection', icon: BookOpen, label: t('reflection') },
+    { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
+  ];
+
+  const languages: { code: Language, name: string }[] = [
+    { code: 'pt', name: 'Português' },
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Español' },
+    { code: 'fr', name: 'Français' },
+  ];
 
   const handleResetData = () => {
     window.localStorage.clear();
@@ -77,29 +94,45 @@ export default function AppSidebar() {
             ))}
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter>
+        <SidebarFooter className="flex flex-col gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="w-full justify-start gap-2">
+                      <Languages/>
+                      <span className="group-data-[collapsible=icon]:hidden">{languages.find(l => l.code === language)?.name}</span>
+                  </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {languages.map(lang => (
+                    <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
+                        {lang.name}
+                    </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+
           <Button
             variant="ghost"
             className="w-full justify-start gap-2"
             onClick={() => setResetDialogOpen(true)}
           >
             <Trash2 />
-            <span className="group-data-[collapsible=icon]:hidden">Apagar Dados</span>
+            <span className="group-data-[collapsible=icon]:hidden">{t('delete_data')}</span>
           </Button>
         </SidebarFooter>
       </Sidebar>
       <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Tem a certeza absoluta?</AlertDialogTitle>
+            <AlertDialogTitle>{t('are_you_sure')}</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta ação não pode ser desfeita. Isto irá apagar permanentemente todos os seus dados deste navegador.
+                {t('delete_data_warning')}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleResetData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              Sim, apagar dados
+              {t('yes_delete_data')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

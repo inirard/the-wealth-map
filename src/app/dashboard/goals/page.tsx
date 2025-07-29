@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState } from 'react';
@@ -19,18 +20,21 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from "@/lib/utils";
-
-const goalSchema = z.object({
-  name: z.string().min(3, "O nome da meta deve ter pelo menos 3 caracteres."),
-  targetAmount: z.coerce.number().min(1, "O valor alvo deve ser maior que 0."),
-  currentAmount: z.coerce.number().min(0).optional(),
-  targetDate: z.date({
-    required_error: "A data alvo é obrigatória.",
-  }),
-  importance: z.string().min(10, "Descreva a importância em pelo menos 10 caracteres.").optional(),
-});
+import { useI18n } from '@/hooks/use-i18n';
 
 export default function GoalsPage() {
+  const { t } = useI18n();
+
+  const goalSchema = z.object({
+    name: z.string().min(3, t('goal_name_error')),
+    targetAmount: z.coerce.number().min(1, t('target_amount_error')),
+    currentAmount: z.coerce.number().min(0).optional(),
+    targetDate: z.date({
+      required_error: t('target_date_error'),
+    }),
+    importance: z.string().min(10, t('importance_error')).optional(),
+  });
+
   const [goals, setGoals] = useLocalStorage<Goal[]>('goals', []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -66,32 +70,32 @@ export default function GoalsPage() {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold font-headline">Mapeamento de Metas</h1>
+        <h1 className="text-3xl font-bold font-headline">{t('goals_mapping')}</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button>Adicionar Nova Meta</Button>
+            <Button>{t('add_new_goal')}</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>Criar uma Nova Meta Financeira</DialogTitle>
+              <DialogTitle>{t('create_new_goal')}</DialogTitle>
             </DialogHeader>
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                 <FormField control={form.control} name="name" render={({ field }) => (
-                  <FormItem><FormLabel>Nome da Meta</FormLabel><FormControl><Input placeholder="Ex: Poupar para a entrada da casa" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>{t('goal_name')}</FormLabel><FormControl><Input placeholder={t('goal_name_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="targetAmount" render={({ field }) => (
-                  <FormItem><FormLabel>Valor Alvo (€)</FormLabel><FormControl><Input type="number" placeholder="20000" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>{t('target_amount')}</FormLabel><FormControl><Input type="number" placeholder="20000" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="currentAmount" render={({ field }) => (
-                  <FormItem><FormLabel>Valor Atual (€)</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>{t('current_amount')}</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="targetDate" render={({ field }) => (
-                  <FormItem className="flex flex-col"><FormLabel>Data Alvo</FormLabel><Popover>
+                  <FormItem className="flex flex-col"><FormLabel>{t('target_date')}</FormLabel><Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
-                          {field.value ? (format(field.value, "PPP")) : (<span>Escolha uma data</span>)}
+                          {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -102,10 +106,10 @@ export default function GoalsPage() {
                   </Popover><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="importance" render={({ field }) => (
-                    <FormItem><FormLabel>Porque é que isto é importante para mim?</FormLabel><FormControl><Textarea placeholder="Ex: Para dar segurança à minha família..." {...field} /></FormControl><FormMessage /></FormItem>
+                    <FormItem><FormLabel>{t('why_is_it_important')}</FormLabel><FormControl><Textarea placeholder={t('importance_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <DialogFooter>
-                  <Button type="submit">Adicionar Meta</Button>
+                  <Button type="submit">{t('add_goal')}</Button>
                 </DialogFooter>
               </form>
             </Form>
@@ -132,18 +136,18 @@ export default function GoalsPage() {
                 </CardHeader>
                 <CardContent className="flex-grow space-y-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">Progresso</p>
+                    <p className="text-sm text-muted-foreground">{t('progress')}</p>
                     <p className="text-2xl font-bold">${goal.currentAmount.toLocaleString()} / <span className="text-lg font-medium text-muted-foreground">${goal.targetAmount.toLocaleString()}</span></p>
                   </div>
                   <Progress value={progress} />
                    {goal.importance && (
                     <div className="pt-2">
-                        <p className="text-sm font-semibold flex items-center gap-2"><Heart className="h-4 w-4 text-pink-500" /> A minha motivação</p>
+                        <p className="text-sm font-semibold flex items-center gap-2"><Heart className="h-4 w-4 text-pink-500" /> {t('my_motivation')}</p>
                         <p className="text-sm text-muted-foreground italic mt-1">"{goal.importance}"</p>
                     </div>
                    )}
                   <div>
-                    <p className="text-sm text-muted-foreground">Data Alvo</p>
+                    <p className="text-sm text-muted-foreground">{t('target_date')}</p>
                     <p className="font-medium">{format(new Date(goal.targetDate), "PPP")}</p>
                   </div>
                 </CardContent>
@@ -154,8 +158,8 @@ export default function GoalsPage() {
       ) : (
         <Card className="flex flex-col items-center justify-center p-12 text-center">
             <CardHeader>
-                <CardTitle>Ainda não há metas!</CardTitle>
-                <CardDescription>Comece a sua jornada adicionando a sua primeira meta financeira.</CardDescription>
+                <CardTitle>{t('no_goals_yet')}</CardTitle>
+                <CardDescription>{t('no_goals_yet_desc')}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Target className="h-16 w-16 text-muted-foreground" />

@@ -1,18 +1,26 @@
+
 "use client";
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
-import { quotes } from '@/lib/data';
+import { quotes as defaultQuotes } from '@/lib/data';
+import { useI18n } from '@/hooks/use-i18n';
 
 export default function QuotesPage() {
+    const { t } = useI18n();
+    const quotes = defaultQuotes.map(q => ({
+        quote: t(q.quote),
+        author: q.author
+    }));
+
     const [quote, setQuote] = useState({ quote: '', author: '' });
 
     const getNewQuote = useCallback(() => {
         const randomIndex = Math.floor(Math.random() * quotes.length);
         setQuote(quotes[randomIndex]);
-    }, []);
+    }, [quotes]);
 
     useEffect(() => {
         getNewQuote();
@@ -21,8 +29,8 @@ export default function QuotesPage() {
     return (
         <div className="flex flex-col items-center justify-center min-h-[70vh] text-center gap-8">
             <div>
-                <h1 className="text-3xl font-bold font-headline">Citações & Afirmações</h1>
-                <p className="text-muted-foreground mt-2">Encontre inspiração para impulsionar a sua jornada financeira.</p>
+                <h1 className="text-3xl font-bold font-headline">{t('quotes_affirmations')}</h1>
+                <p className="text-muted-foreground mt-2">{t('quotes_affirmations_desc')}</p>
             </div>
             
             <Card className="max-w-3xl w-full shadow-xl">
@@ -38,7 +46,7 @@ export default function QuotesPage() {
 
             <Button onClick={getNewQuote} size="lg">
                 <RefreshCw className="mr-2 h-4 w-4" />
-                Nova Citação
+                {t('new_quote')}
             </Button>
         </div>
     );
