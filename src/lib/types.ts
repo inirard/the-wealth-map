@@ -4,6 +4,7 @@ export interface Goal {
   targetAmount: number;
   currentAmount: number;
   targetDate: string;
+  importance: string;
 }
 
 export interface Transaction {
