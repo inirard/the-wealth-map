@@ -73,8 +73,8 @@ export default function DashboardPage() {
                     src="https://placehold.co/600x400.png"
                     alt="Financial planning illustration"
                     fill
-                    objectFit="cover"
-                    className="brightness-90"
+                    className="object-cover brightness-90"
+                    priority
                     data-ai-hint="financial planning"
                 />
             </div>

@@ -1,7 +1,11 @@
 import AppSidebar from "@/components/app-sidebar";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import type { Viewport } from 'next';
+import type { Viewport, Metadata } from 'next';
+
+export const metadata: Metadata = {
+  // O título pode ser definido aqui se for comum a todo o dashboard
+};
 
 export const viewport: Viewport = {
   themeColor: '#007C7C',
