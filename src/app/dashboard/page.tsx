@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -62,11 +61,16 @@ export default function DashboardPage() {
     <div className="flex flex-col gap-8">
       <Card>
         <div className="grid md:grid-cols-2 items-center">
-          <div className="p-8 md:p-10">
-            <h1 className="font-headline text-3xl font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
-              {t("welcome_user", { name })}
-            </h1>
-            <p className="mt-2 text-lg text-foreground/80">{t("dashboard_subtitle")}</p>
+          <div className="p-6 md:p-10">
+            <div className="flex items-center gap-2">
+              <h1 className="text-xl md:text-2xl font-semibold text-primary">
+                {t("welcome")}
+              </h1>
+              <span className="text-xl md:text-2xl font-semibold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+                {name}
+              </span>
+            </div>
+            <p className="mt-2 text-base text-foreground/80">{t("dashboard_subtitle")}</p>
             <div className="mt-6">
               <Link href="/dashboard/goals">
                 <Button size="lg" className="group hover:bg-primary/90">
@@ -78,8 +82,7 @@ export default function DashboardPage() {
           </div>
           <div className="p-4 flex items-center justify-center">
             <Image
-              src="https://placehold.co/400x300.png"
-              data-ai-hint="financial planning illustration"
+              src="/images/dashboardimage.png"
               alt="Dashboard Illustration"
               width={400}
               height={300}
