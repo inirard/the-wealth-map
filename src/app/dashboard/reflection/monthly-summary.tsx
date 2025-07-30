@@ -63,7 +63,7 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                             <TrendingUp className="h-6 w-6 text-green-600 flex-shrink-0" /> : 
                             <TrendingDown className="h-6 w-6 text-destructive flex-shrink-0" />
                         }
-                        <CardTitle className="text-base font-semibold whitespace-nowrap">{t('your_balance_this_month')}</CardTitle>
+                        <CardTitle className="text-base font-semibold">{t('your_balance_this_month')}</CardTitle>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -77,7 +77,9 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                  <CardHeader className="flex-grow">
                     <div className="flex items-start gap-2">
                         <Target className="h-6 w-6 text-primary flex-shrink-0" />
-                        <CardTitle className="text-base font-semibold">{t('next_goal_focus')}</CardTitle>
+                        <div>
+                            <CardTitle className="text-base font-semibold">{t('next_goal_focus')}</CardTitle>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -98,7 +100,9 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                  <CardHeader className="flex-grow">
                     <div className="flex items-start gap-2">
                         <Activity className="h-6 w-6 text-accent flex-shrink-0" />
-                        <CardTitle className="text-base font-semibold">{t('focus_area_title')}</CardTitle>
+                         <div>
+                            <CardTitle className="text-base font-semibold">{t('focus_area_title')}</CardTitle>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent>
