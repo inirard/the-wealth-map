@@ -53,29 +53,30 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-8">
-      <Card className="overflow-hidden">
-        <div className="grid md:grid-cols-2">
-          <div className="p-8 md:p-10 flex flex-col justify-center">
+      <Card>
+        <div className="grid md:grid-cols-2 items-center">
+          <div className="p-8 md:p-10">
             <h1 className="font-headline text-3xl md:text-4xl font-bold text-primary">
               {t("welcome_user", { name })}
             </h1>
             <p className="mt-2 text-lg text-foreground/80">{t("dashboard_subtitle")}</p>
             <div className="mt-6">
               <Link href="/dashboard/goals">
-                <Button size="lg" className="group">
+                <Button size="lg" className="group hover:bg-primary/90">
                   {t("set_first_goal")}
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
             </div>
           </div>
-          <div className="relative w-full h-[300px] md:h-[400px]">
+          <div className="p-4 flex items-center justify-center">
             <Image
               data-ai-hint="financial planning illustration"
               src="https://placehold.co/600x400.png"
               alt="Financial planning illustration"
-              fill
-              style={{ objectFit: "contain" }}
+              width={600}
+              height={400}
+              className="w-full max-w-[400px] h-auto rounded-lg"
               priority
             />
           </div>
