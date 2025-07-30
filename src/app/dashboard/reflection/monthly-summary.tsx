@@ -47,7 +47,7 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
   }
 
   return (
-    <Card className="bg-muted/30">
+    <Card>
         <CardHeader>
             <CardTitle className="flex items-center gap-2">
                 <Zap className="h-6 w-6 text-emphasis" />
@@ -63,7 +63,7 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                             <TrendingUp className="h-6 w-6 text-green-600 flex-shrink-0" /> : 
                             <TrendingDown className="h-6 w-6 text-destructive flex-shrink-0" />
                         }
-                        <CardTitle className="text-base font-semibold">{t('your_balance_this_month')}</CardTitle>
+                        <CardTitle className="text-base font-semibold whitespace-nowrap">{t('your_balance_this_month')}</CardTitle>
                     </div>
                 </CardHeader>
                 <CardContent>
