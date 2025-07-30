@@ -1,47 +1,68 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CircleDollarSign, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
-import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useI18n } from '@/hooks/use-i18n';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from '@/components/ui/label';
+import { auth } from '@/lib/firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { useToast } from '@/hooks/use-toast';
 
-export default function CoverPage() {
-  const [name, setName] = useLocalStorage('username', '');
-  const [tempName, setTempName] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+
+export default function AuthPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('login');
+
   const router = useRouter();
   const { t } = useI18n();
-
-  useEffect(() => {
-    // This check now runs only on the client, after the component has mounted.
-    if (name) {
-      router.push('/dashboard');
-    } else {
-      setIsLoading(false);
-    }
-  }, [name, router]);
+  const { toast } = useToast();
   
-  const handleStart = () => {
-    if (tempName.trim()) {
-      setName(tempName.trim());
-      // The useEffect will catch the name change and redirect.
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        router.push('/dashboard');
+    } catch (error: any) {
+        toast({
+            variant: "destructive",
+            title: "Login Failed",
+            description: error.message,
+        });
+    } finally {
+        setIsLoading(false);
     }
   };
   
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleStart();
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        if (userCredential.user) {
+            await updateProfile(userCredential.user, { displayName: name });
+        }
+        router.push('/dashboard');
+    } catch (error: any) {
+        toast({
+            variant: "destructive",
+            title: "Sign Up Failed",
+            description: error.message,
+        });
+    } finally {
+        setIsLoading(false);
     }
-  };
-
-  // While loading or if redirection is about to happen, render nothing to avoid flashes.
-  if (isLoading || name) {
-      return null;
   }
+
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
@@ -54,9 +75,9 @@ export default function CoverPage() {
       }}></div>
 
       <main className="relative z-10 flex w-full max-w-md flex-col items-center justify-center text-center">
-        <div className="mb-8 animate-pulse-slow">
+        <Link href="/" className="mb-8">
           <CircleDollarSign className="h-24 w-24 text-primary drop-shadow-lg" />
-        </div>
+        </Link>
         <h1 className="font-headline text-5xl font-bold tracking-tight text-primary md:text-7xl">
           The Wealth Map
         </h1>
@@ -64,20 +85,66 @@ export default function CoverPage() {
           {t('welcome_subtitle')}
         </p>
 
-        <div className="mt-10 w-full space-y-4">
-            <Input 
-                type="text" 
-                placeholder={t('what_is_your_name')}
-                value={tempName}
-                onChange={(e) => setTempName(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className="h-12 text-center text-lg"
-            />
-            <Button size="lg" className="group w-full bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg transition-transform transform hover:scale-105" onClick={handleStart} disabled={!tempName.trim()}>
-                {t('start_your_journey')}
-                <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Button>
-        </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-10">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="login">Login</TabsTrigger>
+            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+          </TabsList>
+          <TabsContent value="login">
+            <Card>
+              <CardHeader>
+                <CardTitle>Welcome Back</CardTitle>
+                <CardDescription>
+                  Sign in to continue your journey.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                 <form onSubmit={handleLogin} className="space-y-4 text-left">
+                    <div className="space-y-2">
+                        <Label htmlFor="login-email">Email</Label>
+                        <Input id="login-email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="login-password">Password</Label>
+                        <Input id="login-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? "Logging in..." : "Login"}
+                    </Button>
+                 </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="signup">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create an Account</CardTitle>
+                <CardDescription>
+                  Start your journey to financial freedom today.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                 <form onSubmit={handleSignUp} className="space-y-4 text-left">
+                     <div className="space-y-2">
+                        <Label htmlFor="signup-name">{t('what_is_your_name')}</Label>
+                        <Input id="signup-name" type="text" placeholder="John Doe" required value={name} onChange={(e) => setName(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="signup-email">Email</Label>
+                        <Input id="signup-email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="signup-password">Password</Label>
+                        <Input id="signup-password" type="password" placeholder="Must be 6+ characters" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                    </div>
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading ? "Creating Account..." : "Sign Up"}
+                    </Button>
+                 </form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
       </main>
       
       <footer className="absolute bottom-4 text-xs text-muted-foreground z-10">

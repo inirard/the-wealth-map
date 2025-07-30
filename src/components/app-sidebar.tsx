@@ -3,8 +3,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LogOut } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -33,16 +33,17 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useSidebar } from '@/components/ui/sidebar';
-import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
+import { auth } from '@/lib/firebase';
+import { signOut } from "firebase/auth";
 
 
 export default function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { setOpenMobile } = useSidebar();
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
-  const [, setName] = useLocalStorage('username', '');
   const { t, language, setLanguage } = useI18n();
   const [mounted, setMounted] = React.useState(false);
 
@@ -74,10 +75,17 @@ export default function AppSidebar() {
   ];
 
   const handleResetData = () => {
+    // This should be adapted to clear user data from Firestore in the future
     window.localStorage.clear();
-    setName('');
-    window.location.href = '/';
+    handleSignOut();
   };
+  
+  const handleSignOut = async () => {
+    await signOut(auth);
+    // Clear local storage for safety as well
+    window.localStorage.clear();
+    router.push('/');
+  }
 
   return (
     <>
@@ -140,9 +148,18 @@ export default function AppSidebar() {
               </DropdownMenuContent>
             </DropdownMenu>
 
+            <Button
+                variant="ghost"
+                className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground"
+                onClick={handleSignOut}
+              >
+                <LogOut />
+                <span className="group-data-[collapsible=icon]:hidden">{mounted ? 'Logout': 'Logout'}</span>
+              </Button>
+
           <Button
             variant="ghost"
-            className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground"
+            className="w-full justify-start gap-2 text-destructive hover:bg-destructive hover:text-destructive-foreground"
             onClick={() => setResetDialogOpen(true)}
           >
             <Trash2 />
