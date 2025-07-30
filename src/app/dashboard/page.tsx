@@ -1,10 +1,16 @@
-
 "use client";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Target, Donut, ListChecks, BookOpen, Quote, ArrowRight } from "lucide-react";
+import {
+  Target,
+  Donut,
+  ListChecks,
+  BookOpen,
+  Quote,
+  ArrowRight,
+} from "lucide-react";
 import Image from "next/image";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useI18n } from "@/hooks/use-i18n";
@@ -52,54 +58,66 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-8">
-      <Card>
+    <div className="flex flex-col gap-10 font-sans">
+      {/* Hero Section */}
+      <Card className="rounded-2xl shadow-sm border bg-white">
         <div className="grid md:grid-cols-2 items-center">
           <div className="p-8 md:p-10">
-            <h1 className="font-headline text-3xl md:text-4xl font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            <h1 className="text-3xl font-semibold font-headline text-primary whitespace-nowrap overflow-hidden text-ellipsis">
               {t("welcome_user", { name })}
             </h1>
-            <p className="mt-2 text-lg text-foreground/80">{t("dashboard_subtitle")}</p>
+            <p className="mt-2 text-muted-foreground text-base">{t("dashboard_subtitle")}</p>
             <div className="mt-6">
               <Link href="/dashboard/goals">
-                <Button size="lg" className="group hover:bg-primary/90">
+                <Button size="lg" className="group hover:bg-primary/90 rounded-xl">
                   {t("set_first_goal")}
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
             </div>
           </div>
-          <div className="p-4 flex items-center justify-center">
+          <div className="hidden md:flex items-center justify-center p-4">
             <Image
-              data-ai-hint="financial planning illustration"
               src="https://placehold.co/400x300.png"
               alt="Financial planning illustration"
+              data-ai-hint="financial planning illustration"
               width={400}
               height={300}
-              className="w-full max-w-[400px] h-auto rounded-lg"
+              className="w-full max-w-[400px] h-auto object-contain rounded-xl"
               priority
             />
           </div>
         </div>
       </Card>
 
+      {/* Feature Cards */}
       <div>
-        <h2 className="text-2xl font-bold font-headline mb-4">{t("your_toolkit")}</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <h2 className="text-2xl font-semibold font-headline mb-4 text-foreground">
+          {t("your_toolkit")}
+        </h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featureCards.map((feature) => (
-            <Card key={feature.title} className="hover:shadow-lg transition-shadow duration-300 flex flex-col">
-              <CardHeader className="flex-row items-center gap-4">
+            <Card
+              key={feature.title}
+              className="rounded-2xl shadow-sm border bg-card hover:shadow-md transition-shadow flex flex-col"
+            >
+              <CardHeader className="flex flex-row items-center gap-4">
                 <feature.icon className={`w-8 h-8 ${feature.color}`} />
                 <div>
-                  <CardTitle>{feature.title}</CardTitle>
+                  <CardTitle className="text-lg font-semibold">{feature.title}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow">
-                <p className="text-muted-foreground">{feature.description}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {feature.description}
+                </p>
               </CardContent>
               <div className="p-6 pt-0">
                 <Link href={feature.href}>
-                  <Button variant="outline" className="w-full hover:bg-primary hover:text-primary-foreground">
+                  <Button
+                    variant="outline"
+                    className="w-full rounded-xl hover:bg-primary hover:text-white"
+                  >
                     {t("open")}
                   </Button>
                 </Link>
