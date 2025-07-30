@@ -64,7 +64,7 @@ export default function DashboardPage() {
       <Card className="rounded-2xl shadow-sm border bg-white">
         <div className="grid md:grid-cols-2 items-center">
           <div className="p-8 md:p-10">
-            <h1 className="text-2xl font-semibold font-headline text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            <h1 className="text-xl font-semibold font-headline text-primary whitespace-nowrap overflow-hidden text-ellipsis">
               {t("welcome_user", { name })}
             </h1>
             <p className="mt-2 text-muted-foreground text-base">{t("dashboard_subtitle")}</p>
