@@ -39,7 +39,7 @@ export default function CoverPage() {
   }
 
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10"></div>
       <div className="pointer-events-none absolute inset-0 z-0" style={{
         backgroundImage: `
@@ -48,7 +48,7 @@ export default function CoverPage() {
         `
       }}></div>
 
-      <main className="relative z-10 flex w-full max-w-md flex-col items-center justify-center p-4 text-center">
+      <main className="relative z-10 flex w-full max-w-md flex-col items-center justify-center text-center">
         <div className="mb-8 animate-pulse-slow">
           <CircleDollarSign className="h-24 w-24 text-primary drop-shadow-lg" />
         </div>
@@ -74,6 +74,13 @@ export default function CoverPage() {
             </Button>
         </div>
       </main>
+      
+      <footer className="absolute bottom-4 text-xs text-muted-foreground z-10">
+        <div className="flex gap-4">
+          <Link href="/legal/terms" className="hover:text-primary">Terms of Service</Link>
+          <Link href="/legal/privacy" className="hover:text-primary">Privacy Policy</Link>
+        </div>
+      </footer>
     </div>
   );
 }
