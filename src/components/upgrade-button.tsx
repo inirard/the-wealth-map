@@ -91,7 +91,10 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
                             <CardTitle>{t('premium_plan')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <p className="text-3xl font-bold">€6.99 <span className="text-sm font-normal text-muted-foreground">/ {t('month')}</span></p>
+                            <div>
+                                <p className="text-3xl font-bold">€6.99 <span className="text-sm font-normal text-muted-foreground">/ {t('month')}</span></p>
+                                <p className="text-sm text-muted-foreground mt-1">{t('or')} <span className="font-semibold text-primary">€59 / {t('year')}</span></p>
+                            </div>
                              <ul className="space-y-2">
                                 {premiumFeatures.map((feature, i) => (
                                     <li key={i} className="flex items-start gap-3">
@@ -101,9 +104,12 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
                                 ))}
                             </ul>
                         </CardContent>
-                        <CardFooter>
-                            <Button onClick={() => setPlan('premium')} className="w-full bg-primary hover:bg-primary/90">
-                                {t('choose_premium')}
+                        <CardFooter className="flex-col items-stretch gap-4">
+                             <Button onClick={() => setPlan('premium')} className="w-full bg-primary hover:bg-primary/90">
+                                {t('choose_premium_monthly')}
+                            </Button>
+                             <Button onClick={() => setPlan('premium')} className="w-full bg-primary/90 hover:bg-primary/80">
+                                {t('choose_premium_annually')} ({t('save_percent', { percent: 30 })})
                             </Button>
                         </CardFooter>
                     </Card>
