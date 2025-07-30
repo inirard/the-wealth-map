@@ -182,5 +182,6 @@
   "upgrade_for_ai_coach": "Passez à Premium pour obtenir des analyses personnalisées du Coach IA.",
   "profile_and_settings": "Profil et Paramètres",
   "current_plan": "Plan Actuel",
-  "upgrade_for_csv_export": "Passez à Premium pour exporter vos données de suivi en CSV."
+  "upgrade_for_csv_export": "Passez à Premium pour exporter vos données de suivi en CSV.",
+  "manage_plan": "Gérer le Plan"
 }

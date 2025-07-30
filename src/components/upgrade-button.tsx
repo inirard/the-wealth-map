@@ -15,8 +15,6 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
     const { plan, setPlan } = usePlan();
     const { t } = useI18n();
 
-    if (plan === 'premium' && !asChild) return null;
-
     const basicFeatures = [
         t('basic_feature_1'),
         t('basic_feature_2'),
@@ -38,7 +36,7 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
     ) : (
         <>
             <Crown className="mr-2 h-4 w-4" />
-            {t('upgrade_to_premium')}
+            {plan === 'premium' ? t('manage_plan') : t('upgrade_to_premium')}
         </>
     );
 

@@ -182,5 +182,6 @@
   "upgrade_for_ai_coach": "Upgrade to Premium to get personalized insights from the AI Coach.",
   "profile_and_settings": "Profile & Settings",
   "current_plan": "Current Plan",
-  "upgrade_for_csv_export": "Upgrade to Premium to export your tracker data as a CSV."
+  "upgrade_for_csv_export": "Upgrade to Premium to export your tracker data as a CSV.",
+  "manage_plan": "Manage Plan"
 }

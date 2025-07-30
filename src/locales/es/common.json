@@ -182,5 +182,6 @@
   "upgrade_for_ai_coach": "Actualiza a Premium para obtener ideas personalizadas del Coach de IA.",
   "profile_and_settings": "Perfil y Configuración",
   "current_plan": "Plan Actual",
-  "upgrade_for_csv_export": "Actualiza a Premium para exportar tus datos del rastreador como CSV."
+  "upgrade_for_csv_export": "Actualiza a Premium para exportar tus datos del rastreador como CSV.",
+  "manage_plan": "Gestionar Plan"
 }
