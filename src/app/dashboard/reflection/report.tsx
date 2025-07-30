@@ -90,7 +90,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 </section>
 
                 {/* AI Coach Insights */}
-                {aiInsight && (
+                {aiInsight && aiInsight.analysis && (
                     <section>
                         <Card className="bg-primary/5 border-primary">
                             <CardHeader>
