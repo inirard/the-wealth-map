@@ -91,9 +91,10 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
                             <CardTitle>{t('premium_plan')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div>
-                                <p className="text-3xl font-bold">€6.99 <span className="text-sm font-normal text-muted-foreground">/ {t('month')}</span></p>
-                                <p className="text-sm text-muted-foreground mt-1">{t('or')} <span className="font-semibold text-primary">€59 / {t('year')}</span></p>
+                            <div className="text-3xl font-bold">
+                                €6.99 <span className="text-sm font-normal text-muted-foreground">/ {t('month')}</span>
+                                <span className="text-lg font-normal text-muted-foreground mx-2">{t('or')}</span>
+                                €59 <span className="text-sm font-normal text-muted-foreground">/ {t('year')}</span>
                             </div>
                              <ul className="space-y-2">
                                 {premiumFeatures.map((feature, i) => (
