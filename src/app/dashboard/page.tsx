@@ -63,7 +63,7 @@ export default function DashboardPage() {
       <Card>
         <div className="grid md:grid-cols-2 items-center">
           <div className="p-8 md:p-10">
-            <h1 className="font-headline text-3xl font-bold text-primary">
+            <h1 className="font-headline text-3xl font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
               {t("welcome_user", { name })}
             </h1>
             <p className="mt-2 text-lg text-foreground/80">{t("dashboard_subtitle")}</p>
@@ -79,12 +79,12 @@ export default function DashboardPage() {
           <div className="p-4 flex items-center justify-center">
             <Image
               src="https://placehold.co/400x300.png"
+              data-ai-hint="financial planning illustration"
               alt="Dashboard Illustration"
               width={400}
               height={300}
               className="w-full max-w-[400px] h-auto rounded-lg"
               priority
-              data-ai-hint="financial planning illustration"
             />
           </div>
         </div>
