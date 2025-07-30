@@ -1,10 +1,12 @@
-'use client';
 
-import { initializeApp, getApp, getApps } from 'firebase/app';
+// Import the functions you need from the SDKs you need
+import { initializeApp, getApp, getApps } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Configuração da sua aplicação web no Firebase
+// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBbPGASGp4pjtC54zWJSevwjsKvDuWTlys",
+  apiKey: "AIzaSyDDFTYgevul6NNNjdMsSwFslHp5Evz2cTs",
   authDomain: "the-wealth-map.firebaseapp.com",
   projectId: "the-wealth-map",
   storageBucket: "the-wealth-map.appspot.com",
@@ -13,8 +15,5 @@ const firebaseConfig = {
   measurementId: "G-PQYX7YD59E"
 };
 
-
-// Inicializar a Firebase App de forma segura (evita reinicialização)
-const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-
-export { app };
+// Initialize Firebase
+const app = !getApps().length ?

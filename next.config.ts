@@ -1,4 +1,3 @@
-
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -21,8 +20,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    allowedDevOrigins: ["*.cloudworkstations.dev", "*.app.github.dev"],
+  async rewrites() {
+    return [
+      {
+        source: '/_next/:path*',
+        destination: 'http://localhost:3000/_next/:path*',
+      },
+    ];
   },
 };
 
