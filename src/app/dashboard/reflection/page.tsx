@@ -58,30 +58,43 @@ export default function ReflectionPage() {
         if (!reportElement) return;
 
         setIsDownloading(true);
-        
+
         try {
-            // Temporarily make the report visible for rendering
-            reportElement.parentElement!.style.display = 'block';
-            reportElement.parentElement!.style.opacity = '0';
-            
             const canvas = await html2canvas(reportElement, {
-                scale: 2, // Improves resolution
+                scale: 2, 
                 useCORS: true,
                 backgroundColor: '#ffffff',
+                windowWidth: reportElement.scrollWidth,
+                windowHeight: reportElement.scrollHeight,
             });
-            
-            // Hide the report again
-            reportElement.parentElement!.style.display = '';
-            reportElement.parentElement!.style.opacity = '';
 
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF({
                 orientation: 'portrait',
-                unit: 'px',
-                format: [canvas.width, canvas.height]
+                unit: 'pt',
+                format: 'a4'
             });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            const ratio = canvasWidth / pdfWidth;
+            const imgHeight = canvasHeight / ratio;
+
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+            heightLeft -= pdfHeight;
+
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+                heightLeft -= pdfHeight;
+            }
             
-            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
             pdf.save(`financial-report-${new Date().toISOString().split('T')[0]}.pdf`);
 
         } catch (error) {
@@ -267,7 +280,7 @@ export default function ReflectionPage() {
                 </Card>
             </div>
             
-            <div style={{ display: 'none' }}>
+            <div className="fixed -left-[9999px] top-0">
                  <FinancialReport 
                     ref={reportRef}
                     data={{
@@ -284,3 +297,5 @@ export default function ReflectionPage() {
         </div>
     );
 }
+
+    
