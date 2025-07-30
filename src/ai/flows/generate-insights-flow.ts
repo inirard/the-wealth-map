@@ -39,6 +39,16 @@ const prompt = ai.definePrompt({
   `,
 });
 
+// Function to extract retry delay from the error message
+const getRetryDelay = (errorMessage: string): number | null => {
+    const match = errorMessage.match(/"retryDelay":"(\d+(\.\d+)?)s"/);
+    if (match && match[1]) {
+        return Math.ceil(parseFloat(match[1])) * 1000; // Convert to ms and round up
+    }
+    return null;
+};
+
+
 const generateInsightsFlow = ai.defineFlow(
   {
     name: 'generateInsightsFlow',
@@ -52,12 +62,25 @@ const generateInsightsFlow = ai.defineFlow(
         const {output} = await prompt(input);
         return output!;
       } catch (e: any) {
-        if (i === maxRetries - 1) { // If it's the last retry, throw the error
+         if (i === maxRetries - 1) { // If it's the last retry, throw the error
           console.error(`Final attempt failed: ${e.message}`);
           throw e;
         }
-        const delay = 1000 * (2 ** i); // Exponential backoff: 1s, 2s, 4s
-        console.warn(`Attempt ${i + 1} failed, retrying in ${delay}ms... Error: ${e.message}`);
+
+        const errorMessage = e.message || '';
+        let delay: number;
+
+        if (e.status === 429) {
+            const retryDelay = getRetryDelay(errorMessage);
+            // Use suggested delay if available, otherwise use exponential backoff
+            delay = retryDelay !== null ? retryDelay : 1000 * (2 ** i);
+            console.warn(`Attempt ${i + 1} failed with 429 status. Retrying in ${delay}ms...`);
+        } else {
+            // Use exponential backoff for other errors
+            delay = 1000 * (2 ** i);
+            console.warn(`Attempt ${i + 1} failed, retrying in ${delay}ms... Error: ${errorMessage}`);
+        }
+        
         await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
