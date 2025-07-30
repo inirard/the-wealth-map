@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { createContext, useContext, ReactNode, useCallback } from 'react';
+import React, { createContext, useContext, ReactNode, useCallback, useState, useEffect } from 'react';
 import { useLocalStorage } from './use-local-storage';
 import type { Language } from '@/lib/types';
 
@@ -26,12 +26,16 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export const I18nProvider = ({ children }: { children: ReactNode }) => {
-  // O 'en' aqui é o valor inicial usado para SSR e a primeira renderização do cliente.
-  // O useLocalStorage irá então, no cliente, atualizar para o valor guardado.
   const [language, setLanguage] = useLocalStorage<Language>('language', 'en');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
-    const langTranslations = translations[language] || translations.en;
+    const effectiveLanguage = isMounted ? language : 'en';
+    const langTranslations = translations[effectiveLanguage] || translations.en;
     let text = langTranslations[key] || key;
     if (params) {
       Object.keys(params).forEach(pKey => {
@@ -39,7 +43,7 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
       });
     }
     return text;
-  }, [language]);
+  }, [language, isMounted]);
 
   const contextValue = {
       language,
