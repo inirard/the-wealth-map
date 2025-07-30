@@ -120,5 +120,8 @@
   "ai_coach_loading": "A analisar...",
   "ai_error_title": "Falha na Análise de IA",
   "ai_error_description": "Não foi possível gerar os insights. Por favor, verifique a sua ligação à internet e tente novamente.",
-  "ai_coach_disabled_tooltip": "Por favor, preencha pelo menos um campo de reflexão para ativar a análise de IA."
+  "ai_coach_disabled_tooltip": "Por favor, preencha pelo menos um campo de reflexão para ativar a análise de IA.",
+  "open_chatbot": "Abrir Chatbot",
+  "chatbot_welcome": "Olá! Sou o seu coach financeiro. Como posso ajudá-lo hoje?",
+  "chatbot_placeholder": "Pergunte sobre as suas finanças..."
 }

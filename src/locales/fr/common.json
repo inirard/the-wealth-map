@@ -10,7 +10,7 @@
   "reflection": "Réflexion",
   "affirmations": "Affirmations",
   "delete_data": "Supprimer les Données",
-  "are_you_sure": "Êtes-vous absolument sûr ?",
+  "are_you_sure": "Êtes-vous absolutely sûr ?",
   "delete_data_warning": "Cette action est irréversible. Cela supprimera définitivement toutes vos données de ce navigateur.",
   "cancel": "Annuler",
   "yes_delete_data": "Oui, supprimer les données",
@@ -120,5 +120,8 @@
   "ai_coach_loading": "Analyse en cours...",
   "ai_error_title": "L'Analyse IA a Échoué",
   "ai_error_description": "Impossible de générer les perspectives. Veuillez vérifier votre connexion Internet et réessayer.",
-  "ai_coach_disabled_tooltip": "Veuillez remplir au moins un champ de réflexion pour activer l'analyse IA."
+  "ai_coach_disabled_tooltip": "Veuillez remplir au moins un champ de réflexion pour activer l'analyse IA.",
+  "open_chatbot": "Ouvrir le Chatbot",
+  "chatbot_welcome": "Bonjour ! Je suis votre coach financier. Comment puis-je vous aider aujourd'hui ?",
+  "chatbot_placeholder": "Posez une question sur vos finances..."
 }

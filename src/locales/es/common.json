@@ -120,5 +120,8 @@
   "ai_coach_loading": "Analizando...",
   "ai_error_title": "Falló el Análisis de IA",
   "ai_error_description": "No se pudieron generar las ideas. Por favor, revisa tu conexión a internet e inténtalo de nuevo.",
-  "ai_coach_disabled_tooltip": "Por favor, rellena al menos un campo de reflexión para habilitar el análisis de IA."
+  "ai_coach_disabled_tooltip": "Por favor, rellena al menos un campo de reflexión para habilitar el análisis de IA.",
+  "open_chatbot": "Abrir Chatbot",
+  "chatbot_welcome": "¡Hola! Soy tu asesor financiero. ¿En qué puedo ayudarte hoy?",
+  "chatbot_placeholder": "Pregunta sobre tus finanzas..."
 }

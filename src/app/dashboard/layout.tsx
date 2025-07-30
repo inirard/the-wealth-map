@@ -1,5 +1,6 @@
 
 import AppSidebar from "@/components/app-sidebar";
+import Chatbot from "@/components/chatbot";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import type { Viewport, Metadata } from 'next';
@@ -28,6 +29,7 @@ export default function DashboardLayout({
             {children}
         </div>
       </SidebarInset>
+      <Chatbot />
     </SidebarProvider>
   );
 }

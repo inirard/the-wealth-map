@@ -17,5 +17,6 @@ export default defineConfig({
   enableFlowLogs: true,
   flows: [
     './src/ai/flows/generate-insights-flow.ts',
+    './src/ai/flows/chat-flow.ts',
   ],
 });
