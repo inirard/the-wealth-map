@@ -206,11 +206,9 @@ export default function ReflectionPage() {
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <span>
-                                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
-                                        {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
-                                    </Button>
-                                </span>
+                                <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
+                                    {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
+                                </Button>
                             </TooltipTrigger>
                             {!canGenerate && (
                                 <TooltipContent>
@@ -239,3 +237,5 @@ export default function ReflectionPage() {
         </div>
     );
 }
+
+    
