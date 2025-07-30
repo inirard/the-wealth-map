@@ -83,7 +83,7 @@ export default function Chatbot() {
 
     return (
         <div className="relative">
-            <Button variant="ghost" size="icon" className="hover:text-primary" onClick={() => setIsOpen(true)}>
+            <Button variant="ghost" size="icon" className="text-primary hover:text-primary/90" onClick={() => setIsOpen(true)}>
                 <Bot className="h-6 w-6" />
                 <span className="sr-only">{t('open_chatbot')}</span>
             </Button>
