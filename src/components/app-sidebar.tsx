@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, Crown } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -36,7 +36,6 @@ import { useSidebar } from '@/components/ui/sidebar';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
-import UpgradeButton from './upgrade-button';
 
 
 export default function AppSidebar() {
@@ -90,9 +89,6 @@ export default function AppSidebar() {
           </Link>
         </SidebarHeader>
         <SidebarContent>
-           <div className="mb-4 px-1 group-data-[collapsible=icon]:hidden">
-             <UpgradeButton />
-           </div>
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>

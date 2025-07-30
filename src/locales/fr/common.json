@@ -179,5 +179,7 @@
   "upgrade_for_unlimited_goals": "Vous avez atteint la limite de {{limit}} objectifs du plan Basique. Passez à Premium pour créer des objectifs illimités !",
   "upgrade_for_unlimited_transactions": "Vous avez atteint la limite de {{limit}} transactions du plan Basique. Passez à Premium pour suivre des transactions illimitées !",
   "upgrade_for_pdf_export": "Passez à Premium pour exporter votre rapport financier en PDF.",
-  "upgrade_for_ai_coach": "Passez à Premium pour obtenir des analyses personnalisées du Coach IA."
+  "upgrade_for_ai_coach": "Passez à Premium pour obtenir des analyses personnalisées du Coach IA.",
+  "profile_and_settings": "Profil et Paramètres",
+  "current_plan": "Plan Actuel"
 }

@@ -179,5 +179,7 @@
   "upgrade_for_unlimited_goals": "You have reached the limit of {{limit}} goals for the Basic plan. Upgrade to create unlimited goals!",
   "upgrade_for_unlimited_transactions": "You have reached the limit of {{limit}} transactions for the Basic plan. Upgrade to track unlimited transactions!",
   "upgrade_for_pdf_export": "Upgrade to Premium to export your financial report as a PDF.",
-  "upgrade_for_ai_coach": "Upgrade to Premium to get personalized insights from the AI Coach."
+  "upgrade_for_ai_coach": "Upgrade to Premium to get personalized insights from the AI Coach.",
+  "profile_and_settings": "Profile & Settings",
+  "current_plan": "Current Plan"
 }

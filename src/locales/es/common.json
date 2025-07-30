@@ -179,5 +179,7 @@
   "upgrade_for_unlimited_goals": "Has alcanzado el límite de {{limit}} metas para el plan Básico. ¡Actualiza para crear metas ilimitadas!",
   "upgrade_for_unlimited_transactions": "Has alcanzado el límite de {{limit}} transacciones para el plan Básico. ¡Actualiza para registrar transacciones ilimitadas!",
   "upgrade_for_pdf_export": "Actualiza a Premium para exportar tu informe financiero como PDF.",
-  "upgrade_for_ai_coach": "Actualiza a Premium para obtener ideas personalizadas del Coach de IA."
+  "upgrade_for_ai_coach": "Actualiza a Premium para obtener ideas personalizadas del Coach de IA.",
+  "profile_and_settings": "Perfil y Configuración",
+  "current_plan": "Plan Actual"
 }
