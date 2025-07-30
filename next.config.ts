@@ -1,3 +1,4 @@
+
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
@@ -19,6 +20,9 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
+  },
+  devIndicators: {
+    allowedDevOrigins: ["*.cloudworkstations.dev", "*.app.github.dev"],
   },
 };
 
