@@ -26,7 +26,7 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export const I18nProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useLocalStorage<Language>('language', 'pt');
+  const [language, setLanguage] = useLocalStorage<Language>('language', 'en');
   
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
     const langTranslations = translations[language] || translations.en;
