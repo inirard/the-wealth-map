@@ -59,7 +59,7 @@ export default function ReflectionPage() {
 
     const handleDownloadPdf = async () => {
         const reportElement = reportRef.current;
-        if (!reportElement) return;
+        if (!reportElement || plan === 'basic') return;
 
         setIsDownloading(true);
 
@@ -186,6 +186,36 @@ export default function ReflectionPage() {
             </div>
         );
     }
+    
+    const renderDownloadButton = () => {
+        const isDisabled = !hasDataToReport || isDownloading || plan === 'basic';
+        
+        const button = (
+             <Button onClick={handleDownloadPdf} disabled={isDisabled}>
+                <Download className="mr-2 h-4 w-4" />
+                {isDownloading ? t('downloading') : t('download_pdf')}
+            </Button>
+        );
+
+        if (plan === 'basic') {
+            return (
+                <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            {/* The disabled button needs a wrapper for the tooltip to work */}
+                            <div className="inline-block">
+                               {button}
+                            </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                            <p>{t('upgrade_for_pdf_export')}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
+            );
+        }
+        return button;
+    };
 
     return (
         <div className="space-y-6">
@@ -194,23 +224,7 @@ export default function ReflectionPage() {
                     <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
                     <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
                 </div>
-                {plan === 'basic' ? (
-                     <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <UpgradeButton iconOnly />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>{t('upgrade_for_pdf_export')}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                ) : (
-                    <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading}>
-                        <Download className="mr-2 h-4 w-4" />
-                        {isDownloading ? t('downloading') : t('download_pdf')}
-                    </Button>
-                )}
+                {renderDownloadButton()}
             </div>
 
             <div>
@@ -299,20 +313,11 @@ export default function ReflectionPage() {
                     </CardContent>
                     <CardFooter>
                          {plan === 'basic' ? (
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <div className='flex items-center gap-2 text-sm text-muted-foreground'>
-                                            <Lock className="h-4 w-4" />
-                                            <span>{t('premium_feature')}</span>
-                                            <UpgradeButton size="sm" />
-                                        </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>{t('upgrade_for_ai_coach')}</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                            <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                                <Lock className="h-4 w-4" />
+                                <span>{t('premium_feature')}</span>
+                                <UpgradeButton size="sm" />
+                            </div>
                         ) : (
                             <TooltipProvider>
                                 <Tooltip>

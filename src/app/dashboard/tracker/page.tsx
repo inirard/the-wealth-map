@@ -92,38 +92,48 @@ export default function TrackerPage() {
   }, [transactions]);
   
   const handleExport = useCallback(() => {
+    if(plan === 'basic') return;
     const dataToExport = transactions.map(transaction => ({
         ...transaction, 
         date: format(new Date(transaction.date), "yyyy-MM-dd"),
         type: transaction.type === 'income' ? t('income') : t('expense')
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
-  }, [transactions, t]);
+  }, [transactions, t, plan]);
 
   const atTransactionLimit = plan === 'basic' && transactions.length >= transactionLimit;
+
+  const renderExportButton = () => {
+    const isDisabled = transactions.length === 0 || plan === 'basic';
+    const button = (
+        <Button variant="outline" onClick={handleExport} disabled={isDisabled} className="hover:bg-primary hover:text-primary-foreground">
+            <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
+        </Button>
+    );
+
+     if (plan === 'basic') {
+        return (
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <div className="inline-block">{button}</div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                        <p>{t('upgrade_for_csv_export')}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        );
+    }
+    return button;
+  }
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
         <div className="flex gap-2">
-            {plan === 'basic' ? (
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <UpgradeButton iconOnly />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t('upgrade_for_csv_export')}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ) : (
-              <Button variant="outline" onClick={handleExport} disabled={transactions.length === 0} className="hover:bg-primary hover:text-primary-foreground">
-                  <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
-              </Button>
-            )}
-
+            {renderExportButton()}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild><Button disabled={atTransactionLimit}>{t('add_transaction')}</Button></DialogTrigger>
               <DialogContent>

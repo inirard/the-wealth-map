@@ -9,12 +9,13 @@ import { Check, Crown, X } from 'lucide-react';
 import { usePlan } from '@/hooks/use-plan';
 import { useI18n } from '@/hooks/use-i18n';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
+import { cn } from '@/lib/utils';
 
 export default function UpgradeButton({ asChild = false, fullWidth = false, size = 'default', iconOnly = false }: { asChild?: boolean, fullWidth?: boolean, size?: 'sm' | 'default' | 'lg' | 'icon' | null | undefined, iconOnly?: boolean}) {
     const { plan, setPlan } = usePlan();
     const { t } = useI18n();
 
-    if (plan === 'premium') return null;
+    if (plan === 'premium' && !asChild) return null;
 
     const basicFeatures = [
         t('basic_feature_1'),
@@ -33,7 +34,7 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
     ];
 
     const buttonContent = iconOnly ? (
-        <Crown className="h-4 w-4" />
+        <Crown className="h-6 w-6 text-primary" />
     ) : (
         <>
             <Crown className="mr-2 h-4 w-4" />
@@ -43,9 +44,13 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
 
     const triggerButton = (
         <Button 
-            className={`bg-gradient-to-r from-emphasis to-primary/80 text-white shadow-lg hover:scale-105 transition-transform ${fullWidth ? 'w-full' : ''}`} 
-            size={iconOnly ? 'icon' : size} 
+            variant={iconOnly ? "ghost" : "default"}
+            size={iconOnly ? "icon" : size} 
             asChild={asChild}
+            className={cn(
+                iconOnly ? 'text-primary hover:text-primary/90' : 'bg-gradient-to-r from-emphasis to-primary/80 text-white shadow-lg hover:scale-105 transition-transform',
+                fullWidth ? 'w-full' : ''
+            )}
         >
             {asChild ? <span>{buttonContent}</span> : buttonContent}
         </Button>
@@ -61,7 +66,7 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
                         </DialogTrigger>
                     </TooltipTrigger>
                     {iconOnly && (
-                        <TooltipContent>
+                         <TooltipContent>
                             <p>{t('upgrade_to_premium')}</p>
                         </TooltipContent>
                     )}
@@ -110,7 +115,7 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
                             <CardTitle>{t('premium_plan')}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <div className="text-3xl font-bold">
+                             <div className="text-3xl font-bold">
                                 €6.99 <span className="text-sm font-normal text-muted-foreground">/ {t('month')}</span>
                                 <span className="text-lg font-normal text-muted-foreground mx-2">{t('or')}</span>
                                 €59 <span className="text-sm font-normal text-muted-foreground">/ {t('year')}</span>

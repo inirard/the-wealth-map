@@ -55,9 +55,10 @@ export default function UserProfile() {
                     <div className="flex justify-between items-center w-full">
                        <span className="font-medium">{t('current_plan')}</span>
                        <span className={cn(
-                           "font-semibold",
+                           "font-semibold flex items-center gap-1.5",
                            plan === 'premium' ? 'text-primary' : 'text-muted-foreground'
                         )}>
+                            {plan === 'premium' && <Crown className="h-4 w-4" />}
                            {plan === 'premium' ? t('premium_plan') : t('basic_plan')}
                        </span>
                     </div>
