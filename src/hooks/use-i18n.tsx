@@ -35,7 +35,6 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
     // Use 'en' on the server and during initial client render to prevent hydration mismatch.
-    // Use the user's chosen language only after the component has mounted.
     const effectiveLanguage = isMounted ? language : 'en';
     const langTranslations = translations[effectiveLanguage] || translations.en;
     let text = langTranslations[key] || key;

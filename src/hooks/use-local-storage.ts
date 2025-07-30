@@ -24,13 +24,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T
 
   const setValue: SetValue<T> = useCallback(
     (value) => {
-      if (typeof window === 'undefined') {
-        console.warn(
-          `Tried to set localStorage key “${key}” even though no window was found.`,
-        );
-        return;
-      }
-
+      // Este código só será executado no cliente, onde `window` está disponível.
       try {
         // Permite que o novo valor seja uma função do valor antigo
         const newValue = value instanceof Function ? value(storedValue) : value;
