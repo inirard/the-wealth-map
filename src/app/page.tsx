@@ -77,8 +77,8 @@ export default function CoverPage() {
       
       <footer className="absolute bottom-4 text-xs text-muted-foreground z-10">
         <div className="flex gap-4">
-          <Link href="/legal/terms" className="hover:text-primary">Terms of Service</Link>
-          <Link href="/legal/privacy" className="hover:text-primary">Privacy Policy</Link>
+          <Link href="/legal/terms" className="hover:text-primary">{t('terms_of_service')}</Link>
+          <Link href="/legal/privacy" className="hover:text-primary">{t('privacy_policy')}</Link>
         </div>
       </footer>
     </div>

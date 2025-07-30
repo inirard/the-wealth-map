@@ -132,5 +132,7 @@
   "financial_summary_title": "Financial Summary",
   "final_balance": "Final Balance",
   "goals_progress_title": "Goals Progress",
-  "transactions_title": "Transactions Detail"
+  "transactions_title": "Transactions Detail",
+  "terms_of_service": "Terms of Service",
+  "privacy_policy": "Privacy Policy"
 }

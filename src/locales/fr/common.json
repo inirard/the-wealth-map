@@ -132,5 +132,7 @@
   "financial_summary_title": "Résumé Financier",
   "final_balance": "Solde Final",
   "goals_progress_title": "Progression des Objectifs",
-  "transactions_title": "Détail des Transactions"
+  "transactions_title": "Détail des Transactions",
+  "terms_of_service": "Conditions d'Utilisation",
+  "privacy_policy": "Politique de Confidentialité"
 }
