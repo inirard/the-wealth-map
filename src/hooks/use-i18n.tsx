@@ -41,7 +41,7 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
     let text = langTranslations[key] || key;
     if (params) {
       Object.keys(params).forEach(pKey => {
-        text = text.replace(`{{${pKey}}}`, String(params[pKey]));
+        text = text.replace(new RegExp(`{{${pKey}}}`, 'g'), String(params[pKey]));
       });
     }
     return text;
