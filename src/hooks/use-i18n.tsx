@@ -27,16 +27,21 @@ const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export const I18nProvider = ({ children }: { children: ReactNode }) => {
   const [lsLanguage, setLsLanguage] = useLocalStorage<Language>('language', 'en');
-  const [effectiveLanguage, setEffectiveLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>('en');
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
-    setEffectiveLanguage(lsLanguage);
+    setLanguage(lsLanguage);
   }, [lsLanguage]);
+  
+  const handleSetLanguage = useCallback((lang: Language) => {
+      setLsLanguage(lang);
+      setLanguage(lang);
+  }, [setLsLanguage]);
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
-    const langKey = isMounted ? effectiveLanguage : 'en';
+    const langKey = isMounted ? language : 'en'; // Use 'en' for SSR and initial client render
     const langTranslations = translations[langKey] || translations.en;
     let text = langTranslations[key] || key;
     if (params) {
@@ -45,16 +50,11 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
       });
     }
     return text;
-  }, [isMounted, effectiveLanguage]);
-  
-  const setLanguage = useCallback((lang: Language) => {
-      setLsLanguage(lang);
-      setEffectiveLanguage(lang);
-  }, [setLsLanguage]);
+  }, [isMounted, language]);
 
   const contextValue = {
-      language: effectiveLanguage,
-      setLanguage,
+      language,
+      setLanguage: handleSetLanguage,
       t
   };
   
