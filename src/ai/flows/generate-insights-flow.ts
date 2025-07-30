@@ -70,11 +70,11 @@ const generateInsightsFlow = ai.defineFlow(
         const errorMessage = e.message || '';
         let delay: number;
 
-        if (e.status === 429) {
+        if (e.status === 429 || e.status === 503) {
             const retryDelay = getRetryDelay(errorMessage);
             // Use suggested delay if available, otherwise use exponential backoff
             delay = retryDelay !== null ? retryDelay : 1000 * (2 ** i);
-            console.warn(`Attempt ${i + 1} failed with 429 status. Retrying in ${delay}ms...`);
+            console.warn(`Attempt ${i + 1} failed with ${e.status} status. Retrying in ${delay}ms...`);
         } else {
             // Use exponential backoff for other errors
             delay = 1000 * (2 ** i);
