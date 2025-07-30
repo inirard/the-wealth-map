@@ -25,19 +25,18 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
-export const I18nProvider = ({ children }: { children: ReactNode }) => {
+// A separate component to render children once the client-side language is determined.
+const I18nContent = ({ children }: { children: ReactNode }) => {
   const [lsLanguage, setLanguage] = useLocalStorage<Language>('language', 'en');
-  const [isMounted, setIsMounted] = useState(false);
+  const [language, setEffectiveLanguage] = useState<Language>('en');
 
+  // This effect runs only on the client, after hydration.
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  const language = isMounted ? lsLanguage : 'en';
+    setEffectiveLanguage(lsLanguage);
+  }, [lsLanguage]);
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
-    const effectiveLanguage = isMounted ? lsLanguage : 'en';
-    const langTranslations = translations[effectiveLanguage] || translations.en;
+    const langTranslations = translations[language] || translations.en;
     let text = langTranslations[key] || key;
     if (params) {
       Object.keys(params).forEach(pKey => {
@@ -45,7 +44,7 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
       });
     }
     return text;
-  }, [lsLanguage, isMounted]);
+  }, [language]);
 
   const contextValue = {
       language,
@@ -59,6 +58,23 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
     </I18nContext.Provider>
   );
 };
+
+export const I18nProvider = ({ children }: { children: ReactNode }) => {
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // During SSR and initial client render, we render nothing or a fallback.
+  // Once mounted, we render the actual content with the correct language.
+  if (!isMounted) {
+    return null; // Or a loading spinner, but null avoids flashing content.
+  }
+  
+  return <I18nContent>{children}</I18nContent>;
+};
+
 
 export const useI18n = () => {
   const context = useContext(I18nContext);
