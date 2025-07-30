@@ -46,7 +46,21 @@ const generateInsightsFlow = ai.defineFlow(
     outputSchema: GenerateInsightsOutputSchema,
   },
   async (input) => {
-    const {output} = await prompt(input);
-    return output!;
+    const maxRetries = 3;
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const {output} = await prompt(input);
+        return output!;
+      } catch (e: any) {
+        if (i === maxRetries - 1) { // If it's the last retry, throw the error
+          console.error(`Final attempt failed: ${e.message}`);
+          throw e;
+        }
+        console.warn(`Attempt ${i + 1} failed, retrying... Error: ${e.message}`);
+        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Wait before retrying (e.g., 1s, 2s, 3s)
+      }
+    }
+    // This should not be reached, but typescript needs a return path.
+    throw new Error("Failed to generate insights after multiple retries.");
   }
 );
