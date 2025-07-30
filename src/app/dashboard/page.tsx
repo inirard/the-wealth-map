@@ -63,7 +63,7 @@ export default function DashboardPage() {
       <Card>
         <div className="grid md:grid-cols-2 items-center">
           <div className="p-8 md:p-10">
-            <h1 className="font-headline text-3xl font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            <h1 className="font-headline text-2xl font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
               {t("welcome_user", { name })}
             </h1>
             <p className="mt-2 text-lg text-foreground/80">{t("dashboard_subtitle")}</p>
