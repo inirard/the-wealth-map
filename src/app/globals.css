@@ -4,18 +4,18 @@
 
 @layer base {
   :root {
-    --background: 40 67% 98%; /* #FDFCF9 */
+    --background: 34 50% 98%; /* #FDFCF9 */
     --foreground: 240 5.3% 26.1%;
-    --card: 40 67% 98%;
+    --card: 0 0% 100%;
     --card-foreground: 240 5.3% 26.1%;
-    --popover: 40 67% 98%;
+    --popover: 34 50% 98%;
     --popover-foreground: 240 5.3% 26.1%;
     --primary: 180 100% 24.3%; /* #007C7C */
     --primary-foreground: 180 100% 98%;
     --secondary: 256 27% 90%;
     --secondary-foreground: 256 27% 30%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
+    --muted: 220 9% 46%; /* #6B7280 */
+    --muted-foreground: 220 9% 80%;
     --accent: 256 27% 64%; /* #7E6EAA */
     --accent-foreground: 0 0% 100%;
     --emphasis: 34 100% 70%; /* #FFBB66 */
@@ -25,7 +25,7 @@
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 180 100% 24.3%;
-    --radius: 0.5rem;
+    --radius: 0.75rem;
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 180 100% 24.3%;
@@ -47,8 +47,8 @@
     --primary-foreground: 0 0% 98%;
     --secondary: 256 27% 20%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
+    --muted: 220 9% 55%;
+    --muted-foreground: 220 9% 70%;
     --accent: 256 27% 54%;
     --accent-foreground: 0 0% 98%;
     --emphasis: 34 100% 60%;
@@ -74,8 +74,9 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply bg-background text-foreground font-body antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline text-foreground;
   }
 }

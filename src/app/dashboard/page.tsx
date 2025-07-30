@@ -62,13 +62,13 @@ export default function DashboardPage() {
       <Card>
         <div className="grid md:grid-cols-2 items-center">
           <div className="p-8 md:p-10">
-            <h1 className="font-headline text-lg font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            <h1 className="font-headline text-3xl font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
               {t("welcome_user", { name })}
             </h1>
-            <p className="mt-2 text-base text-foreground/80">{t("dashboard_subtitle")}</p>
+            <p className="mt-2 text-lg text-foreground/80">{t("dashboard_subtitle")}</p>
             <div className="mt-6">
               <Link href="/dashboard/goals">
-                <Button size="lg" className="group hover:bg-primary/90">
+                <Button size="lg" className="group">
                   {t("set_first_goal")}
                   <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                 </Button>
@@ -77,11 +77,12 @@ export default function DashboardPage() {
           </div>
           <div className="p-4 flex items-center justify-center">
             <Image
-              src="/images/dashboardimage.png"
+              data-ai-hint="financial planning illustration"
+              src="https://placehold.co/400x300.png"
               alt="Dashboard Illustration"
               width={400}
               height={300}
-              className="w-full max-w-[400px] h-auto rounded-lg"
+              className="w-full max-w-[400px] h-auto rounded-lg object-cover"
               priority
             />
           </div>
@@ -90,7 +91,7 @@ export default function DashboardPage() {
 
       <div>
         <h2 className="text-2xl font-bold font-headline mb-4">{t("your_toolkit")}</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {featureCards.map((feature) => (
             <Card
               key={feature.title}
@@ -99,7 +100,7 @@ export default function DashboardPage() {
               <CardHeader className="flex-row items-center gap-4">
                 <feature.icon className={`w-8 h-8 ${feature.color}`} />
                 <div>
-                  <CardTitle className="text-base">{feature.title}</CardTitle>
+                  <CardTitle className="text-lg">{feature.title}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow">
