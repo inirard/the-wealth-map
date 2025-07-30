@@ -123,5 +123,13 @@
   "ai_coach_disabled_tooltip": "Veuillez remplir au moins un champ de réflexion pour activer l'analyse IA.",
   "open_chatbot": "Ouvrir le Chatbot",
   "chatbot_welcome": "Bonjour ! Je suis votre coach financier. Comment puis-je vous aider aujourd'hui ?",
-  "chatbot_placeholder": "Posez une question sur vos finances..."
+  "chatbot_placeholder": "Posez une question sur vos finances...",
+  "generate_report": "Générer un Rapport",
+  "financial_report_title": "Rapport Financier",
+  "financial_report_subtitle": "Résumé pour {{name}}",
+  "report_date": "Date du Rapport",
+  "financial_summary_title": "Résumé Financier",
+  "final_balance": "Solde Final",
+  "goals_progress_title": "Progression des Objectifs",
+  "transactions_title": "Détail des Transactions"
 }

@@ -1,6 +1,7 @@
+
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription, CardFooter } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,10 +13,12 @@ import { useI18n } from '@/hooks/use-i18n';
 import MonthlySummary from './monthly-summary';
 import { generateInsights } from '@/ai/flows/generate-insights-flow';
 import type { GenerateInsightsOutput } from '@/lib/ai-types';
-import { Sparkles, Bot } from 'lucide-react';
+import { Sparkles, Bot, Printer } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useReactToPrint } from 'react-to-print';
+import FinancialReport from './report';
 
 const emotionalStates = [
     { emoji: '😃', label: 'excellent' },
@@ -28,6 +31,7 @@ const emotionalStates = [
 export default function ReflectionPage() {
     const { t, language } = useI18n();
     const { toast } = useToast();
+    const reportRef = useRef<HTMLDivElement>(null);
 
     const reflectionPrompts = useMemo(() => [
         { id: 'wins', prompt: t('wins_prompt') },
@@ -42,9 +46,15 @@ export default function ReflectionPage() {
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
+    const [username] = useLocalStorage<string>('username', 'User');
     const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+    const handlePrint = useReactToPrint({
+        content: () => reportRef.current,
+        documentTitle: `financial-report-${username.toLowerCase()}-${new Date().toISOString().split('T')[0]}`,
+    });
 
     useEffect(() => {
         const initialData = reflectionPrompts.map(p => {
@@ -53,7 +63,7 @@ export default function ReflectionPage() {
         });
         setReflections(initialData);
         setIsInitialLoad(false);
-    }, []); // Run only once on mount
+    }, [t]); 
 
     const handleContentChange = (id: string, content: string) => {
         setReflections(currentReflections =>
@@ -91,6 +101,10 @@ export default function ReflectionPage() {
         return reflections.some(r => r.content && r.content.trim() !== '');
     }, [reflections]);
 
+    const hasDataToReport = useMemo(() => {
+        return goals.length > 0 || transactions.length > 0 || wheelData.length > 0 || reflections.some(r => r.content.trim() !== '');
+    }, [goals, transactions, wheelData, reflections]);
+
     if (isInitialLoad) {
         return (
             <div className="space-y-8">
@@ -104,9 +118,15 @@ export default function ReflectionPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
-                <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
+                    <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
+                </div>
+                <Button onClick={handlePrint} disabled={!hasDataToReport}>
+                    <Printer className="mr-2 h-4 w-4" />
+                    {t('generate_report')}
+                </Button>
             </div>
 
             <Card>
@@ -201,6 +221,21 @@ export default function ReflectionPage() {
                     </TooltipProvider>
                 </CardFooter>
             </Card>
+            
+            <div className="print-only">
+                 <FinancialReport 
+                    ref={reportRef}
+                    data={{
+                        username,
+                        goals,
+                        transactions,
+                        wheelData,
+                        reflections,
+                        mood,
+                        aiInsight,
+                    }}
+                />
+            </div>
         </div>
     );
 }

@@ -123,5 +123,13 @@
   "ai_coach_disabled_tooltip": "Please fill in at least one reflection field to enable AI analysis.",
   "open_chatbot": "Open Chatbot",
   "chatbot_welcome": "Hello! I'm your financial coach. How can I help you today?",
-  "chatbot_placeholder": "Ask about your finances..."
+  "chatbot_placeholder": "Ask about your finances...",
+  "generate_report": "Generate Report",
+  "financial_report_title": "Financial Report",
+  "financial_report_subtitle": "Summary for {{name}}",
+  "report_date": "Report Date",
+  "financial_summary_title": "Financial Summary",
+  "final_balance": "Final Balance",
+  "goals_progress_title": "Goals Progress",
+  "transactions_title": "Transactions Detail"
 }

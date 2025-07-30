@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import './globals.css';
+import './print.css';
 import { Toaster } from "@/components/ui/toaster";
 import { I18nProvider } from '@/hooks/use-i18n';
 import { Inter } from 'next/font/google';

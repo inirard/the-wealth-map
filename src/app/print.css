@@ -1,0 +1,35 @@
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Hide elements that shouldn't be in the report */
+    .no-print {
+        display: none !important;
+    }
+
+    /* The main content area in the app */
+    div[data-sidebar="inset"] {
+        display: none !important;
+    }
+    
+    /* The report component itself */
+    .print-only {
+        display: block !important;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    @page {
+        size: A4;
+        margin: 1cm;
+    }
+}
+
+/* Hide the report component by default */
+.print-only {
+    display: none;
+}
