@@ -92,7 +92,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 {/* AI Coach Insights */}
                 {aiInsight && aiInsight.analysis && (
                     <section>
-                        <Card className="bg-primary/5 border-primary">
+                        <Card className="bg-primary/5 border-primary shadow-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-3 text-primary">
                                     <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
@@ -122,8 +122,8 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                              {mood && emotionalStates[mood] && (
                                 <Card className="flex flex-col items-center justify-center bg-gray-50 shadow-md">
                                     <CardHeader><CardTitle>{t('how_did_you_feel')}</CardTitle></CardHeader>
-                                    <CardContent className="text-center flex flex-col items-center">
-                                         {React.createElement(emotionalStates[mood].icon, { className: "text-7xl mb-2" })}
+                                    <CardContent className="text-center flex flex-col items-center gap-2">
+                                         {React.createElement(emotionalStates[mood].icon, { className: "text-7xl" })}
                                         <p className="text-2xl font-medium text-gray-700">{t(emotionalStates[mood].labelKey)}</p>
                                     </CardContent>
                                 </Card>
@@ -203,7 +203,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                                     {transaction.type === 'income' ? t('income') : t('expense')}
                                                 </span>
                                             </TableCell>
-                                            <TableCell className={cn("text-right font-semibold", transaction.type === 'income' ? 'text-green-600' : 'text-red-600')}>
+                                            <TableCell className={cn("text-right font-semibold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
                                                 €{transaction.amount.toFixed(2)}
                                             </TableCell>
                                         </TableRow>
