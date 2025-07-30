@@ -131,7 +131,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                     <CardContent className="p-6 pt-2">
                                         <div>
                                             <span className="text-7xl block">{emotionalStates[mood].icon({})}</span>
-                                            <p className="text-2xl font-medium text-gray-700 mt-2">{t(emotionalStates[mood].labelKey)}</p>
+                                            <p className="text-2xl font-medium text-gray-700 mt-4">{t(emotionalStates[mood].labelKey)}</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -229,6 +229,8 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 FinancialReport.displayName = 'FinancialReport';
 export default FinancialReport;
     
+    
+
     
 
     
