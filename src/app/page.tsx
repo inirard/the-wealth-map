@@ -1,9 +1,10 @@
+
 "use client";
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CircleDollarSign, ArrowRight } from "lucide-react";
+import { CircleDollarSign, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useI18n } from '@/hooks/use-i18n';
@@ -21,6 +22,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('login');
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
   const { t } = useI18n();
@@ -104,9 +106,12 @@ export default function AuthPage() {
                         <Label htmlFor="login-email">Email</Label>
                         <Input id="login-email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 relative">
                         <Label htmlFor="login-password">Password</Label>
-                        <Input id="login-password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <Input id="login-password" type={showPassword ? "text" : "password"} required value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-7 h-7 w-7 text-muted-foreground hover:bg-transparent hover:text-primary" onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </Button>
                     </div>
                     <Button type="submit" className="w-full" disabled={isLoading}>
                       {isLoading ? "Logging in..." : "Login"}
@@ -133,9 +138,12 @@ export default function AuthPage() {
                         <Label htmlFor="signup-email">Email</Label>
                         <Input id="signup-email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 relative">
                         <Label htmlFor="signup-password">Password</Label>
-                        <Input id="signup-password" type="password" placeholder="Must be 6+ characters" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <Input id="signup-password" type={showPassword ? "text" : "password"} placeholder="Must be 6+ characters" required value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-7 h-7 w-7 text-muted-foreground hover:bg-transparent hover:text-primary" onClick={() => setShowPassword(!showPassword)}>
+                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                        </Button>
                     </div>
                     <Button type="submit" className="w-full" disabled={isLoading}>
                       {isLoading ? "Creating Account..." : "Sign Up"}
