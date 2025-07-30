@@ -34,10 +34,10 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
-    // Use 'en' on the server and during initial client render to prevent hydration mismatch.
     const effectiveLanguage = isMounted ? language : 'en';
     const langTranslations = translations[effectiveLanguage] || translations.en;
     let text = langTranslations[key] || key;
+
     if (params) {
       Object.keys(params).forEach(pKey => {
         text = text.replace(new RegExp(`{{${pKey}}}`, 'g'), String(params[pKey]));
@@ -45,11 +45,11 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
     }
     return text;
   }, [language, isMounted]);
-  
+
   const contextValue = {
-      language: isMounted ? language : 'en',
-      setLanguage,
-      t
+    language: isMounted ? language : 'en',
+    setLanguage,
+    t,
   };
 
   return (
@@ -58,7 +58,6 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
     </I18nContext.Provider>
   );
 };
-
 
 export const useI18n = () => {
   const context = useContext(I18nContext);

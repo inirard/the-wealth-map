@@ -43,6 +43,12 @@ export default function AppSidebar() {
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
   const [, setName] = useLocalStorage('username', '');
   const { t, language, setLanguage } = useI18n();
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
 
   const navItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: t('dashboard') },
@@ -79,7 +85,7 @@ export default function AppSidebar() {
           <SidebarMenu>
             {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton 
+                <SidebarMenuButton
                   asChild
                   isActive={pathname === item.href}
                   onClick={() => setOpenMobile(false)}
@@ -87,7 +93,7 @@ export default function AppSidebar() {
                 >
                   <Link href={item.href}>
                     <item.icon />
-                    <span>{item.label}</span>
+                    {mounted ? <span>{item.label}</span> : <span>{t('dashboard')}</span>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -99,7 +105,7 @@ export default function AppSidebar() {
               <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground">
                       <Languages/>
-                      <span className="group-data-[collapsible=icon]:hidden">{languages.find(l => l.code === language)?.name}</span>
+                      <span className="group-data-[collapsible=icon]:hidden">{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
                   </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -117,22 +123,22 @@ export default function AppSidebar() {
             onClick={() => setResetDialogOpen(true)}
           >
             <Trash2 />
-            <span className="group-data-[collapsible=icon]:hidden">{t('delete_data')}</span>
+            <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_data'): 'Delete Data'}</span>
           </Button>
         </SidebarFooter>
       </Sidebar>
       <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('are_you_sure')}</AlertDialogTitle>
+            <AlertDialogTitle>{mounted ? t('are_you_sure') : 'Are you absolutely sure?'}</AlertDialogTitle>
             <AlertDialogDescription>
-                {t('delete_data_warning')}
+                {mounted ? t('delete_data_warning'): 'This action cannot be undone. This will permanently delete all your data from this browser.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>{mounted ? t('cancel'): 'Cancel'}</AlertDialogCancel>
             <AlertDialogAction onClick={handleResetData} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-              {t('yes_delete_data')}
+              {mounted ? t('yes_delete_data') : 'Yes, delete data'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -140,3 +146,4 @@ export default function AppSidebar() {
     </>
   );
 }
+
