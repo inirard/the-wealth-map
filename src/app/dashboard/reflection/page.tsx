@@ -176,7 +176,7 @@ export default function ReflectionPage() {
                 ))}
             </div>
 
-            <Card>
+            <Card className="bg-primary/5">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2 text-lg">
                         <Sparkles className="h-6 w-6 text-primary" />
