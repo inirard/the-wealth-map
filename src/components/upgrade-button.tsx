@@ -130,12 +130,16 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
                             </ul>
                         </CardContent>
                         <CardFooter className="flex-col items-stretch gap-4">
-                             <Button onClick={() => setPlan('premium')} className="w-full bg-primary hover:bg-primary/90">
-                                {t('choose_premium_monthly')}
-                            </Button>
-                             <Button onClick={() => setPlan('premium')} className="w-full bg-primary/90 hover:bg-primary/80">
-                                {t('choose_premium_annually')} ({t('save_percent', { percent: 30 })})
-                            </Button>
+                            <DialogClose asChild>
+                                 <Button onClick={() => setPlan('premium')} className="w-full bg-primary hover:bg-primary/90">
+                                    {t('choose_premium_monthly')}
+                                </Button>
+                            </DialogClose>
+                            <DialogClose asChild>
+                                 <Button onClick={() => setPlan('premium')} className="w-full bg-primary/90 hover:bg-primary/80">
+                                    {t('choose_premium_annually')} ({t('save_percent', { percent: 30 })})
+                                </Button>
+                            </DialogClose>
                         </CardFooter>
                     </Card>
                 </div>
