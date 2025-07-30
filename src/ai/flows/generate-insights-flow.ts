@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow to generate financial insights based on user data.
@@ -71,10 +72,10 @@ const prompt = ai.definePrompt({
     The response must be in the specified language: {{language}}.
 
     Here is the user's data:
-    - Goals: {{jsonStringify goals}}
-    - Transactions: {{jsonStringify transactions}}
-    - Wealth Wheel Assessment: {{jsonStringify wheelData}}
-    - Personal Reflections: {{jsonStringify reflections}}
+    - Goals: {{goals}}
+    - Transactions: {{transactions}}
+    - Wealth Wheel Assessment: {{wheelData}}
+    - Personal Reflections: {{reflections}}
 
     Based on this data, please generate a single paragraph of analysis that does the following:
     1.  Acknowledge a specific positive point from their reflections or a goal they are progressing on.
