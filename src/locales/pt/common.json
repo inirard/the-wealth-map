@@ -135,5 +135,7 @@
   "transactions_title": "Detalhe das Transações",
   "terms_of_service": "Termos de Serviço",
   "privacy_policy": "Política de Privacidade",
-  "goal_completed": "Parabéns por completar a sua meta '{{goalName}}'!"
+  "goal_completed": "Parabéns por completar a sua meta '{{goalName}}'!",
+  "download_pdf": "Descarregar PDF",
+  "downloading": "A descarregar..."
 }

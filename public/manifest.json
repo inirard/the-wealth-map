@@ -1,24 +1,22 @@
 {
-  "name": "The Wealth Map - Digital Planner",
+  "name": "The Wealth Map",
   "short_name": "Wealth Map",
-  "description": "A modern interactive financial planner designed to guide your wealth journey.",
+  "description": "Your interactive digital planner to navigate the journey to financial freedom.",
   "icons": [
     {
-      "src": "/icons/icon-192x192.svg",
+      "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png"
     },
     {
-      "src": "/icons/icon-512x512.svg",
+      "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ],
   "theme_color": "#007C7C",
   "background_color": "#FDFCF9",
-  "start_url": "/dashboard",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "portrait"
 }

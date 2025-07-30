@@ -14,8 +14,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: 'The Wealth Map - Digital Planner',
-  description: 'A modern interactive financial planner designed to guide your wealth journey.',
+  title: 'The Wealth Map | Your Interactive Financial Planner',
+  description: 'Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.',
   manifest: '/manifest.json',
   themeColor: '#007C7C',
 };
@@ -34,7 +34,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.svg" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="font-body antialiased">
           <I18nProvider>

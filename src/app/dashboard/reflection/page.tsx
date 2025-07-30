@@ -193,7 +193,7 @@ export default function ReflectionPage() {
                 </div>
                 <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading}>
                     <Download className="mr-2 h-4 w-4" />
-                    {isDownloading ? 'Downloading...' : 'Download PDF'}
+                    {isDownloading ? t('downloading') : t('download_pdf')}
                 </Button>
             </div>
 
@@ -323,3 +323,4 @@ export default function ReflectionPage() {
     
 
     
+

@@ -135,5 +135,7 @@
   "transactions_title": "Transactions Detail",
   "terms_of_service": "Terms of Service",
   "privacy_policy": "Privacy Policy",
-  "goal_completed": "Congratulations on completing your '{{goalName}}' goal!"
+  "goal_completed": "Congratulations on completing your '{{goalName}}' goal!",
+  "download_pdf": "Download PDF",
+  "downloading": "Downloading..."
 }
