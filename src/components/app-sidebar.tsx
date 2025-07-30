@@ -97,7 +97,7 @@ export default function AppSidebar() {
         <SidebarFooter className="flex flex-col gap-2">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="w-full justify-start gap-2">
+                  <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground">
                       <Languages/>
                       <span className="group-data-[collapsible=icon]:hidden">{languages.find(l => l.code === language)?.name}</span>
                   </Button>
@@ -113,7 +113,7 @@ export default function AppSidebar() {
 
           <Button
             variant="ghost"
-            className="w-full justify-start gap-2"
+            className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground"
             onClick={() => setResetDialogOpen(true)}
           >
             <Trash2 />
