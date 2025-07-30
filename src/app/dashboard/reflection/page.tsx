@@ -61,10 +61,9 @@ export default function ReflectionPage() {
 
         try {
             const canvas = await html2canvas(reportElement, {
-                scale: 2, 
+                scale: 2,
                 useCORS: true,
                 backgroundColor: '#ffffff',
-                windowWidth: reportElement.scrollWidth,
                 windowHeight: reportElement.scrollHeight,
             });
 
