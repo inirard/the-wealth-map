@@ -5,7 +5,8 @@ import React, { forwardRef, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
-import { ChartContainer, ChartTooltip, ChartTooltipContent, Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "@/components/ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts"
 import { CircleDollarSign, Target, TrendingUp, TrendingDown, Bot, Sparkles, Heart, Star, BookOpen } from 'lucide-react';
 import { format } from "date-fns";
 import { useI18n } from '@/hooks/use-i18n';
