@@ -119,7 +119,7 @@
   "ai_coach_button": "Generate AI Analysis",
   "ai_coach_loading": "Analyzing...",
   "ai_error_title": "AI Coach Unavailable",
-  "ai_error_description": "The AI service is currently overloaded. Please try again in a few moments.",
+  "ai_error_description": "The AI service is currently experiencing high demand. Please try again in a few moments.",
   "ai_coach_disabled_tooltip": "Please fill in at least one reflection field to enable AI analysis.",
   "open_chatbot": "Open Chatbot",
   "chatbot_welcome": "Hello! I'm your financial coach. How can I help you today?",

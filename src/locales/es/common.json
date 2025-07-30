@@ -119,7 +119,7 @@
   "ai_coach_button": "Generar Análisis de IA",
   "ai_coach_loading": "Analizando...",
   "ai_error_title": "Asesor de IA no disponible",
-  "ai_error_description": "El servicio de IA está actualmente sobrecargado. Por favor, inténtalo de nuevo en unos momentos.",
+  "ai_error_description": "El servicio de IA está experimentando actualmente una gran demanda. Por favor, inténtelo de nuevo en unos momentos.",
   "ai_coach_disabled_tooltip": "Por favor, rellena al menos un campo de reflexión para habilitar el análisis de IA.",
   "open_chatbot": "Abrir Chatbot",
   "chatbot_welcome": "¡Hola! Soy tu asesor financiero. ¿En qué puedo ayudarte hoy?",

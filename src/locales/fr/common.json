@@ -119,7 +119,7 @@
   "ai_coach_button": "Générer l'Analyse IA",
   "ai_coach_loading": "Analyse en cours...",
   "ai_error_title": "Coach IA Indisponible",
-  "ai_error_description": "Le service IA est actuellement surchargé. Veuillez réessayer dans quelques instants.",
+  "ai_error_description": "Le service d'IA connaît actuellement une forte demande. Veuillez réessayer dans quelques instants.",
   "ai_coach_disabled_tooltip": "Veuillez remplir au moins un champ de réflexion pour activer l'analyse IA.",
   "open_chatbot": "Ouvrir le Chatbot",
   "chatbot_welcome": "Bonjour ! Je suis votre coach financier. Comment puis-je vous aider aujourd'hui ?",

@@ -56,8 +56,9 @@ const generateInsightsFlow = ai.defineFlow(
           console.error(`Final attempt failed: ${e.message}`);
           throw e;
         }
-        console.warn(`Attempt ${i + 1} failed, retrying... Error: ${e.message}`);
-        await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Wait before retrying (e.g., 1s, 2s, 3s)
+        const delay = 1000 * (2 ** i); // Exponential backoff: 1s, 2s, 4s
+        console.warn(`Attempt ${i + 1} failed, retrying in ${delay}ms... Error: ${e.message}`);
+        await new Promise(resolve => setTimeout(resolve, delay));
       }
     }
     // This part should not be reachable due to the error being thrown in the loop,
