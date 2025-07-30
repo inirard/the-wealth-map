@@ -2,7 +2,6 @@
 import AppSidebar from "@/components/app-sidebar";
 import Chatbot from "@/components/chatbot";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
 import type { Viewport, Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -22,7 +21,7 @@ export default function DashboardLayout({
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 no-print">
             <SidebarTrigger className="hover:text-primary" />
             <Chatbot />
         </header>

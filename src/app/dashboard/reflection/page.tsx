@@ -17,7 +17,6 @@ import { Sparkles, Bot, Printer } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { useReactToPrint } from 'react-to-print';
 import FinancialReport from './report';
 
 const emotionalStates = [
@@ -51,10 +50,9 @@ export default function ReflectionPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-    const handlePrint = useReactToPrint({
-        content: () => reportRef.current,
-        documentTitle: `financial-report-${username.toLowerCase()}-${new Date().toISOString().split('T')[0]}`,
-    });
+    const handlePrint = () => {
+        window.print();
+    };
 
     useEffect(() => {
         const initialData = reflectionPrompts.map(p => {
@@ -63,7 +61,7 @@ export default function ReflectionPage() {
         });
         setReflections(initialData);
         setIsInitialLoad(false);
-    }, [t]); 
+    }, [t, lsReflections, reflectionPrompts]); 
 
     const handleContentChange = (id: string, content: string) => {
         setReflections(currentReflections =>
@@ -118,7 +116,7 @@ export default function ReflectionPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 no-print">
                 <div>
                     <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
                     <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
@@ -129,34 +127,38 @@ export default function ReflectionPage() {
                 </Button>
             </div>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>{t('how_did_you_feel')}</CardTitle>
-                    <CardDescription>{t('how_did_you_feel_desc')}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-wrap gap-4">
-                        {emotionalStates.map((state) => (
-                            <Button
-                                key={state.label}
-                                variant={mood === state.emoji ? "default" : "outline"}
-                                className={cn(
-                                    "flex-grow sm:flex-grow-0 text-2xl h-20 w-24 flex flex-col items-center justify-center gap-2 transition-all duration-200",
-                                    mood === state.emoji ? "border-primary border-2" : "border"
-                                )}
-                                onClick={() => setMood(state.emoji)}
-                            >
-                                <span>{state.emoji}</span>
-                                <span className="text-sm font-normal">{t(state.label)}</span>
-                            </Button>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
+            <div className="no-print">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{t('how_did_you_feel')}</CardTitle>
+                        <CardDescription>{t('how_did_you_feel_desc')}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="flex flex-wrap gap-4">
+                            {emotionalStates.map((state) => (
+                                <Button
+                                    key={state.label}
+                                    variant={mood === state.emoji ? "default" : "outline"}
+                                    className={cn(
+                                        "flex-grow sm:flex-grow-0 text-2xl h-20 w-24 flex flex-col items-center justify-center gap-2 transition-all duration-200",
+                                        mood === state.emoji ? "border-primary border-2" : "border"
+                                    )}
+                                    onClick={() => setMood(state.emoji)}
+                                >
+                                    <span>{state.emoji}</span>
+                                    <span className="text-sm font-normal">{t(state.label)}</span>
+                                </Button>
+                            ))}
+                        </div>
+                    </CardContent>
+                </Card>
+            </div>
 
-            <MonthlySummary goals={goals} transactions={transactions} wheelData={wheelData} />
-
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="no-print">
+                <MonthlySummary goals={goals} transactions={transactions} wheelData={wheelData} />
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-2 no-print">
                 {reflections.map((reflection) => (
                     <Card key={reflection.id} className="flex flex-col">
                         <CardHeader>
@@ -176,49 +178,51 @@ export default function ReflectionPage() {
                 ))}
             </div>
 
-            <Card className="bg-primary/5">
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                        <Sparkles className="h-6 w-6 text-primary" />
-                        {t('ai_coach_title')}
-                    </CardTitle>
-                    <CardDescription>
-                        {t('ai_coach_description')}
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {isLoading ? (
-                        <div className="space-y-2">
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-full" />
-                            <Skeleton className="h-4 w-3/4" />
-                        </div>
-                    ) : aiInsight ? (
-                        <div className="flex items-start gap-4">
-                            <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
-                            <p className="text-sm text-foreground/90 italic">{aiInsight.analysis}</p>
-                        </div>
-                    ) : (
-                        <p className="text-sm text-muted-foreground">{t('ai_coach_prompt')}</p>
-                    )}
-                </CardContent>
-                <CardFooter>
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
-                                    {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
-                                </Button>
-                            </TooltipTrigger>
-                            {!canGenerate && (
-                                <TooltipContent>
-                                    <p>{t('ai_coach_disabled_tooltip')}</p>
-                                </TooltipContent>
-                            )}
-                        </Tooltip>
-                    </TooltipProvider>
-                </CardFooter>
-            </Card>
+            <div className="no-print">
+                <Card className="bg-primary/5">
+                    <CardHeader>
+                        <CardTitle className="flex items-center gap-2 text-lg">
+                            <Sparkles className="h-6 w-6 text-primary" />
+                            {t('ai_coach_title')}
+                        </CardTitle>
+                        <CardDescription>
+                            {t('ai_coach_description')}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        {isLoading ? (
+                            <div className="space-y-2">
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-full" />
+                                <Skeleton className="h-4 w-3/4" />
+                            </div>
+                        ) : aiInsight ? (
+                            <div className="flex items-start gap-4">
+                                <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                                <p className="text-sm text-foreground/90 italic">{aiInsight.analysis}</p>
+                            </div>
+                        ) : (
+                            <p className="text-sm text-muted-foreground">{t('ai_coach_prompt')}</p>
+                        )}
+                    </CardContent>
+                    <CardFooter>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
+                                        {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
+                                    </Button>
+                                </TooltipTrigger>
+                                {!canGenerate && (
+                                    <TooltipContent>
+                                        <p>{t('ai_coach_disabled_tooltip')}</p>
+                                    </TooltipContent>
+                                )}
+                            </Tooltip>
+                        </TooltipProvider>
+                    </CardFooter>
+                </Card>
+            </div>
             
             <div className="print-only">
                  <FinancialReport 
@@ -237,5 +241,3 @@ export default function ReflectionPage() {
         </div>
     );
 }
-
-    
