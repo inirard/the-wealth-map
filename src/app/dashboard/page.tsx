@@ -70,7 +70,8 @@ export default function DashboardPage() {
           </div>
           <div className="relative w-full h-[300px] md:h-[400px]">
             <Image
-              src="/images/dashboardimage.png"
+              data-ai-hint="financial planning illustration"
+              src="https://placehold.co/600x400.png"
               alt="Financial planning illustration"
               fill
               style={{ objectFit: "contain" }}
@@ -96,7 +97,7 @@ export default function DashboardPage() {
               </CardContent>
               <div className="p-6 pt-0">
                 <Link href={feature.href}>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full hover:bg-primary hover:text-primary-foreground">
                     {t("open")}
                   </Button>
                 </Link>
