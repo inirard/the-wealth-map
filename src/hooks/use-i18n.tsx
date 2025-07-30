@@ -34,7 +34,7 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
-    // Durante a renderização no servidor ou antes da montagem no cliente, use sempre o idioma padrão 'en'.
+    // Fallback to 'en' if not mounted or language not found
     const effectiveLanguage = isMounted ? language : 'en';
     const langTranslations = translations[effectiveLanguage] || translations.en;
     let text = langTranslations[key] || key;
@@ -52,6 +52,11 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
       t
   };
   
+  // Prevent rendering children on the server and during initial client render to avoid hydration mismatch
+  if (!isMounted) {
+    return null; 
+  }
+
   return (
     <I18nContext.Provider value={contextValue}>
       {children}
