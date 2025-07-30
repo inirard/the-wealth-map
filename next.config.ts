@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  devIndicators: {
+  experimental: {
     allowedDevOrigins: ["*.cloudworkstations.dev", "*.app.github.dev"],
   },
 };
