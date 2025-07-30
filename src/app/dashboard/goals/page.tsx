@@ -132,7 +132,7 @@ export default function GoalsPage() {
                   <FormItem className="flex flex-col"><FormLabel>{t('target_date')}</FormLabel><Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
-                        <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>
+                        <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
                           {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
