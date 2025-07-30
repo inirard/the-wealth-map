@@ -32,7 +32,7 @@ export default function DashboardLayout({
                 <UserProfile />
             </div>
         </header>
-        <div className="p-4 sm:p-6 lg:p-8">
+        <div className="p-6 pt-6 sm:p-6 lg:p-8">
             {children}
         </div>
       </SidebarInset>

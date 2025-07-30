@@ -51,7 +51,7 @@ export default function UserProfile() {
                     </p>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem disabled>
+                <DropdownMenuItem>
                     <div className="flex justify-between items-center w-full">
                        <span className="font-medium">{t('current_plan')}</span>
                        <span className={cn(
@@ -64,14 +64,7 @@ export default function UserProfile() {
                     </div>
                 </DropdownMenuItem>
                 
-                {plan === 'basic' ? (
-                     <UpgradeButton asChild>
-                        <DropdownMenuItem className="focus:bg-primary/10 focus:text-primary cursor-pointer">
-                            <Crown className="mr-2 h-4 w-4" />
-                            <span>{t('upgrade_to_premium')}</span>
-                        </DropdownMenuItem>
-                    </UpgradeButton>
-                ) : (
+                {plan === 'premium' && (
                     <DropdownMenuItem 
                         className="focus:bg-primary/10 focus:text-primary cursor-pointer"
                         onSelect={() => setPlan('basic')}
