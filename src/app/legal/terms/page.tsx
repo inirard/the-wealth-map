@@ -1,9 +1,19 @@
 
+"use client";
+
+import React, { useState, useEffect } from 'react';
+
 export default function TermsOfServicePage() {
+  const [lastUpdated, setLastUpdated] = useState('');
+
+  useEffect(() => {
+    setLastUpdated(new Date().toLocaleDateString());
+  }, []);
+
   return (
     <>
       <h1>Terms of Service for The Wealth Map</h1>
-      <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
+      <p><strong>Last Updated:</strong> {lastUpdated}</p>
 
       <p>
         By purchasing, downloading, or using "The Wealth Map" application (the "Service"), you agree to be bound by these Terms of Service.

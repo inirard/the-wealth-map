@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -13,18 +12,23 @@ import { useI18n } from '@/hooks/use-i18n';
 export default function CoverPage() {
   const [name, setName] = useLocalStorage('username', '');
   const [tempName, setTempName] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { t } = useI18n();
 
   useEffect(() => {
+    // This check now runs only on the client, after the component has mounted.
     if (name) {
       router.push('/dashboard');
+    } else {
+      setIsLoading(false);
     }
   }, [name, router]);
   
   const handleStart = () => {
     if (tempName.trim()) {
       setName(tempName.trim());
+      // The useEffect will catch the name change and redirect.
     }
   };
   
@@ -34,8 +38,9 @@ export default function CoverPage() {
     }
   };
 
-  if (name) {
-      return null; // Or a loading spinner
+  // While loading or if redirection is about to happen, render nothing to avoid flashes.
+  if (isLoading || name) {
+      return null;
   }
 
   return (

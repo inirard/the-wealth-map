@@ -1,9 +1,19 @@
 
+"use client";
+
+import React, { useState, useEffect } from 'react';
+
 export default function PrivacyPolicyPage() {
+  const [lastUpdated, setLastUpdated] = useState('');
+
+  useEffect(() => {
+    setLastUpdated(new Date().toLocaleDateString());
+  }, []);
+
   return (
     <>
       <h1>Privacy Policy for The Wealth Map</h1>
-      <p><strong>Last Updated:</strong> {new Date().toLocaleDateString()}</p>
+      <p><strong>Last Updated:</strong> {lastUpdated}</p>
 
       <p>
         Welcome to The Wealth Map. Your privacy is critically important to us. This Privacy Policy explains how we handle your information.
