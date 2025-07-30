@@ -13,7 +13,7 @@ import { useI18n } from '@/hooks/use-i18n';
 import MonthlySummary from './monthly-summary';
 import { generateInsights } from '@/ai/flows/generate-insights-flow';
 import type { GenerateInsightsOutput } from '@/lib/ai-types';
-import { Sparkles, Bot, Download } from 'lucide-react';
+import { Sparkles, Bot, Download, TriangleAlert } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -50,6 +50,7 @@ export default function ReflectionPage() {
     const [username] = useLocalStorage<string>('username', 'User');
     const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [aiError, setAiError] = useState<boolean>(false);
     const [isDownloading, setIsDownloading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -139,6 +140,7 @@ export default function ReflectionPage() {
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
+        setAiError(false);
         setLsReflections(reflections);
 
         try {
@@ -152,6 +154,7 @@ export default function ReflectionPage() {
             setAiInsight(insight);
         } catch (error) {
             console.error("Error generating AI insights:", error);
+            setAiError(true);
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
@@ -262,6 +265,11 @@ export default function ReflectionPage() {
                                 <Skeleton className="h-4 w-full" />
                                 <Skeleton className="h-4 w-full" />
                                 <Skeleton className="h-4 w-3/4" />
+                            </div>
+                        ) : aiError ? (
+                             <div className="flex items-start gap-3 text-destructive">
+                                <TriangleAlert className="h-5 w-5 flex-shrink-0" />
+                                <p className="text-sm font-medium">{t('ai_coach_error_message')}</p>
                             </div>
                         ) : aiInsight ? (
                             <div className="flex items-start gap-4">

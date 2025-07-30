@@ -121,6 +121,7 @@
   "ai_error_title": "Coach de IA Indisponível",
   "ai_error_description": "O serviço de IA está a registar um elevado volume de pedidos. Por favor, tente novamente dentro de momentos.",
   "ai_coach_disabled_tooltip": "Por favor, preencha pelo menos um campo de reflexão para ativar a análise de IA.",
+  "ai_coach_error_message": "Não foi possível gerar a análise de IA. O serviço pode estar temporariamente sobrecarregado ou pode estar offline. Por favor, tente novamente mais tarde.",
   "open_chatbot": "Abrir Chatbot",
   "chatbot_welcome": "Olá! Sou o seu coach financeiro. Como posso ajudá-lo hoje?",
   "chatbot_placeholder": "Pergunte sobre as suas finanças...",
