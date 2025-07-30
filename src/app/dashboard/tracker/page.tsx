@@ -97,7 +97,7 @@ export default function TrackerPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
         <div className="flex gap-2">
-            <Button variant="outline" onClick={handleExport} disabled={transactions.length === 0}>
+            <Button variant="outline" onClick={handleExport} disabled={transactions.length === 0} className="hover:bg-primary hover:text-primary-foreground">
                 <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
             </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -190,3 +190,5 @@ export default function TrackerPage() {
     </div>
   );
 }
+
+    
