@@ -11,6 +11,7 @@ import {
   BookOpen,
   Quote,
   ArrowRight,
+  Bot,
 } from "lucide-react";
 import Image from "next/image";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -48,6 +49,13 @@ export default function DashboardPage() {
       icon: BookOpen,
       href: "/dashboard/reflection",
       color: "text-emphasis",
+    },
+    {
+        title: t('ai_projections_title'),
+        description: t('ai_projections_description'),
+        icon: Bot,
+        href: '/dashboard/projections',
+        color: 'text-purple-600',
     },
     {
       title: t("affirmations"),
