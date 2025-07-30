@@ -15,13 +15,13 @@ import { Button } from './ui/button';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { usePlan } from '@/hooks/use-plan';
 import { useI18n } from '@/hooks/use-i18n';
-import { Crown, User } from 'lucide-react';
+import { Crown, User, Settings } from 'lucide-react';
 import UpgradeButton from './upgrade-button';
 import { cn } from '@/lib/utils';
 
 export default function UserProfile() {
     const [name] = useLocalStorage('username', 'User');
-    const { plan } = usePlan();
+    const { plan, setPlan } = usePlan();
     const { t } = useI18n();
 
     const getInitials = (name: string) => {
@@ -63,14 +63,24 @@ export default function UserProfile() {
                        </span>
                     </div>
                 </DropdownMenuItem>
-                {plan === 'basic' && (
-                     <UpgradeButton asChild fullWidth>
+                
+                {plan === 'basic' ? (
+                     <UpgradeButton asChild>
                         <DropdownMenuItem className="focus:bg-primary/10 focus:text-primary cursor-pointer">
                             <Crown className="mr-2 h-4 w-4" />
                             <span>{t('upgrade_to_premium')}</span>
                         </DropdownMenuItem>
                     </UpgradeButton>
+                ) : (
+                    <DropdownMenuItem 
+                        className="focus:bg-primary/10 focus:text-primary cursor-pointer"
+                        onSelect={() => setPlan('basic')}
+                    >
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Gerir Subscrição</span>
+                    </DropdownMenuItem>
                 )}
+
             </DropdownMenuContent>
         </DropdownMenu>
     );
