@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Trash2, TrendingUp, TrendingDown, Wallet, Download, Lock } from "lucide-react";
+import { Calendar as CalendarIcon, Trash2, TrendingUp, TrendingDown, Wallet, Download, Crown } from "lucide-react";
 
 import type { Transaction } from '@/lib/types';
 import { exportToCsv } from '@/lib/csv';
@@ -25,6 +25,7 @@ import { useI18n } from '@/hooks/use-i18n';
 import { usePlan } from '@/hooks/use-plan';
 import UpgradePrompt from '@/components/upgrade-prompt';
 import UpgradeButton from '@/components/upgrade-button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function TrackerPage() {
   const { t } = useI18n();
@@ -107,11 +108,16 @@ export default function TrackerPage() {
         <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
         <div className="flex gap-2">
             {plan === 'basic' ? (
-              <UpgradeButton asChild>
-                <span className="w-full">
-                  <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
-                </span>
-              </UpgradeButton>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <UpgradeButton iconOnly />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t('upgrade_for_csv_export')}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             ) : (
               <Button variant="outline" onClick={handleExport} disabled={transactions.length === 0} className="hover:bg-primary hover:text-primary-foreground">
                   <Download className="mr-2 h-4 w-4" /> {t('export_csv')}

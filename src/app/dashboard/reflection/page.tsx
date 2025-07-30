@@ -195,15 +195,10 @@ export default function ReflectionPage() {
                     <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
                 </div>
                 {plan === 'basic' ? (
-                    <TooltipProvider>
+                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <UpgradeButton asChild>
-                                    <span>
-                                        <Download className="mr-2 h-4 w-4" />
-                                        {t('download_pdf')}
-                                    </span>
-                                </UpgradeButton>
+                                <UpgradeButton iconOnly />
                             </TooltipTrigger>
                             <TooltipContent>
                                 <p>{t('upgrade_for_pdf_export')}</p>

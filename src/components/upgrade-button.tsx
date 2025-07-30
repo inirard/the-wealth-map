@@ -3,13 +3,14 @@
 
 import React from 'react';
 import { Button } from './ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from './ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose, DialogTrigger } from './ui/dialog';
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from './ui/card';
 import { Check, Crown, X } from 'lucide-react';
 import { usePlan } from '@/hooks/use-plan';
 import { useI18n } from '@/hooks/use-i18n';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 
-export default function UpgradeButton({ asChild = false, fullWidth = false, size = 'default' }: { asChild?: boolean, fullWidth?: boolean, size?: 'sm' | 'default' | 'lg' | 'icon' | null | undefined}) {
+export default function UpgradeButton({ asChild = false, fullWidth = false, size = 'default', iconOnly = false }: { asChild?: boolean, fullWidth?: boolean, size?: 'sm' | 'default' | 'lg' | 'icon' | null | undefined, iconOnly?: boolean}) {
     const { plan, setPlan } = usePlan();
     const { t } = useI18n();
 
@@ -31,23 +32,41 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
         t('premium_feature_6'),
     ];
 
+    const buttonContent = iconOnly ? (
+        <Crown className="h-4 w-4" />
+    ) : (
+        <>
+            <Crown className="mr-2 h-4 w-4" />
+            {t('upgrade_to_premium')}
+        </>
+    );
+
+    const triggerButton = (
+        <Button 
+            className={`bg-gradient-to-r from-emphasis to-primary/80 text-white shadow-lg hover:scale-105 transition-transform ${fullWidth ? 'w-full' : ''}`} 
+            size={iconOnly ? 'icon' : size} 
+            asChild={asChild}
+        >
+            {asChild ? <span>{buttonContent}</span> : buttonContent}
+        </Button>
+    );
+
     return (
         <Dialog>
-            <DialogTrigger asChild>
-                 <Button className={`bg-gradient-to-r from-emphasis to-primary/80 text-white shadow-lg hover:scale-105 transition-transform ${fullWidth ? 'w-full' : ''}`} size={size} asChild={asChild}>
-                    {asChild ? (
-                        <span>
-                            <Crown className="mr-2 h-4 w-4" />
-                            {t('upgrade_to_premium')}
-                        </span>
-                    ) : (
-                        <>
-                            <Crown className="mr-2 h-4 w-4" />
-                            {t('upgrade_to_premium')}
-                        </>
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <DialogTrigger asChild>
+                            {triggerButton}
+                        </DialogTrigger>
+                    </TooltipTrigger>
+                    {iconOnly && (
+                        <TooltipContent>
+                            <p>{t('upgrade_to_premium')}</p>
+                        </TooltipContent>
                     )}
-                 </Button>
-            </DialogTrigger>
+                </Tooltip>
+            </TooltipProvider>
             <DialogContent className="max-w-4xl p-8">
                 <DialogHeader>
                     <DialogTitle className="text-center text-3xl font-bold">{t('unlock_full_potential')}</DialogTitle>
