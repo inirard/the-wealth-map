@@ -9,7 +9,7 @@
     "genkit:watch": "genkit start -- tsx --watch src/ai/dev.ts",
     "genkit": "genkit start",
     "build": "next build",
-    "start": "npm run build && serve out",
+    "start": "serve out",
     "lint": "next lint",
     "typecheck": "tsc --noEmit"
   },
@@ -60,6 +60,7 @@
     "react-textarea-autosize": "^8.5.3",
     "react-to-print": "^2.15.1",
     "recharts": "^2.15.1",
+    "serve": "^14.2.3",
     "tailwind-merge": "^3.0.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.2"
