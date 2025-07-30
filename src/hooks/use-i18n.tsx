@@ -25,18 +25,19 @@ interface I18nContextType {
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
-// A separate component to render children once the client-side language is determined.
-const I18nContent = ({ children }: { children: ReactNode }) => {
-  const [lsLanguage, setLanguage] = useLocalStorage<Language>('language', 'en');
-  const [language, setEffectiveLanguage] = useState<Language>('en');
+export const I18nProvider = ({ children }: { children: ReactNode }) => {
+  const [lsLanguage, setLsLanguage] = useLocalStorage<Language>('language', 'en');
+  const [effectiveLanguage, setEffectiveLanguage] = useState<Language>('en');
+  const [isMounted, setIsMounted] = useState(false);
 
-  // This effect runs only on the client, after hydration.
   useEffect(() => {
+    setIsMounted(true);
     setEffectiveLanguage(lsLanguage);
   }, [lsLanguage]);
 
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
-    const langTranslations = translations[language] || translations.en;
+    const langKey = isMounted ? effectiveLanguage : 'en';
+    const langTranslations = translations[langKey] || translations.en;
     let text = langTranslations[key] || key;
     if (params) {
       Object.keys(params).forEach(pKey => {
@@ -44,10 +45,15 @@ const I18nContent = ({ children }: { children: ReactNode }) => {
       });
     }
     return text;
-  }, [language]);
+  }, [isMounted, effectiveLanguage]);
+  
+  const setLanguage = useCallback((lang: Language) => {
+      setLsLanguage(lang);
+      setEffectiveLanguage(lang);
+  }, [setLsLanguage]);
 
   const contextValue = {
-      language,
+      language: effectiveLanguage,
       setLanguage,
       t
   };
@@ -57,22 +63,6 @@ const I18nContent = ({ children }: { children: ReactNode }) => {
       {children}
     </I18nContext.Provider>
   );
-};
-
-export const I18nProvider = ({ children }: { children: ReactNode }) => {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  // During SSR and initial client render, we render nothing or a fallback.
-  // Once mounted, we render the actual content with the correct language.
-  if (!isMounted) {
-    return null; // Or a loading spinner, but null avoids flashing content.
-  }
-  
-  return <I18nContent>{children}</I18nContent>;
 };
 
 
