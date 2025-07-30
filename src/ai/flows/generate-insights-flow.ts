@@ -4,59 +4,10 @@
  * @fileOverview An AI flow to generate financial insights based on user data.
  *
  * - generateInsights - A function that handles the financial analysis process.
- * - GenerateInsightsInput - The input type for the generateInsights function.
- * - GenerateInsightsOutput - The return type for the generateInsights function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types';
-
-const GoalSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  targetAmount: z.number(),
-  currentAmount: z.number(),
-  targetDate: z.string(),
-  importance: z.string().optional(),
-});
-
-const TransactionSchema = z.object({
-  id: z.string(),
-  description: z.string(),
-  amount: z.number(),
-  type: z.enum(['income', 'expense']),
-  date: z.string(),
-});
-
-const WealthWheelDataSchema = z.object({
-  id: z.string(),
-  label: z.string(),
-  value: z.number(),
-  description: z.string(),
-});
-
-const ReflectionSchema = z.object({
-    id: z.string(),
-    prompt: z.string(),
-    content: z.string(),
-});
-
-const GenerateInsightsInputSchema = z.object({
-  language: z.enum(['pt', 'en', 'es', 'fr']),
-  goals: z.array(GoalSchema),
-  transactions: z.array(TransactionSchema),
-  wheelData: z.array(WealthWheelDataSchema),
-  reflections: z.array(ReflectionSchema),
-});
-export type GenerateInsightsInput = z.infer<typeof GenerateInsightsInputSchema>;
-
-
-const GenerateInsightsOutputSchema = z.object({
-  analysis: z.string().describe('A concise, encouraging, and actionable financial analysis paragraph for the user. It should be in the language specified in the input.'),
-});
-export type GenerateInsightsOutput = z.infer<typeof GenerateInsightsOutputSchema>;
-
+import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
 
 export async function generateInsights(input: GenerateInsightsInput): Promise<GenerateInsightsOutput> {
   return generateInsightsFlow(input);

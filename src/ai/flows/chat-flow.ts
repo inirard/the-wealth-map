@@ -4,67 +4,10 @@
  * @fileOverview A flow for an interactive financial chatbot.
  *
  * - chat - A function that handles the chatbot conversation.
- * - ChatInput - The input type for the chat function.
- * - ChatOutput - The return type for the chat function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types';
-
-const GoalSchema = z.object({
-  id: z.string(),
-  name: z.string(),
-  targetAmount: z.number(),
-  currentAmount: z.number(),
-  targetDate: z.string(),
-  importance: z.string().optional(),
-});
-
-const TransactionSchema = z.object({
-  id: z.string(),
-  description: z.string(),
-  amount: z.number(),
-  type: z.enum(['income', 'expense']),
-  date: z.string(),
-});
-
-const WealthWheelDataSchema = z.object({
-  id: z.string(),
-  label: z.string(),
-  value: z.number(),
-  description: z.string(),
-});
-
-const ReflectionSchema = z.object({
-    id: z.string(),
-    prompt: z.string(),
-    content: z.string(),
-});
-
-const ChatMessageSchema = z.object({
-    role: z.enum(['user', 'model']),
-    content: z.string(),
-});
-export type ChatMessage = z.infer<typeof ChatMessageSchema>;
-
-export const ChatInputSchema = z.object({
-  language: z.enum(['pt', 'en', 'es', 'fr']),
-  history: z.array(ChatMessageSchema),
-  message: z.string(),
-  goals: z.array(GoalSchema),
-  transactions: z.array(TransactionSchema),
-  wheelData: z.array(WealthWheelDataSchema),
-  reflections: z.array(ReflectionSchema),
-});
-export type ChatInput = z.infer<typeof ChatInputSchema>;
-
-
-export const ChatOutputSchema = z.object({
-  response: z.string().describe("The chatbot's response to the user's message. It must be in the language specified in the input."),
-});
-export type ChatOutput = z.infer<typeof ChatOutputSchema>;
-
+import { ChatInputSchema, ChatOutputSchema, type ChatInput, type ChatOutput } from '@/lib/ai-types';
 
 export async function chat(input: ChatInput): Promise<ChatOutput> {
   return chatFlow(input);
