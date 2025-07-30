@@ -125,8 +125,10 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                         <CardTitle>{t('how_did_you_feel')}</CardTitle>
                                     </CardHeader>
                                     <CardContent className="p-0 mt-4">
-                                        {React.createElement(emotionalStates[mood].icon, { className: "text-7xl" })}
-                                        <p className="text-2xl font-medium text-gray-700 mt-2">{t(emotionalStates[mood].labelKey)}</p>
+                                        <div className="flex flex-col items-center justify-center">
+                                            {React.createElement(emotionalStates[mood].icon, { className: "text-7xl block" })}
+                                            <p className="text-2xl font-medium text-gray-700 mt-4">{t(emotionalStates[mood].labelKey)}</p>
+                                        </div>
                                     </CardContent>
                                 </Card>
                             )}
