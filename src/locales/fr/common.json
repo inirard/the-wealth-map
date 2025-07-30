@@ -134,5 +134,6 @@
   "goals_progress_title": "Progression des Objectifs",
   "transactions_title": "Détail des Transactions",
   "terms_of_service": "Conditions d'Utilisation",
-  "privacy_policy": "Politique de Confidentialité"
+  "privacy_policy": "Politique de Confidentialité",
+  "goal_completed": "Félicitations pour avoir atteint votre objectif '{{goalName}}' !"
 }

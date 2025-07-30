@@ -134,5 +134,6 @@
   "goals_progress_title": "Goals Progress",
   "transactions_title": "Transactions Detail",
   "terms_of_service": "Terms of Service",
-  "privacy_policy": "Privacy Policy"
+  "privacy_policy": "Privacy Policy",
+  "goal_completed": "Congratulations on completing your '{{goalName}}' goal!"
 }

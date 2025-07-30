@@ -28,10 +28,16 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
     const balance = totalIncome - totalExpenses;
 
     // Goal Summary
-    const closestGoal = goals
-      .filter(g => new Date(g.targetDate) > new Date())
-      .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime())[0];
-    const goalProgress = closestGoal ? (closestGoal.currentAmount / closestGoal.targetAmount) * 100 : 0;
+    const sortedGoals = [...goals]
+        .filter(g => g.currentAmount < g.targetAmount) // Prioritize not-completed goals
+        .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime());
+
+    const closestGoal = sortedGoals[0] || [...goals].sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime())[0];
+    
+    let goalProgress = 0;
+    if (closestGoal && closestGoal.targetAmount > 0) {
+        goalProgress = (closestGoal.currentAmount / closestGoal.targetAmount) * 100;
+    }
     
     // Wealth Wheel Summary
     const lowestWheelArea = [...wheelData]
@@ -84,12 +90,18 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                 </CardHeader>
                 <CardContent>
                     {summary.closestGoal ? (
-                        <p className="text-sm text-muted-foreground">
-                            {t('next_goal_desc', { 
-                                goalName: summary.closestGoal.name, 
-                                progress: Math.round(summary.goalProgress) 
-                            })}
-                        </p>
+                        summary.goalProgress >= 100 ? (
+                            <p className="text-sm text-muted-foreground">
+                                {t('goal_completed', { goalName: summary.closestGoal.name })}
+                            </p>
+                        ) : (
+                            <p className="text-sm text-muted-foreground">
+                                {t('next_goal_desc', { 
+                                    goalName: summary.closestGoal.name, 
+                                    progress: Math.round(summary.goalProgress) 
+                                })}
+                            </p>
+                        )
                     ) : (
                         <p className="text-sm text-muted-foreground">{t('no_upcoming_goals')}</p>
                     )}
