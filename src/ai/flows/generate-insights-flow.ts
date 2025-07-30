@@ -17,7 +17,7 @@ const GoalSchema = z.object({
   targetAmount: z.number(),
   currentAmount: z.number(),
   targetDate: z.string(),
-  importance: z.string(),
+  importance: z.string().optional(),
 });
 
 const TransactionSchema = z.object({

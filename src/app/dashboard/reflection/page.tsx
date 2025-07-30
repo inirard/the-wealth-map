@@ -44,7 +44,7 @@ export default function ReflectionPage() {
     const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
-    
+
     useEffect(() => {
         const initialData = reflectionPrompts.map(p => {
             const saved = lsReflections.find(s => s.id === p.id);
@@ -89,7 +89,7 @@ export default function ReflectionPage() {
     const canGenerate = useMemo(() => {
         return reflections.some(r => r.content && r.content.trim() !== '');
     }, [reflections]);
-    
+
     if (isInitialLoad) {
         return (
             <div className="space-y-8">
@@ -133,14 +133,10 @@ export default function ReflectionPage() {
                 </CardContent>
             </Card>
 
-            <MonthlySummary
-                goals={goals}
-                transactions={transactions}
-                wheelData={wheelData}
-            />
+            <MonthlySummary goals={goals} transactions={transactions} wheelData={wheelData} />
 
             <div className="grid gap-6 md:grid-cols-2">
-                {reflections.length > 0 && reflections.map((reflection) => (
+                {reflections.map((reflection) => (
                     <Card key={reflection.id}>
                         <CardHeader>
                             <CardTitle>{reflection.prompt}</CardTitle>
