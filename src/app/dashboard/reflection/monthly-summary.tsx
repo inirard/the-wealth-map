@@ -57,14 +57,16 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-3">
             <Card className="flex flex-col">
-                <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
-                     {summary.balance >= 0 ? 
-                        <TrendingUp className="h-8 w-8 text-green-600 flex-shrink-0" /> : 
-                        <TrendingDown className="h-8 w-8 text-destructive flex-shrink-0" />
-                    }
-                    <CardTitle className="text-base font-semibold whitespace-nowrap">{t('your_balance_this_month')}</CardTitle>
+                <CardHeader className="flex-grow">
+                    <div className="flex items-center gap-2">
+                        {summary.balance >= 0 ? 
+                            <TrendingUp className="h-6 w-6 text-green-600 flex-shrink-0" /> : 
+                            <TrendingDown className="h-6 w-6 text-destructive flex-shrink-0" />
+                        }
+                        <CardTitle className="text-base font-semibold">{t('your_balance_this_month')}</CardTitle>
+                    </div>
                 </CardHeader>
-                <CardContent className="flex-grow flex items-end">
+                <CardContent>
                     <p className={cn("text-3xl font-bold", summary.balance >= 0 ? 'text-green-600' : 'text-destructive')}>
                         €{summary.balance.toFixed(2)}
                     </p>
@@ -72,11 +74,13 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
             </Card>
 
             <Card className="flex flex-col">
-                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
-                    <Target className="h-8 w-8 text-primary flex-shrink-0" />
-                    <CardTitle className="text-base font-semibold">{t('next_goal_focus')}</CardTitle>
+                 <CardHeader className="flex-grow">
+                    <div className="flex items-start gap-2">
+                        <Target className="h-6 w-6 text-primary flex-shrink-0" />
+                        <CardTitle className="text-base font-semibold">{t('next_goal_focus')}</CardTitle>
+                    </div>
                 </CardHeader>
-                <CardContent className="flex-grow">
+                <CardContent>
                     {summary.closestGoal ? (
                         <p className="text-sm text-muted-foreground">
                             {t('next_goal_desc', { 
@@ -91,14 +95,16 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
             </Card>
 
             <Card className="flex flex-col">
-                 <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2">
-                    <Activity className="h-8 w-8 text-accent flex-shrink-0" />
-                    <CardTitle className="text-base font-semibold">{t('focus_area_title')}</CardTitle>
+                 <CardHeader className="flex-grow">
+                    <div className="flex items-start gap-2">
+                        <Activity className="h-6 w-6 text-accent flex-shrink-0" />
+                        <CardTitle className="text-base font-semibold">{t('focus_area_title')}</CardTitle>
+                    </div>
                 </CardHeader>
-                <CardContent className="flex-grow">
+                <CardContent>
                      {summary.lowestWheelArea ? (
                         <p className="text-sm text-muted-foreground">
-                           {t('focus_area_desc', { area: summary.lowestWheelArea.label })}
+                           {t('focus_area_desc', { area: t(summary.lowestWheelArea.id) })}
                         </p>
                     ) : (
                          <p className="text-sm text-muted-foreground">{t('complete_wealth_wheel')}</p>
