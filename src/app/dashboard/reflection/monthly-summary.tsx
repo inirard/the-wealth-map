@@ -28,11 +28,11 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
     const balance = totalIncome - totalExpenses;
 
     // Goal Summary
-    const sortedGoals = [...goals]
-        .filter(g => g.currentAmount < g.targetAmount) // Prioritize not-completed goals
-        .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime());
+    const incompleteGoals = goals
+      .filter(g => g.currentAmount < g.targetAmount)
+      .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime());
 
-    const closestGoal = sortedGoals[0] || [...goals].sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime())[0];
+    const closestGoal = incompleteGoals[0] || [...goals].sort((a, b) => new Date(b.targetDate).getTime() - new Date(a.targetDate).getTime())[0];
     
     let goalProgress = 0;
     if (closestGoal && closestGoal.targetAmount > 0) {
