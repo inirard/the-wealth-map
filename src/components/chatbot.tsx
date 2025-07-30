@@ -11,7 +11,7 @@ import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types
 import type { ChatMessage } from '@/lib/ai-types';
 import { chat } from '@/ai/flows/chat-flow';
 import Textarea from 'react-textarea-autosize';
-import { Bot, Send, User, X, Loader, MessageSquare } from 'lucide-react';
+import { Bot, Send, User, X, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from "@/hooks/use-toast";
 
@@ -82,15 +82,13 @@ export default function Chatbot() {
     };
 
     return (
-        <>
-            <div className={cn("fixed bottom-6 right-6 z-50 transition-transform duration-300 ease-in-out", isOpen ? "scale-0" : "scale-100")}>
-                <Button size="lg" className="rounded-full w-16 h-16 shadow-lg" onClick={() => setIsOpen(true)}>
-                    <Bot className="w-8 h-8" />
-                    <span className="sr-only">{t('open_chatbot')}</span>
-                </Button>
-            </div>
+        <div className="relative">
+            <Button variant="ghost" size="icon" className="hover:text-primary" onClick={() => setIsOpen(true)}>
+                <Bot className="h-6 w-6" />
+                <span className="sr-only">{t('open_chatbot')}</span>
+            </Button>
 
-            <div className={cn("fixed bottom-6 right-6 z-50 w-[calc(100vw-3rem)] max-w-md transition-all duration-300 ease-in-out", 
+            <div className={cn("fixed bottom-6 right-6 z-50 w-[calc(100vw-3rem)] max-w-md transition-all duration-300 ease-in-out sm:bottom-auto sm:top-20", 
                 isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10 pointer-events-none")}>
                 <Card className="shadow-2xl h-[70vh] flex flex-col">
                     <CardHeader className="flex flex-row items-center justify-between">
@@ -148,7 +146,6 @@ export default function Chatbot() {
                     </CardFooter>
                 </Card>
             </div>
-        </>
+        </div>
     );
 }
-
