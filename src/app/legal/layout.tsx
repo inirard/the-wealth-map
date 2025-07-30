@@ -21,7 +21,7 @@ export default function LegalLayout({
             <span className="font-semibold text-lg">The Wealth Map</span>
           </Link>
           <Button asChild variant="outline">
-            <Link href="/dashboard">
+            <Link href="/dashboard" className="flex items-center">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to App
             </Link>
