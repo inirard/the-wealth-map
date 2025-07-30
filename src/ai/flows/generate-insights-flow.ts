@@ -60,7 +60,8 @@ const generateInsightsFlow = ai.defineFlow(
         await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Wait before retrying (e.g., 1s, 2s, 3s)
       }
     }
-    // This should not be reached, but typescript needs a return path.
+    // This part should not be reachable due to the error being thrown in the loop,
+    // but it satisfies TypeScript's need for a return path.
     throw new Error("Failed to generate insights after multiple retries.");
   }
 );
