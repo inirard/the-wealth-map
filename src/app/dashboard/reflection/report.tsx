@@ -52,6 +52,10 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
     
     const nonEmptyReflections = reflections.filter(r => r.content.trim() !== '');
 
+    const cardStyle = {
+        breakInside: 'avoid',
+    } as React.CSSProperties;
+
     return (
         <div ref={ref} className="p-8 font-body bg-white text-gray-800">
             {/* Report Header */}
@@ -74,15 +78,15 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 <section>
                     <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('financial_summary_title')}</h2>
                     <div className="grid grid-cols-3 gap-6">
-                        <Card className="text-center shadow-md">
+                        <Card className="text-center shadow-md" style={cardStyle}>
                             <CardHeader><CardTitle className="text-lg">{t('total_income')}</CardTitle></CardHeader>
                             <CardContent><p className="text-3xl font-bold text-green-600">€{totalIncome.toFixed(2)}</p></CardContent>
                         </Card>
-                        <Card className="text-center shadow-md">
+                        <Card className="text-center shadow-md" style={cardStyle}>
                             <CardHeader><CardTitle className="text-lg">{t('total_expenses')}</CardTitle></CardHeader>
                             <CardContent><p className="text-3xl font-bold text-red-600">€{totalExpenses.toFixed(2)}</p></CardContent>
                         </Card>
-                        <Card className="text-center shadow-md">
+                        <Card className="text-center shadow-md" style={cardStyle}>
                             <CardHeader><CardTitle className="text-lg">{t('final_balance')}</CardTitle></CardHeader>
                             <CardContent><p className={cn("text-3xl font-bold", balance >= 0 ? 'text-green-600' : 'text-red-600')}>€{balance.toFixed(2)}</p></CardContent>
                         </Card>
@@ -92,7 +96,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 {/* AI Coach Insights */}
                 {aiInsight && aiInsight.analysis && (
                     <section>
-                        <Card className="bg-primary/5 border-primary shadow-md">
+                        <Card className="bg-primary/5 border-primary shadow-md" style={cardStyle}>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-3 text-primary">
                                     <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
@@ -113,21 +117,21 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                              <div className="space-y-4">
                                 {nonEmptyReflections.map(reflection => (
-                                    <Card key={reflection.id} className="shadow-md">
+                                    <Card key={reflection.id} className="shadow-md" style={cardStyle}>
                                         <CardHeader><CardTitle className="text-base">{reflection.prompt}</CardTitle></CardHeader>
                                         <CardContent><p className="text-gray-600 italic">"{reflection.content}"</p></CardContent>
                                     </Card>
                                 ))}
                              </div>
                              {mood && emotionalStates[mood] && (
-                                <Card className="bg-gray-50 shadow-md p-6 text-center">
-                                    <CardHeader className="p-0">
+                                <Card className="shadow-md text-center" style={cardStyle}>
+                                    <CardHeader className="p-6 pb-2">
                                         <CardTitle>{t('how_did_you_feel')}</CardTitle>
                                     </CardHeader>
-                                    <CardContent className="p-0 mt-4">
-                                        <div className="flex flex-col items-center justify-center">
-                                            {React.createElement(emotionalStates[mood].icon, { className: "text-7xl block" })}
-                                            <p className="text-2xl font-medium text-gray-700 mt-4">{t(emotionalStates[mood].labelKey)}</p>
+                                    <CardContent className="p-6 pt-2">
+                                        <div>
+                                            <span className="text-7xl block">{emotionalStates[mood].icon({})}</span>
+                                            <p className="text-2xl font-medium text-gray-700 mt-2">{t(emotionalStates[mood].labelKey)}</p>
                                         </div>
                                     </CardContent>
                                 </Card>
@@ -144,7 +148,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                             <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('goals_progress_title')}</h2>
                             <div className="space-y-4">
                                 {goals.map(goal => (
-                                    <Card key={goal.id} className="shadow-md">
+                                    <Card key={goal.id} className="shadow-md" style={cardStyle}>
                                         <CardHeader>
                                             <CardTitle className="flex justify-between items-center text-lg">
                                                 <span>{goal.name}</span>
@@ -166,7 +170,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                     {wheelData.length > 0 && (
                         <section className={goals.length > 0 ? "col-span-2" : "col-span-5"}>
                             <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('your_wealth_wheel')}</h2>
-                             <Card className="shadow-md">
+                             <Card className="shadow-md" style={cardStyle}>
                                  <CardContent className="h-[500px] p-4">
                                     <ChartContainer config={chartConfig} className="w-full h-full">
                                         <RadarChart data={wheelData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
@@ -187,7 +191,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 {transactions.length > 0 && (
                     <section>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('transactions_title')}</h2>
-                        <Card className="shadow-md">
+                        <Card className="shadow-md" style={cardStyle}>
                             <Table>
                                 <TableHeader>
                                     <TableRow>
