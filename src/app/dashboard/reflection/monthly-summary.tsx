@@ -62,7 +62,7 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                         <TrendingUp className="h-8 w-8 text-green-600 flex-shrink-0" /> : 
                         <TrendingDown className="h-8 w-8 text-destructive flex-shrink-0" />
                     }
-                    <CardTitle className="text-base font-semibold">{t('your_balance_this_month')}</CardTitle>
+                    <CardTitle className="text-base font-semibold whitespace-nowrap">{t('your_balance_this_month')}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex-grow flex items-end">
                     <p className={cn("text-3xl font-bold", summary.balance >= 0 ? 'text-green-600' : 'text-destructive')}>
