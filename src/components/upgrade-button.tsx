@@ -34,7 +34,7 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
     ];
 
     const buttonContent = iconOnly ? (
-        <Crown className="h-6 w-6 text-primary" />
+        <Crown className="h-5 w-5" />
     ) : (
         <>
             <Crown className="mr-2 h-4 w-4" />
@@ -48,7 +48,7 @@ export default function UpgradeButton({ asChild = false, fullWidth = false, size
             size={iconOnly ? "icon" : size} 
             asChild={asChild}
             className={cn(
-                iconOnly ? 'text-primary hover:text-primary/90' : 'bg-gradient-to-r from-emphasis to-primary/80 text-white shadow-lg hover:scale-105 transition-transform',
+                iconOnly ? 'text-primary hover:text-primary/90' : 'bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-transform',
                 fullWidth ? 'w-full' : ''
             )}
         >
