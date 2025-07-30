@@ -62,10 +62,10 @@ export default function DashboardPage() {
       <Card>
         <div className="grid md:grid-cols-2 items-center">
           <div className="p-8 md:p-10">
-            <h1 className="font-headline text-lg font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
+            <h1 className="font-headline text-2xl font-bold text-primary whitespace-nowrap overflow-hidden text-ellipsis">
               {t("welcome_user", { name })}
             </h1>
-            <p className="mt-2 text-md text-foreground/80">{t("dashboard_subtitle")}</p>
+            <p className="mt-2 text-base text-foreground/80">{t("dashboard_subtitle")}</p>
             <div className="mt-6">
               <Link href="/dashboard/goals">
                 <Button size="lg" className="group hover:bg-primary/90">
@@ -77,12 +77,11 @@ export default function DashboardPage() {
           </div>
           <div className="p-4 flex items-center justify-center">
             <Image
-              src="https://placehold.co/400x300.png"
+              src="/images/dashboardimage.png"
               alt="Dashboard Illustration"
               width={400}
               height={300}
               className="w-full max-w-[400px] h-auto rounded-lg"
-              data-ai-hint="financial planning illustration"
               priority
             />
           </div>
@@ -100,17 +99,17 @@ export default function DashboardPage() {
               <CardHeader className="flex-row items-center gap-4">
                 <feature.icon className={`w-8 h-8 ${feature.color}`} />
                 <div>
-                  <CardTitle>{feature.title}</CardTitle>
+                  <CardTitle className="text-base">{feature.title}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent className="flex-grow">
-                <p className="text-muted-foreground">{feature.description}</p>
+                <p className="text-sm text-muted-foreground">{feature.description}</p>
               </CardContent>
               <div className="p-6 pt-0">
                 <Link href={feature.href}>
                   <Button
                     variant="outline"
-                    className="w-full hover:bg-primary hover:text-primary-foreground"
+                    className="w-full"
                   >
                     {t("open")}
                   </Button>
