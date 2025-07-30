@@ -41,8 +41,12 @@ export default function PrivacyPolicyPage() {
 
       <h2>6. Contact Us</h2>
       <p>
-        If you have any questions about this Privacy Policy, you can contact us at [Your Contact Email Address].
+        If you have any questions about this Privacy Policy, you can contact us at:
       </p>
+      <ul>
+        <li><strong>Email:</strong> thewealthmap.app@gmail.com</li>
+        <li><strong>Phone:</strong> +238 520 16 61</li>
+      </ul>
       
       <p><em>This is a template. Please consult with a legal professional to ensure this policy is appropriate for your specific circumstances.</em></p>
     </>

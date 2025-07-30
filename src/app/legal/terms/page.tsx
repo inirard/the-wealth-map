@@ -38,6 +38,15 @@ export default function TermsOfServicePage() {
       <p>
         We reserve the right to modify these terms at any time. We will notify you of any changes by posting the new Terms of Service on this page.
       </p>
+      
+      <h2>7. Contact Us</h2>
+      <p>
+        If you have any questions about these Terms of Service, you can contact us at:
+      </p>
+      <ul>
+        <li><strong>Email:</strong> thewealthmap.app@gmail.com</li>
+        <li><strong>Phone:</strong> +238 520 16 61</li>
+      </ul>
 
       <p><em>This is a template. Please consult with a legal professional to tailor these terms to your specific business and legal requirements.</em></p>
     </>
