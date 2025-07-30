@@ -9,27 +9,31 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T
   const [storedValue, setStoredValue] = useState<T>(initialValue);
 
   useEffect(() => {
+    // This effect runs only once on the client-side after the initial render.
+    // It safely reads from localStorage without causing server-client mismatches.
     try {
       const item = window.localStorage.getItem(key);
-      // Se o item existir no localStorage, usamos esse valor.
-      // Caso contrário, mantemos o `initialValue` que já está no estado.
+      // If the item exists in localStorage, we use that value.
+      // Otherwise, we stick with the `initialValue` already in the state.
       if (item !== null) {
         setStoredValue(JSON.parse(item));
       }
     } catch (error) {
       console.warn(`Error reading localStorage key “${key}”:`, error);
-      // Em caso de erro, o estado já tem o `initialValue`, então não é preciso fazer nada.
+      // In case of an error, the state already holds `initialValue`, so we do nothing.
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key]); // Executa apenas quando a 'key' muda.
+    // The empty dependency array ensures this effect runs only once on mount.
+  }, [key]);
 
   const setValue: SetValue<T> = useCallback(
     (value) => {
       try {
         const valueToStore = value instanceof Function ? value(storedValue) : value;
         setStoredValue(valueToStore);
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
-        window.dispatchEvent(new Event('local-storage'));
+        if (typeof window !== 'undefined') {
+          window.localStorage.setItem(key, JSON.stringify(valueToStore));
+          window.dispatchEvent(new Event('local-storage'));
+        }
       } catch (error) {
         console.warn(`Error setting localStorage key “${key}”:`, error);
       }
