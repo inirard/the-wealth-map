@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -7,6 +6,7 @@ export default function TermsOfServicePage() {
   const [lastUpdated, setLastUpdated] = useState('');
 
   useEffect(() => {
+    // This code runs only on the client, after the page has hydrated.
     setLastUpdated(new Date().toLocaleDateString());
   }, []);
 
