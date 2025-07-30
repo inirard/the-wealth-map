@@ -60,12 +60,22 @@ export default function ReflectionPage() {
         setIsDownloading(true);
 
         try {
+            // A4 size in pixels at 96 DPI: 794x1123
+            const a4Width = 794;
+            
+            // Set element width to match A4 page for consistent rendering
+            reportElement.style.width = `${a4Width}px`;
+            
             const canvas = await html2canvas(reportElement, {
-                scale: 2,
+                scale: 2, // Use higher scale for better resolution
                 useCORS: true,
                 backgroundColor: '#ffffff',
                 windowHeight: reportElement.scrollHeight,
+                windowWidth: a4Width, 
             });
+
+            // Reset element width after canvas generation
+            reportElement.style.width = '';
 
             const imgData = canvas.toDataURL('image/png');
             const pdf = new jsPDF({
@@ -78,6 +88,8 @@ export default function ReflectionPage() {
             const pdfHeight = pdf.internal.pageSize.getHeight();
             const canvasWidth = canvas.width;
             const canvasHeight = canvas.height;
+            
+            // The ratio should be based on the canvas width and the PDF width
             const ratio = canvasWidth / pdfWidth;
             const imgHeight = canvasHeight / ratio;
 
@@ -88,7 +100,7 @@ export default function ReflectionPage() {
             heightLeft -= pdfHeight;
 
             while (heightLeft > 0) {
-                position = heightLeft - imgHeight;
+                position -= pdfHeight;
                 pdf.addPage();
                 pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
                 heightLeft -= pdfHeight;
@@ -296,5 +308,7 @@ export default function ReflectionPage() {
         </div>
     );
 }
+
+    
 
     
