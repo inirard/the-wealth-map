@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, PanelLeft } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -13,6 +13,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import { Button } from '@/components/ui/button';
 import {
@@ -58,6 +59,11 @@ export default function AppSidebar() {
     { href: '/dashboard/reflection', icon: BookOpen, label: t('reflection') },
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
   ];
+  
+  const legalItems = [
+    { href: '/legal/terms', icon: FileText, label: t('terms_of_service') },
+    { href: '/legal/privacy', icon: ShieldCheck, label: t('privacy_policy') },
+  ]
 
   const languages: { code: Language, name: string }[] = [
     { code: 'pt', name: 'Português' },
@@ -94,6 +100,22 @@ export default function AppSidebar() {
                   <Link href={item.href}>
                     <item.icon />
                     {mounted ? <span>{item.label}</span> : <span>{t('dashboard')}</span>}
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+             <SidebarSeparator className="my-2" />
+             {legalItems.map((item) => (
+              <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === item.href}
+                  onClick={() => setOpenMobile(false)}
+                  tooltip={item.label}
+                >
+                  <Link href={item.href}>
+                    <item.icon />
+                    {mounted ? <span>{item.label}</span> : <span>...</span>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -146,4 +168,3 @@ export default function AppSidebar() {
     </>
   );
 }
-
