@@ -1,5 +1,5 @@
 
-import type {Metadata} from 'next';
+import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import './print.css';
 import { Toaster } from "@/components/ui/toaster";
@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: 'The Wealth Map | Your Interactive Financial Planner',
   description: 'Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.',
   manifest: '/manifest.json',
+};
+
+export const viewport: Viewport = {
   themeColor: '#007C7C',
 };
 
