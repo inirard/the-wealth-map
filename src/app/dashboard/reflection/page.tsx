@@ -211,7 +211,8 @@ export default function ReflectionPage() {
                                     variant={mood === state.emoji ? "default" : "outline"}
                                     className={cn(
                                         "flex-grow sm:flex-grow-0 text-2xl h-20 w-24 flex flex-col items-center justify-center gap-2 transition-all duration-200",
-                                        mood === state.emoji ? "border-primary border-2" : "border"
+                                        mood === state.emoji ? "border-primary border-2" : "border",
+                                        mood !== state.emoji && "hover:bg-primary/90 hover:text-primary-foreground"
                                     )}
                                     onClick={() => setMood(state.emoji)}
                                 >
@@ -316,6 +317,8 @@ export default function ReflectionPage() {
         </div>
     );
 }
+
+    
 
     
 
