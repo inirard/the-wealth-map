@@ -1,3 +1,4 @@
+
 import {defineConfig} from '@genkit-ai/core';
 import {googleAI} from '@genkit-ai/googleai';
 import {genkitEval} from '@genkit-ai/eval';
@@ -18,5 +19,6 @@ export default defineConfig({
   flows: [
     './src/ai/flows/generate-insights-flow.ts',
     './src/ai/flows/chat-flow.ts',
+    './src/ai/flows/predictive-insights-flow.ts',
   ],
 });

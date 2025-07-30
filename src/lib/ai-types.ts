@@ -1,3 +1,4 @@
+
 import {z} from 'genkit';
 
 const GoalSchema = z.object({
@@ -8,6 +9,7 @@ const GoalSchema = z.object({
   targetDate: z.string(),
   importance: z.string().optional(),
 });
+export type Goal = z.infer<typeof GoalSchema>;
 
 const TransactionSchema = z.object({
   id: z.string(),
@@ -16,6 +18,7 @@ const TransactionSchema = z.object({
   type: z.enum(['income', 'expense']),
   date: z.string(),
 });
+export type Transaction = z.infer<typeof TransactionSchema>;
 
 const WealthWheelDataSchema = z.object({
   id: z.string(),
@@ -23,12 +26,14 @@ const WealthWheelDataSchema = z.object({
   value: z.number(),
   description: z.string(),
 });
+export type WealthWheelData = z.infer<typeof WealthWheelDataSchema>;
 
 const ReflectionSchema = z.object({
     id: z.string(),
     prompt: z.string(),
     content: z.string(),
 });
+export type Reflection = z.infer<typeof ReflectionSchema>;
 
 const ChatMessageSchema = z.object({
     role: z.enum(['user', 'model']),
@@ -67,3 +72,23 @@ export const GenerateInsightsOutputSchema = z.object({
   analysis: z.string().describe('A concise, encouraging, and actionable financial analysis paragraph for the user. It should be in the language specified in the input.'),
 });
 export type GenerateInsightsOutput = z.infer<typeof GenerateInsightsOutputSchema>;
+
+export const PredictiveInsightsInputSchema = z.object({
+    language: z.enum(['pt', 'en', 'es', 'fr']),
+    goals: z.array(GoalSchema),
+    transactions: z.array(TransactionSchema),
+    currentDate: z.string().describe('The current date in ISO format.'),
+});
+export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;
+
+export const PredictiveInsightsOutputSchema = z.object({
+    futureBalancePrediction: z.string().describe("Prediction of the user's future balance for the end of the current month. Must be in the specified language."),
+    goalProjections: z.array(z.object({
+        goalName: z.string(),
+        projection: z.string().describe("Projection for when the user might achieve the goal. Must be in the specified language."),
+    })).describe("An array of projections for each of the user's financial goals."),
+    spendingAnalysis: z.string().describe("Analysis of spending patterns with a suggestion for a cut. Must be in the specified language."),
+    proactiveAlerts: z.array(z.string()).describe("An array of automated alerts based on spending patterns. Must be in the specified language."),
+    whatIfScenario: z.string().describe("A 'what if' scenario to motivate the user. Must be in the specified language."),
+});
+export type PredictiveInsightsOutput = z.infer<typeof PredictiveInsightsOutputSchema>;

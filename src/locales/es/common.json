@@ -137,5 +137,17 @@
   "privacy_policy": "Política de Privacidad",
   "goal_completed": "¡Felicidades por completar tu meta '{{goalName}}'!",
   "download_pdf": "Descargar PDF",
-  "downloading": "Descargando..."
+  "downloading": "Descargando...",
+  "ai_projections_title": "Proyecciones de IA",
+  "ai_projections_description": "Mira hacia el futuro. Obtén predicciones impulsadas por IA basadas en tus hábitos financieros.",
+  "future_balance_prediction": "Predicción de Saldo Futuro",
+  "goal_projections": "Proyecciones de Metas",
+  "spending_pattern_analysis": "Análisis de Patrones de Gasto",
+  "proactive_alerts": "Alertas Proactivas",
+  "what_if_scenario": "Escenario 'Qué Pasaría Si'",
+  "generate_projections_title": "Genera Tu Futuro Financiero",
+  "generate_projections_desc": "Usa tus datos existentes para que la IA cree pronósticos y escenarios para ti.",
+  "generate_projections_button": "Generar Proyecciones",
+  "regenerate_projections_button": "Regenerar Proyecciones",
+  "add_data_to_generate": "Añade algunas transacciones o metas para generar proyecciones."
 }
