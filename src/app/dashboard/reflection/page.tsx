@@ -13,11 +13,13 @@ import { useI18n } from '@/hooks/use-i18n';
 import MonthlySummary from './monthly-summary';
 import { generateInsights } from '@/ai/flows/generate-insights-flow';
 import type { GenerateInsightsOutput } from '@/lib/ai-types';
-import { Sparkles, Bot, Printer } from 'lucide-react';
+import { Sparkles, Bot, Download } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import FinancialReport from './report';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const emotionalStates = [
     { emoji: '😃', label: 'excellent' },
@@ -48,11 +50,52 @@ export default function ReflectionPage() {
     const [username] = useLocalStorage<string>('username', 'User');
     const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-    const handlePrint = () => {
-        window.print();
+    const handleDownloadPdf = async () => {
+        const reportElement = reportRef.current;
+        if (!reportElement) return;
+
+        setIsDownloading(true);
+        
+        try {
+            // Temporarily make the report visible for rendering
+            reportElement.parentElement!.style.display = 'block';
+            reportElement.parentElement!.style.opacity = '0';
+            
+            const canvas = await html2canvas(reportElement, {
+                scale: 2, // Improves resolution
+                useCORS: true,
+                backgroundColor: '#ffffff',
+            });
+            
+            // Hide the report again
+            reportElement.parentElement!.style.display = '';
+            reportElement.parentElement!.style.opacity = '';
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'px',
+                format: [canvas.width, canvas.height]
+            });
+            
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save(`financial-report-${new Date().toISOString().split('T')[0]}.pdf`);
+
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+            toast({
+                variant: "destructive",
+                title: t('ai_error_title'),
+                description: 'Failed to generate PDF report.',
+            });
+        } finally {
+            setIsDownloading(false);
+        }
     };
+
 
     useEffect(() => {
         const initialData = reflectionPrompts.map(p => {
@@ -116,18 +159,18 @@ export default function ReflectionPage() {
 
     return (
         <div className="space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 no-print">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
                     <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
                 </div>
-                <Button onClick={handlePrint} disabled={!hasDataToReport}>
-                    <Printer className="mr-2 h-4 w-4" />
-                    {t('generate_report')}
+                <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading}>
+                    <Download className="mr-2 h-4 w-4" />
+                    {isDownloading ? 'Downloading...' : 'Download PDF'}
                 </Button>
             </div>
 
-            <div className="no-print">
+            <div>
                 <Card>
                     <CardHeader>
                         <CardTitle>{t('how_did_you_feel')}</CardTitle>
@@ -154,11 +197,11 @@ export default function ReflectionPage() {
                 </Card>
             </div>
 
-            <div className="no-print">
+            <div>
                 <MonthlySummary goals={goals} transactions={transactions} wheelData={wheelData} />
             </div>
             
-            <div className="grid gap-6 md:grid-cols-2 no-print">
+            <div className="grid gap-6 md:grid-cols-2">
                 {reflections.map((reflection) => (
                     <Card key={reflection.id} className="flex flex-col">
                         <CardHeader>
@@ -178,7 +221,7 @@ export default function ReflectionPage() {
                 ))}
             </div>
 
-            <div className="no-print">
+            <div>
                 <Card className="bg-primary/5">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2 text-lg">
@@ -224,7 +267,7 @@ export default function ReflectionPage() {
                 </Card>
             </div>
             
-            <div className="print-only">
+            <div style={{ display: 'none' }}>
                  <FinancialReport 
                     ref={reportRef}
                     data={{
