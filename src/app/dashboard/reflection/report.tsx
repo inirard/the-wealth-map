@@ -63,7 +63,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 <div className="flex items-center gap-3">
                     <CircleDollarSign className="h-10 w-10 text-primary" />
                     <div>
-                        <h1 className="text-3xl font-bold font-headline text-primary">{t('financial_report_title')}</h1>
+                        <h1 className="text-3xl font-bold font-headline text-gray-800">{t('financial_report_title')}</h1>
                         <p className="text-gray-500">{t('financial_report_subtitle', { name: username })}</p>
                     </div>
                 </div>
@@ -76,7 +76,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
             <main className="space-y-12">
                 {/* Financial Summary */}
                 <section>
-                    <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('financial_summary_title')}</h2>
+                    <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('financial_summary_title')}</h2>
                     <div className="grid grid-cols-3 gap-6">
                         <Card className="text-center shadow-md" style={cardStyle}>
                             <CardHeader><CardTitle className="text-lg">{t('total_income')}</CardTitle></CardHeader>
@@ -113,7 +113,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                  {/* Reflections and Mood */}
                 {nonEmptyReflections.length > 0 && (
                      <section>
-                        <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('reflection_motivation')}</h2>
+                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('reflection_motivation')}</h2>
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                              <div className="space-y-4">
                                 {nonEmptyReflections.map(reflection => (
@@ -145,7 +145,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 <div className="grid grid-cols-5 gap-8">
                     {goals.length > 0 && (
                         <section className="col-span-3">
-                            <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('goals_progress_title')}</h2>
+                            <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('goals_progress_title')}</h2>
                             <div className="space-y-4">
                                 {goals.map(goal => (
                                     <Card key={goal.id} className="shadow-md" style={cardStyle}>
@@ -169,7 +169,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
                     {wheelData.length > 0 && (
                         <section className={goals.length > 0 ? "col-span-2" : "col-span-5"}>
-                            <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('your_wealth_wheel')}</h2>
+                            <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('your_wealth_wheel')}</h2>
                              <Card className="shadow-md" style={cardStyle}>
                                  <CardContent className="h-[500px] p-4">
                                     <ChartContainer config={chartConfig} className="w-full h-full">
@@ -190,7 +190,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 {/* Transactions */}
                 {transactions.length > 0 && (
                     <section>
-                        <h2 className="text-2xl font-bold font-headline mb-4 text-primary">{t('transactions_title')}</h2>
+                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('transactions_title')}</h2>
                         <Card className="shadow-md" style={cardStyle}>
                             <Table>
                                 <TableHeader>
