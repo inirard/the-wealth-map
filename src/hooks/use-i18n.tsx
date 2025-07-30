@@ -26,10 +26,18 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
 export const I18nProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useLocalStorage<Language>('language', 'en');
-  
+  const [lsLanguage, setLanguage] = useLocalStorage<Language>('language', 'en');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const language = isMounted ? lsLanguage : 'en';
+
   const t = useCallback((key: string, params?: Record<string, string | number>) => {
-    const langTranslations = translations[language] || translations.en;
+    const effectiveLanguage = isMounted ? lsLanguage : 'en';
+    const langTranslations = translations[effectiveLanguage] || translations.en;
     let text = langTranslations[key] || key;
     if (params) {
       Object.keys(params).forEach(pKey => {
@@ -37,10 +45,16 @@ export const I18nProvider = ({ children }: { children: ReactNode }) => {
       });
     }
     return text;
-  }, [language]);
+  }, [lsLanguage, isMounted]);
 
+  const contextValue = {
+      language,
+      setLanguage,
+      t
+  };
+  
   return (
-    <I18nContext.Provider value={{ language, setLanguage, t }}>
+    <I18nContext.Provider value={contextValue}>
       {children}
     </I18nContext.Provider>
   );
