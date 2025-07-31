@@ -31,9 +31,9 @@ export default function ActivatePage() {
         setLicenseKey(key.trim());
         toast({
           title: 'Ativação bem-sucedida!',
-          description: 'Bem-vindo(a) ao The Wealth Map.',
+          description: 'A preparar a sua conta...',
         });
-        router.push('/dashboard');
+        router.push('/welcome');
       } else {
         setError('Chave de licença inválida. Por favor, verifique e tente novamente.');
         setIsLoading(false);
