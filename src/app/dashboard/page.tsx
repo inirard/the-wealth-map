@@ -1,6 +1,7 @@
 
 "use client";
 
+import React from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -16,10 +17,16 @@ import {
 import Image from "next/image";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useI18n } from "@/hooks/use-i18n";
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function DashboardPage() {
   const [name] = useLocalStorage("username", "Explorer");
   const { t } = useI18n();
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const featureCards = [
     {
@@ -72,7 +79,7 @@ export default function DashboardPage() {
         <div className="grid md:grid-cols-2 items-center">
           <div className="p-6 md:p-10">
             <h1 className="text-lg md:text-xl font-semibold text-primary whitespace-nowrap">
-              {t("welcome_user", { name })}
+              {isClient ? t("welcome_user", { name }) : <Skeleton className="h-7 w-48" />}
             </h1>
             <p className="mt-2 text-base text-foreground/80">{t("dashboard_subtitle")}</p>
             <div className="mt-6">
