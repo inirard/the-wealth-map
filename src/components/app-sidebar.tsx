@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -37,6 +37,7 @@ import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
 import DataManagement from './data-management';
 import { cn } from '@/lib/utils';
+import UpgradeToPro from './upgrade-to-pro';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -45,6 +46,7 @@ export default function AppSidebar() {
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
   const { t, language, setLanguage } = useI18n();
   const [mounted, setMounted] = React.useState(false);
+  const [upgradeDialogOpen, setUpgradeDialogOpen] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
@@ -105,6 +107,17 @@ export default function AppSidebar() {
               </SidebarMenuItem>
             ))}
              <SidebarSeparator className="my-2" />
+              <SidebarMenuItem>
+                 <SidebarMenuButton
+                    onClick={() => setUpgradeDialogOpen(true)}
+                    tooltip={t('unlock_pro_plan')}
+                    className="bg-primary/10 text-primary hover:bg-primary/20"
+                  >
+                    <Gem />
+                    {mounted ? <span className="group-data-[collapsible=icon]:hidden">{t('unlock_pro_plan')}</span> : <span className="group-data-[collapsible=icon]:hidden">...</span>}
+                  </SidebarMenuButton>
+              </SidebarMenuItem>
+             <SidebarSeparator className="my-2" />
              {legalItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
@@ -150,6 +163,9 @@ export default function AppSidebar() {
           </Button>
         </SidebarFooter>
       </Sidebar>
+
+      <UpgradeToPro open={upgradeDialogOpen} onOpenChange={setUpgradeDialogOpen} />
+
       <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>

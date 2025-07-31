@@ -190,7 +190,13 @@
   "quantity": "Quantité",
   "no_investments_yet": "Aucun investissement enregistré pour le moment.",
   "investments_report_title": "Rapport sur les Investissements",
-  "investments_detail": "Détail des Investissements"
+  "investments_detail": "Détail des Investissements",
+  "unlock_pro_plan": "Débloquer le Plan PRO",
+  "unlock_pro_title": "Bientôt Disponible : Le Plan PRO !",
+  "unlock_pro_desc": "Passez à la version supérieure à l'avenir pour débloquer des fonctionnalités puissantes afin d'automatiser et de maximiser votre patrimoine.",
+  "pro_feature_cloud_sync": "Sauvegarde dans le cloud et synchronisation multi-appareils.",
+  "pro_feature_bank_integration": "Importation automatique depuis vos comptes bancaires.",
+  "pro_feature_advanced_reports": "Rapports avancés avec des aperçus prédictifs et des graphiques.",
+  "pro_feature_smart_alerts": "Alertes intelligentes pour les opportunités d'investissement et les paiements de factures.",
+  "notify_me": "Prévenez-moi Quand ce Sera Prêt"
 }
-
-    

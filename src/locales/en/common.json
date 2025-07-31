@@ -190,7 +190,13 @@
   "quantity": "Quantity",
   "no_investments_yet": "No investments registered yet.",
   "investments_report_title": "Investments Report",
-  "investments_detail": "Investments Detail"
+  "investments_detail": "Investments Detail",
+  "unlock_pro_plan": "Unlock PRO Plan",
+  "unlock_pro_title": "Coming Soon: The PRO Plan!",
+  "unlock_pro_desc": "Upgrade in the future to unlock powerful features for automating and maximizing your wealth.",
+  "pro_feature_cloud_sync": "Cloud backup and multi-device sync.",
+  "pro_feature_bank_integration": "Automatic import from your bank accounts.",
+  "pro_feature_advanced_reports": "Advanced reports with predictive insights and charts.",
+  "pro_feature_smart_alerts": "Smart alerts for investment opportunities and bill payments.",
+  "notify_me": "Notify Me When It's Ready"
 }
-
-    
