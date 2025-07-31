@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem, MoreHorizontal } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -121,64 +121,68 @@ export default function AppSidebar() {
             ))}
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter className="flex flex-col gap-2">
-            <SidebarMenuItem>
-                 <SidebarMenuButton
-                    asChild
-                    isActive={pathname === '/dashboard/upgrade'}
-                    onClick={() => setOpenMobile(false)}
-                    tooltip={t('unlock_pro_plan')}
-                    className="bg-primary/10 text-primary hover:bg-primary/20"
-                  >
-                   <Link href="/dashboard/upgrade">
-                        <Gem />
-                        <span className="group-data-[collapsible=icon]:hidden">{t('unlock_pro_plan')}</span>
-                   </Link>
-                  </SidebarMenuButton>
-            </SidebarMenuItem>
-            
-            <div className="group-data-[collapsible=expanded]:contents hidden">
-                <SidebarSeparator className="my-2" />
-                <DataManagement />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground">
-                          <Languages/>
-                          <span>{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
-                      </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {languages.map(lang => (
-                        <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
-                            {lang.name}
-                        </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+        <SidebarFooter>
+            <div className="flex flex-col gap-2">
+                <SidebarMenuItem>
+                     <SidebarMenuButton
+                        asChild
+                        isActive={pathname === '/dashboard/upgrade'}
+                        onClick={() => setOpenMobile(false)}
+                        tooltip={t('unlock_pro_plan')}
+                        className="bg-primary/10 text-primary hover:bg-primary/20"
+                      >
+                       <Link href="/dashboard/upgrade">
+                            <Gem />
+                            <span className="group-data-[collapsible=icon]:hidden">{t('unlock_pro_plan')}</span>
+                       </Link>
+                      </SidebarMenuButton>
+                </SidebarMenuItem>
+                
+                <div className="group-data-[collapsible=expanded]:contents hidden">
+                    <SidebarSeparator className="my-2" />
+                    <DataManagement />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground">
+                              <Languages/>
+                              <span>{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
+                          </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {languages.map(lang => (
+                            <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
+                                {lang.name}
+                            </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
 
-                 <SidebarMenu>
-                    <SidebarMenuItem>
-                        <SidebarMenuButton asChild tooltip={t('terms_of_service')}>
-                             <Link href="/legal/terms"><FileText /> <span className="group-data-[collapsible=icon]:hidden">{t('terms_of_service')}</span></Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild tooltip={t('privacy_policy')}>
-                            <Link href="/legal/privacy"><ShieldCheck /> <span className="group-data-[collapsible=icon]:hidden">{t('privacy_policy')}</span></Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                 </SidebarMenu>
+                     <SidebarMenu>
+                        <SidebarMenuItem>
+                            <SidebarMenuButton asChild tooltip={t('terms_of_service')}>
+                                 <Link href="/legal/terms"><FileText /> <span className="group-data-[collapsible=icon]:hidden">{t('terms_of_service')}</span></Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                         <SidebarMenuItem>
+                            <SidebarMenuButton asChild tooltip={t('privacy_policy')}>
+                                <Link href="/legal/privacy"><ShieldCheck /> <span className="group-data-[collapsible=icon]:hidden">{t('privacy_policy')}</span></Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                     </SidebarMenu>
+                </div>
+                
+                <SidebarMenuItem>
+                    <SidebarMenuButton
+                        variant="ghost"
+                        className="w-full justify-start text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                        onClick={() => setResetDialogOpen(true)}
+                        tooltip={mounted ? t('delete_data') : 'Delete Data'}
+                    >
+                        <Trash2 />
+                        <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_data'): 'Delete Data'}</span>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
             </div>
-
-            <Button
-                variant="ghost"
-                className="w-full justify-start gap-2 text-destructive hover:bg-destructive hover:text-destructive-foreground"
-                onClick={() => setResetDialogOpen(true)}
-                title={mounted ? t('delete_data') : 'Delete Data'}
-            >
-                <Trash2 />
-                <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_data'): 'Delete Data'}</span>
-            </Button>
         </SidebarFooter>
       </Sidebar>
 
