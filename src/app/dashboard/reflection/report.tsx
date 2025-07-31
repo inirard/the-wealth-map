@@ -52,8 +52,12 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
     
     const nonEmptyReflections = reflections.filter(r => r.content.trim() !== '');
 
-    const cardStyle = {
+    const sectionStyle = {
         breakInside: 'avoid',
+    } as React.CSSProperties;
+
+    const cardStyle = {
+        breakInside: 'avoid-page',
     } as React.CSSProperties;
 
     return (
@@ -75,18 +79,18 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
             <main className="space-y-12">
                 {/* Financial Summary */}
-                <section>
+                <section style={sectionStyle}>
                     <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('financial_summary_title')}</h2>
                     <div className="grid grid-cols-3 gap-6">
-                        <Card className="text-center shadow-md" style={cardStyle}>
+                        <Card className="text-center shadow-md">
                             <CardHeader><CardTitle className="text-lg">{t('total_income')}</CardTitle></CardHeader>
                             <CardContent><p className="text-3xl font-bold text-green-600">€{totalIncome.toFixed(2)}</p></CardContent>
                         </Card>
-                        <Card className="text-center shadow-md" style={cardStyle}>
+                        <Card className="text-center shadow-md">
                             <CardHeader><CardTitle className="text-lg">{t('total_expenses')}</CardTitle></CardHeader>
                             <CardContent><p className="text-3xl font-bold text-red-600">€{totalExpenses.toFixed(2)}</p></CardContent>
                         </Card>
-                        <Card className="text-center shadow-md" style={cardStyle}>
+                        <Card className="text-center shadow-md">
                             <CardHeader><CardTitle className="text-lg">{t('final_balance')}</CardTitle></CardHeader>
                             <CardContent><p className={cn("text-3xl font-bold", balance >= 0 ? 'text-green-600' : 'text-red-600')}>€{balance.toFixed(2)}</p></CardContent>
                         </Card>
@@ -95,8 +99,8 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
                 {/* AI Coach Insights */}
                 {aiInsight && aiInsight.analysis && (
-                    <section>
-                        <Card className="bg-primary/5 border-primary shadow-md" style={cardStyle}>
+                    <section style={sectionStyle}>
+                        <Card className="bg-primary/5 border-primary shadow-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-3 text-primary">
                                     <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
@@ -112,7 +116,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 
                  {/* Reflections and Mood */}
                 {nonEmptyReflections.length > 0 && (
-                     <section>
+                     <section style={sectionStyle}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('reflection_motivation')}</h2>
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                              <div className="space-y-4">
@@ -142,7 +146,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
 
                 {/* Goals and Wealth Wheel */}
-                <div className="grid grid-cols-5 gap-8">
+                <div className="grid grid-cols-5 gap-8" style={sectionStyle}>
                     {goals.length > 0 && (
                         <section className="col-span-3">
                             <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('goals_progress_title')}</h2>
@@ -189,9 +193,9 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
                 {/* Transactions */}
                 {transactions.length > 0 && (
-                    <section>
+                    <section style={sectionStyle}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('transactions_title')}</h2>
-                        <Card className="shadow-md" style={cardStyle}>
+                        <Card className="shadow-md">
                             <Table>
                                 <TableHeader>
                                     <TableRow>
