@@ -200,5 +200,9 @@
   "pro_feature_bank_integration": "Importação automática das suas contas bancárias.",
   "pro_feature_advanced_reports": "Relatórios avançados com insights preditivos e gráficos.",
   "pro_feature_smart_alerts": "Alertas inteligentes para oportunidades de investimento e pagamentos.",
-  "notify_me": "Notifiquem-me Quando Estiver Pronto"
+  "notify_me": "Notifiquem-me Quando Estiver Pronto",
+  "ai_limit_title": "Limite Mensal Atingido",
+  "ai_limit_description": "Já utilizou a sua análise de IA gratuita para este mês. Faça o upgrade para PRO para obter insights ilimitados."
 }
+
+    
