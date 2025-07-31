@@ -20,7 +20,6 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import FinancialReport from './report';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { isSameMonth, parseISO } from 'date-fns';
 
 const emotionalStates = [
     { emoji: '😃', label: 'excellent' },
@@ -50,7 +49,6 @@ export default function ReflectionPage() {
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
     const [username] = useLocalStorage<string>('username', 'User');
     const [aiInsight, setAiInsight] = useLocalStorage<GenerateInsightsOutput | null>('aiInsight', null);
-    const [lastInsightDate, setLastInsightDate] = useLocalStorage<string | null>('lastInsightDate', null);
     const [isLoading, setIsLoading] = useState(false);
     const [aiError, setAiError] = useState<boolean>(false);
     const [isDownloading, setIsDownloading] = useState(false);
@@ -138,21 +136,7 @@ export default function ReflectionPage() {
         setLsReflections(newReflections);
     };
 
-    const hasUsedInsightThisMonth = useMemo(() => {
-        if (!lastInsightDate) return false;
-        return isSameMonth(parseISO(lastInsightDate), new Date());
-    }, [lastInsightDate]);
-
     const handleGenerateInsights = async () => {
-        if (hasUsedInsightThisMonth) {
-            toast({
-                variant: 'destructive',
-                title: t('ai_limit_title'),
-                description: t('ai_limit_description'),
-            });
-            return;
-        }
-
         setIsLoading(true);
         setAiInsight(null);
         setAiError(false);
@@ -167,7 +151,6 @@ export default function ReflectionPage() {
                 reflections,
             });
             setAiInsight(insight);
-            setLastInsightDate(new Date().toISOString());
         } catch (error) {
             console.error("Error generating AI insights:", error);
             setAiError(true);
@@ -311,19 +294,15 @@ export default function ReflectionPage() {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate || hasUsedInsightThisMonth}>
+                                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
                                         {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
                                     </Button>
                                 </TooltipTrigger>
-                                {!canGenerate ? (
+                                {!canGenerate && (
                                     <TooltipContent>
                                         <p>{t('ai_coach_disabled_tooltip')}</p>
                                     </TooltipContent>
-                                ) : hasUsedInsightThisMonth ? (
-                                    <TooltipContent>
-                                        <p>{t('ai_limit_description')}</p>
-                                    </TooltipContent>
-                                ) : null}
+                                )}
                             </Tooltip>
                         </TooltipProvider>
                     </CardFooter>
