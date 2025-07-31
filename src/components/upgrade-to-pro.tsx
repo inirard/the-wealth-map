@@ -19,15 +19,15 @@ interface UpgradeToProProps {
     onOpenChange: (open: boolean) => void;
 }
 
+const proFeaturesList = [
+    { icon: CloudSync, textKey: 'pro_feature_cloud_sync' },
+    { icon: Banknote, textKey: 'pro_feature_bank_integration' },
+    { icon: BarChart, textKey: 'pro_feature_advanced_reports' },
+    { icon: BellRing, textKey: 'pro_feature_smart_alerts' },
+];
+
 export default function UpgradeToPro({ open, onOpenChange }: UpgradeToProProps) {
     const { t } = useI18n();
-
-    const proFeatures = [
-        { icon: CloudSync, text: t('pro_feature_cloud_sync') },
-        { icon: Banknote, text: t('pro_feature_bank_integration') },
-        { icon: BarChart, text: t('pro_feature_advanced_reports') },
-        { icon: BellRing, text: t('pro_feature_smart_alerts') },
-    ];
 
     return (
         <AlertDialog open={open} onOpenChange={onOpenChange}>
@@ -46,12 +46,12 @@ export default function UpgradeToPro({ open, onOpenChange }: UpgradeToProProps) 
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="my-6 space-y-4">
-                    {proFeatures.map((feature, index) => {
+                    {proFeaturesList.map((feature, index) => {
                         const Icon = feature.icon;
                         return (
                             <div key={index} className="flex items-start gap-4">
                                 <Icon className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                                <p className="text-foreground/80">{feature.text}</p>
+                                <p className="text-foreground/80">{t(feature.textKey)}</p>
                             </div>
                         )
                     })}
