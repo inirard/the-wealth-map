@@ -250,7 +250,7 @@ export default function ProjectionsPage() {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button onClick={handleDownloadPdf} disabled={isDownloading} variant="ghost" size="icon" className="text-primary hover:text-primary/90">
+                                    <Button onClick={handleDownloadPdf} disabled={isDownloading} variant="outline" size="icon">
                                         <Download className="h-5 w-5" />
                                     </Button>
                                 </TooltipTrigger>
@@ -260,7 +260,7 @@ export default function ProjectionsPage() {
                             </Tooltip>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                     <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate} variant="ghost" size="icon" className="text-primary hover:text-primary/90">
+                                     <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate} variant="outline" size="icon">
                                         <Clock className="h-5 w-5" />
                                     </Button>
                                 </TooltipTrigger>
@@ -289,3 +289,5 @@ export default function ProjectionsPage() {
         </div>
     );
 }
+
+    

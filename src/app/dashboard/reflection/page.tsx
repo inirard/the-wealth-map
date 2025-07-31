@@ -193,7 +193,7 @@ export default function ReflectionPage() {
                  <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                             <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="ghost" size="icon" className="text-primary hover:text-primary/90">
+                             <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="outline" size="icon">
                                 <Download className="h-5 w-5" />
                             </Button>
                         </TooltipTrigger>
@@ -324,3 +324,5 @@ export default function ReflectionPage() {
         </div>
     );
 }
+
+    
