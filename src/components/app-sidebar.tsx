@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem, MoreVertical } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -81,8 +81,6 @@ export default function AppSidebar() {
     router.push('/');
   };
 
-  const allSecondaryItems = [...secondaryNavItems, ...legalItems];
-
   return (
     <>
       <Sidebar>
@@ -110,28 +108,7 @@ export default function AppSidebar() {
               </SidebarMenuItem>
             ))}
 
-            {/* "More" menu for collapsed sidebar */}
-            {sidebarState === 'collapsed' ? (
-                <SidebarMenuItem>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <SidebarMenuButton tooltip={t('more')}>
-                                <MoreVertical />
-                            </SidebarMenuButton>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent side="right" align="start">
-                            {allSecondaryItems.map((item) => (
-                                <DropdownMenuItem key={item.href} asChild>
-                                    <Link href={item.href} className="flex items-center gap-2">
-                                        <item.icon className="h-4 w-4" />
-                                        <span>{item.label}</span>
-                                    </Link>
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </SidebarMenuItem>
-            ) : (
+            {sidebarState !== 'collapsed' && (
                 <>
                     {secondaryNavItems.map((item) => (
                       <SidebarMenuItem key={item.href}>
@@ -151,7 +128,6 @@ export default function AppSidebar() {
                 </>
             )}
 
-
              <SidebarSeparator className="my-2" />
               <SidebarMenuItem>
                  <SidebarMenuButton
@@ -167,41 +143,48 @@ export default function AppSidebar() {
                    </Link>
                   </SidebarMenuButton>
               </SidebarMenuItem>
-             <SidebarSeparator className="my-2" />
-             {sidebarState !== 'collapsed' && legalItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  onClick={() => setOpenMobile(false)}
-                  tooltip={item.label}
-                >
-                  <Link href={item.href}>
-                    <item.icon />
-                    {mounted ? <span className="group-data-[collapsible=icon]:hidden">{item.label}</span> : <span className="group-data-[collapsible=icon]:hidden">...</span>}
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
+             
+             {sidebarState !== 'collapsed' && (
+                <>
+                    <SidebarSeparator className="my-2" />
+                    {legalItems.map((item) => (
+                        <SidebarMenuItem key={item.href}>
+                            <SidebarMenuButton
+                            asChild
+                            isActive={pathname === item.href}
+                            onClick={() => setOpenMobile(false)}
+                            tooltip={item.label}
+                            >
+                            <Link href={item.href}>
+                                <item.icon />
+                                <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+                            </Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    ))}
+                </>
+             )}
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="flex flex-col gap-2">
-            <DataManagement />
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground">
-                      <Languages/>
-                      <span className="group-data-[collapsible=icon]:hidden">{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
-                  </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {languages.map(lang => (
-                    <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
-                        {lang.name}
-                    </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="group-data-[collapsible=icon]:hidden">
+                <DataManagement />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground">
+                          <Languages/>
+                          <span>{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
+                      </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {languages.map(lang => (
+                        <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
+                            {lang.name}
+                        </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
 
           <Button
             variant="ghost"
@@ -233,3 +216,4 @@ export default function AppSidebar() {
     </>
   );
 }
+
