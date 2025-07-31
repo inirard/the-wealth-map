@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import type { Goal, Transaction } from '@/lib/types';
@@ -9,20 +9,27 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks/use-i18n';
 import { predictFinancialFuture } from '@/ai/flows/predictive-insights-flow';
 import type { PredictiveInsightsOutput } from '@/lib/ai-types';
-import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Clock } from 'lucide-react';
+import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Clock, Download } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import ProjectionsReport from './report';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
 
 export default function ProjectionsPage() {
     const { t, language } = useI18n();
     const { toast } = useToast();
+    const reportRef = useRef<HTMLDivElement>(null);
 
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
+    const [username] = useLocalStorage<string>('username', 'User');
     
     const [aiPredictions, setAiPredictions] = useLocalStorage<PredictiveInsightsOutput | null>('aiProjections', null);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDownloading, setIsDownloading] = useState(false);
     const [aiError, setAiError] = useState<boolean>(false);
 
     const handleGeneratePredictions = async () => {
@@ -48,6 +55,68 @@ export default function ProjectionsPage() {
             });
         } finally {
             setIsLoading(false);
+        }
+    };
+    
+    const handleDownloadPdf = async () => {
+        const reportElement = reportRef.current;
+        if (!reportElement) return;
+
+        setIsDownloading(true);
+
+        try {
+            const a4Width = 794;
+            reportElement.style.width = `${a4Width}px`;
+            
+            const canvas = await html2canvas(reportElement, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: '#ffffff',
+                windowHeight: reportElement.scrollHeight,
+                windowWidth: a4Width, 
+            });
+
+            reportElement.style.width = '';
+
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'pt',
+                format: 'a4'
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+            
+            const ratio = canvasWidth / pdfWidth;
+            const imgHeight = canvasHeight / ratio;
+
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+            heightLeft -= pdfHeight;
+
+            while (heightLeft > 0) {
+                position -= pdfHeight;
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+                heightLeft -= pdfHeight;
+            }
+            
+            pdf.save(`financial-projections-${new Date().toISOString().split('T')[0]}.pdf`);
+
+        } catch (error) {
+            console.error("Error generating PDF:", error);
+            toast({
+                variant: "destructive",
+                title: t('ai_error_title'),
+                description: 'Failed to generate PDF report.',
+            });
+        } finally {
+            setIsDownloading(false);
         }
     };
 
@@ -169,15 +238,33 @@ export default function ProjectionsPage() {
                     <h1 className="text-3xl font-bold font-headline">{t('ai_projections_title')}</h1>
                     <p className="text-muted-foreground mt-2">{t('ai_projections_description')}</p>
                 </div>
-                {aiPredictions && (
-                     <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate}>
-                        <Clock className="mr-2 h-4 w-4" />
-                        {isLoading ? t('ai_coach_loading') : t('regenerate_projections_button')}
-                    </Button>
-                )}
+                <div className="flex items-center gap-2">
+                    {aiPredictions && (
+                        <>
+                            <Button onClick={handleDownloadPdf} disabled={isDownloading}>
+                                <Download className="mr-2 h-4 w-4" />
+                                {isDownloading ? t('downloading') : t('download_pdf')}
+                            </Button>
+                            <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate}>
+                                <Clock className="mr-2 h-4 w-4" />
+                                {isLoading ? t('ai_coach_loading') : t('regenerate_projections_button')}
+                            </Button>
+                        </>
+                    )}
+                </div>
             </div>
 
             {renderContent()}
+
+            <div className="fixed -left-[9999px] top-0">
+                 <ProjectionsReport 
+                    ref={reportRef}
+                    data={{
+                        username,
+                        aiPredictions,
+                    }}
+                />
+            </div>
         </div>
     );
 }
