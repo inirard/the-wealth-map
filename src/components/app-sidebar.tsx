@@ -95,7 +95,7 @@ export default function AppSidebar() {
   const SecondaryMenuContent = () => (
     <>
       <DropdownMenuSub>
-        <DropdownMenuSubTrigger className="focus:bg-primary/10 focus:text-primary">
+        <DropdownMenuSubTrigger className="focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary">
           <Languages /> {t('languages')}
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
@@ -152,7 +152,7 @@ export default function AppSidebar() {
                 <SidebarMenuItem>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <SidebarMenuButton variant="ghost" className="w-full justify-start hover:bg-primary/10 hover:text-primary">
+                            <SidebarMenuButton variant="ghost" className="w-full justify-start hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary">
                                 <Languages />
                                 <span className="group-data-[collapsible=icon]:hidden">{t('languages')}</span>
                             </SidebarMenuButton>
