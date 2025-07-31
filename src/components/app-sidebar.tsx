@@ -36,8 +36,6 @@ import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
 import DataManagement from './data-management';
-import { cn } from '@/lib/utils';
-import UpgradeToPro from './upgrade-to-pro';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -46,7 +44,6 @@ export default function AppSidebar() {
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
   const { t, language, setLanguage } = useI18n();
   const [mounted, setMounted] = React.useState(false);
-  const [upgradeDialogOpen, setUpgradeDialogOpen] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
@@ -109,12 +106,16 @@ export default function AppSidebar() {
              <SidebarSeparator className="my-2" />
               <SidebarMenuItem>
                  <SidebarMenuButton
-                    onClick={() => setUpgradeDialogOpen(true)}
+                    asChild
+                    isActive={pathname === '/dashboard/upgrade'}
+                    onClick={() => setOpenMobile(false)}
                     tooltip={t('unlock_pro_plan')}
                     className="bg-primary/10 text-primary hover:bg-primary/20"
                   >
-                    <Gem />
-                    {mounted ? <span className="group-data-[collapsible=icon]:hidden">{t('unlock_pro_plan')}</span> : <span className="group-data-[collapsible=icon]:hidden">...</span>}
+                   <Link href="/dashboard/upgrade">
+                        <Gem />
+                        {mounted ? <span className="group-data-[collapsible=icon]:hidden">{t('unlock_pro_plan')}</span> : <span className="group-data-[collapsible=icon]:hidden">...</span>}
+                   </Link>
                   </SidebarMenuButton>
               </SidebarMenuItem>
              <SidebarSeparator className="my-2" />
@@ -163,8 +164,6 @@ export default function AppSidebar() {
           </Button>
         </SidebarFooter>
       </Sidebar>
-
-      <UpgradeToPro open={upgradeDialogOpen} onOpenChange={setUpgradeDialogOpen} />
 
       <AlertDialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
         <AlertDialogContent>
