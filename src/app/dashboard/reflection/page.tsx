@@ -190,10 +190,18 @@ export default function ReflectionPage() {
                     <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
                     <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
                 </div>
-                <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading}>
-                    <Download className="mr-2 h-4 w-4" />
-                    {isDownloading ? t('downloading') : t('download_pdf')}
-                </Button>
+                 <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                             <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="ghost" size="icon" className="text-primary hover:text-primary/90">
+                                <Download className="h-5 w-5" />
+                            </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                           <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>
+                        </TooltipContent>
+                    </Tooltip>
+                </TooltipProvider>
             </div>
 
             <div>
