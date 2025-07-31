@@ -21,7 +21,7 @@ export default function ProjectionsPage() {
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     
-    const [aiPredictions, setAiPredictions] = useState<PredictiveInsightsOutput | null>(null);
+    const [aiPredictions, setAiPredictions] = useLocalStorage<PredictiveInsightsOutput | null>('aiProjections', null);
     const [isLoading, setIsLoading] = useState(false);
     const [aiError, setAiError] = useState<boolean>(false);
 

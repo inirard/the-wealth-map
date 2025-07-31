@@ -48,7 +48,7 @@ export default function ReflectionPage() {
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
     const [username] = useLocalStorage<string>('username', 'User');
-    const [aiInsight, setAiInsight] = useState<GenerateInsightsOutput | null>(null);
+    const [aiInsight, setAiInsight] = useLocalStorage<GenerateInsightsOutput | null>('aiInsight', null);
     const [isLoading, setIsLoading] = useState(false);
     const [aiError, setAiError] = useState<boolean>(false);
     const [isDownloading, setIsDownloading] = useState(false);
