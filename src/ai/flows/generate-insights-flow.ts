@@ -23,10 +23,10 @@ const prompt = ai.definePrompt({
     The response must be in the specified language: {{language}}.
 
     Here is the user's data:
-    - Goals: {{goals}}
-    - Transactions: {{transactions}}
-    - Wealth Wheel Assessment: {{wheelData}}
-    - Personal Reflections: {{reflections}}
+    - Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
+    - Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
+    - Wealth Wheel Assessment: {{#if wheelData.length}}{{json wheelData}}{{else}}Not completed.{{/if}}
+    - Personal Reflections: {{#if reflections.length}}{{json reflections}}{{else}}No reflections written.{{/if}}
 
     Based on this data, please generate a single paragraph of analysis that does the following:
     1.  Acknowledge a specific positive point from their reflections or a goal they are progressing on.
