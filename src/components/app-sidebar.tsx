@@ -101,9 +101,11 @@ export default function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
+          </SidebarMenu>
+          
+          <SidebarSeparator className="my-2" />
 
-            <SidebarSeparator className="my-2" />
-
+          <SidebarMenu>
              {secondaryNavItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
@@ -120,9 +122,46 @@ export default function AppSidebar() {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
+
+           <div className="mt-auto group-data-[collapsible=expanded]:contents hidden">
+              <SidebarSeparator className="my-2" />
+              <DataManagement />
+              <div className="p-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                          <Languages/>
+                          <span className="group-data-[collapsible=icon]:hidden">{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
+                      </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    {languages.map(lang => (
+                        <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
+                            {lang.name}
+                        </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+
+                <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild tooltip={t('terms_of_service')}>
+                              <Link href="/legal/terms"><FileText /> <span className="group-data-[collapsible=icon]:hidden">{t('terms_of_service')}</span></Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                      <SidebarMenuItem>
+                        <SidebarMenuButton asChild tooltip={t('privacy_policy')}>
+                            <Link href="/legal/privacy"><ShieldCheck /> <span className="group-data-[collapsible=icon]:hidden">{t('privacy_policy')}</span></Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                </SidebarMenu>
+            </div>
+
         </SidebarContent>
         <SidebarFooter>
-            <div className="flex flex-col gap-2">
+            <SidebarSeparator className="my-2" />
+            <SidebarMenu>
                 <SidebarMenuItem>
                      <SidebarMenuButton
                         asChild
@@ -137,40 +176,6 @@ export default function AppSidebar() {
                        </Link>
                       </SidebarMenuButton>
                 </SidebarMenuItem>
-                
-                <div className="group-data-[collapsible=expanded]:contents hidden">
-                    <SidebarSeparator className="my-2" />
-                    <DataManagement />
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground">
-                              <Languages/>
-                              <span>{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
-                          </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        {languages.map(lang => (
-                            <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
-                                {lang.name}
-                            </DropdownMenuItem>
-                        ))}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-
-                     <SidebarMenu>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={t('terms_of_service')}>
-                                 <Link href="/legal/terms"><FileText /> <span className="group-data-[collapsible=icon]:hidden">{t('terms_of_service')}</span></Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild tooltip={t('privacy_policy')}>
-                                <Link href="/legal/privacy"><ShieldCheck /> <span className="group-data-[collapsible=icon]:hidden">{t('privacy_policy')}</span></Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                     </SidebarMenu>
-                </div>
-                
                 <SidebarMenuItem>
                     <SidebarMenuButton
                         variant="ghost"
@@ -182,7 +187,7 @@ export default function AppSidebar() {
                         <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_data'): 'Delete Data'}</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
-            </div>
+            </SidebarMenu>
         </SidebarFooter>
       </Sidebar>
 
