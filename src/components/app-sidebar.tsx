@@ -21,6 +21,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
@@ -62,6 +63,11 @@ export default function AppSidebar() {
     { href: '/dashboard/projections', icon: Bot, label: t('ai_projections_title') },
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
   ];
+  
+  const legalNavItems = [
+      { href: '/legal/terms', icon: FileText, label: t('terms_of_service')},
+      { href: '/legal/privacy', icon: ShieldCheck, label: t('privacy_policy')}
+  ]
 
   const languages: { code: Language, name: string }[] = [
     { code: 'pt', name: 'Português' },
@@ -145,15 +151,45 @@ export default function AppSidebar() {
               </div>
 
                 <SidebarMenu>
+                    {legalNavItems.map((item) => (
+                         <SidebarMenuItem key={item.href}>
+                            <SidebarMenuButton asChild tooltip={item.label}>
+                                  <Link href={item.href}><item.icon /> <span className="group-data-[collapsible=icon]:hidden">{item.label}</span></Link>
+                            </SidebarMenuButton>
+                        </SidebarMenuItem>
+                    ))}
+                </SidebarMenu>
+            </div>
+
+            <div className="group-data-[collapsible=icon]:contents hidden">
+                <SidebarMenu>
                     <SidebarMenuItem>
-                        <SidebarMenuButton asChild tooltip={t('terms_of_service')}>
-                              <Link href="/legal/terms"><FileText /> <span className="group-data-[collapsible=icon]:hidden">{t('terms_of_service')}</span></Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                      <SidebarMenuItem>
-                        <SidebarMenuButton asChild tooltip={t('privacy_policy')}>
-                            <Link href="/legal/privacy"><ShieldCheck /> <span className="group-data-[collapsible=icon]:hidden">{t('privacy_policy')}</span></Link>
-                        </SidebarMenuButton>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton variant="ghost" tooltip={t('more')}>
+                                    <MoreHorizontal />
+                                     <span className="group-data-[collapsible=icon]:hidden">{t('more')}</span>
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent side="right" align="start">
+                                <DataManagement />
+                                 <DropdownMenuSeparator />
+                                 {legalNavItems.map(item => (
+                                     <DropdownMenuItem key={item.href} asChild>
+                                        <Link href={item.href} className="flex items-center gap-2">
+                                            <item.icon />
+                                            <span>{item.label}</span>
+                                        </Link>
+                                     </DropdownMenuItem>
+                                 ))}
+                                 <DropdownMenuSeparator />
+                                 {languages.map(lang => (
+                                    <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
+                                        {lang.name}
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </SidebarMenuItem>
                 </SidebarMenu>
             </div>
