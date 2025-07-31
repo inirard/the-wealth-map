@@ -264,13 +264,15 @@ export default function ProjectionsPage() {
             {renderContent()}
 
             <div className="fixed -left-[9999px] top-0">
-                 <ProjectionsReport 
-                    ref={reportRef}
-                    data={{
-                        username,
-                        aiPredictions,
-                    }}
-                />
+                {isClient && aiPredictions && (
+                    <ProjectionsReport 
+                        ref={reportRef}
+                        data={{
+                            username,
+                            aiPredictions,
+                        }}
+                    />
+                )}
             </div>
         </div>
     );
