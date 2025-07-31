@@ -168,7 +168,7 @@ export default function ProjectionsPage() {
 
         if (aiPredictions) {
             return (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-6 md:grid-cols-2">
                      <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3"><TrendingUp className="text-primary"/>{t('future_balance_prediction')}</CardTitle>
@@ -191,7 +191,13 @@ export default function ProjectionsPage() {
                         </CardHeader>
                         <CardContent><p className="text-muted-foreground">{aiPredictions.spendingAnalysis}</p></CardContent>
                      </Card>
-                      <Card className="md:col-span-2">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-3"><Lightbulb className="text-primary"/>{t('what_if_scenario')}</CardTitle>
+                        </CardHeader>
+                        <CardContent><p className="text-muted-foreground">{aiPredictions.whatIfScenario}</p></CardContent>
+                    </Card>
+                    <Card className="md:col-span-2">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3"><Target className="text-primary"/>{t('goal_projections')}</CardTitle>
                         </CardHeader>
@@ -201,12 +207,6 @@ export default function ProjectionsPage() {
                             </ul>
                         </CardContent>
                      </Card>
-                    <Card>
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-3"><Lightbulb className="text-primary"/>{t('what_if_scenario')}</CardTitle>
-                        </CardHeader>
-                        <CardContent><p className="text-muted-foreground">{aiPredictions.whatIfScenario}</p></CardContent>
-                    </Card>
                 </div>
             )
         }
@@ -247,16 +247,28 @@ export default function ProjectionsPage() {
                 </div>
                 <div className="flex items-center gap-2">
                     {isClient && aiPredictions && (
-                        <>
-                            <Button onClick={handleDownloadPdf} disabled={isDownloading}>
-                                <Download className="mr-2 h-4 w-4" />
-                                {isDownloading ? t('downloading') : t('download_pdf')}
-                            </Button>
-                            <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate}>
-                                <Clock className="mr-2 h-4 w-4" />
-                                {isLoading ? t('ai_coach_loading') : t('regenerate_projections_button')}
-                            </Button>
-                        </>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button onClick={handleDownloadPdf} disabled={isDownloading} variant="outline" size="icon">
+                                        <Download className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                     <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate} variant="outline" size="icon">
+                                        <Clock className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{isLoading ? t('ai_coach_loading') : t('regenerate_projections_button')}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
                     )}
                 </div>
             </div>
