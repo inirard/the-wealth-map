@@ -129,6 +129,7 @@ export default function AppSidebar() {
             ))}
           </SidebarMenu>
 
+           {/* This section is visible ONLY when the sidebar is EXPANDED */}
            <div className="mt-auto group-data-[collapsible=expanded]:contents hidden">
               <SidebarSeparator className="my-2" />
               <DataManagement />
@@ -161,6 +162,7 @@ export default function AppSidebar() {
                 </SidebarMenu>
             </div>
 
+            {/* This section is visible ONLY when the sidebar is COLLAPSED (icon mode) */}
             <div className="group-data-[collapsible=icon]:contents hidden">
                 <SidebarMenu>
                     <SidebarMenuItem>
