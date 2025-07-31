@@ -13,6 +13,7 @@ import {
   Quote,
   ArrowRight,
   Bot,
+  LineChart,
 } from "lucide-react";
 import Image from "next/image";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -49,6 +50,13 @@ export default function DashboardPage() {
       icon: ListChecks,
       href: "/dashboard/tracker",
       color: "text-green-600",
+    },
+     {
+      title: t('investments'),
+      description: t('investments_desc'),
+      icon: LineChart,
+      href: '/dashboard/investments',
+      color: 'text-blue-600',
     },
     {
       title: t("reflection"),

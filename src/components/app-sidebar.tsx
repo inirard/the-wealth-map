@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, DatabaseZap } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -55,6 +55,7 @@ export default function AppSidebar() {
     { href: '/dashboard/goals', icon: Target, label: t('goals_mapping') },
     { href: '/dashboard/wealth-wheel', icon: Donut, label: t('wealth_wheel') },
     { href: '/dashboard/tracker', icon: ListChecks, label: t('monthly_tracker') },
+    { href: '/dashboard/investments', icon: LineChart, label: t('investments') },
     { href: '/dashboard/reflection', icon: BookOpen, label: t('reflection') },
     { href: '/dashboard/projections', icon: Bot, label: t('ai_projections_title') },
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },

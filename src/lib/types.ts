@@ -29,5 +29,12 @@ export interface Reflection {
   content: string;
 }
 
-export type Language = 'pt' | 'en' | 'es' | 'fr';
+export interface Investment {
+  id: string;
+  name: string;
+  type: string;
+  amount: number;
+  quantity?: number;
+}
 
+export type Language = 'pt' | 'en' | 'es' | 'fr';
