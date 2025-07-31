@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -21,6 +21,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from "@/lib/utils";
 import { useI18n } from '@/hooks/use-i18n';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function GoalsPage() {
   const { t } = useI18n();
@@ -39,6 +40,11 @@ export default function GoalsPage() {
   const [goals, setGoals] = useLocalStorage<Goal[]>('goals', []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<z.infer<typeof goalSchema>>({
     resolver: zodResolver(goalSchema),
@@ -105,6 +111,24 @@ export default function GoalsPage() {
     setEditingGoal(goal);
     setIsDialogOpen(true);
   }
+  
+  const renderSkeletons = () => (
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {[...Array(3)].map((_, i) => (
+            <Card key={i}>
+                <CardHeader>
+                    <Skeleton className="h-6 w-3/4" />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <Skeleton className="h-5 w-1/2" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-8 w-full" />
+                </CardContent>
+            </Card>
+        ))}
+    </div>
+);
+
 
   return (
     <div className="space-y-8">
@@ -156,7 +180,7 @@ export default function GoalsPage() {
         </Dialog>
       </div>
 
-      {goals.length > 0 ? (
+      {!isClient ? renderSkeletons() : goals.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {goals.map((goal) => {
             const progress = (goal.currentAmount / goal.targetAmount) * 100;
