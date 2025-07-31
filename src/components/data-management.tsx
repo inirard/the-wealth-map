@@ -3,7 +3,7 @@
 
 import React, { useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { DatabaseBackup, DatabaseRestore } from 'lucide-react';
+import { DatabaseZap, Database } from 'lucide-react';
 import { useI18n } from '@/hooks/use-i18n';
 import { useToast } from "@/hooks/use-toast";
 
@@ -106,11 +106,11 @@ export default function DataManagement() {
     <div className="group-data-[collapsible=icon]:p-0 p-2">
         <div className="flex flex-col gap-2 group-data-[collapsible=icon]:items-center">
             <Button variant="outline" onClick={handleBackup} className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:w-auto group-data-[collapsible=icon]:justify-center">
-                <DatabaseBackup />
+                <DatabaseZap />
                 <span className="group-data-[collapsible=icon]:hidden">{t('backup_data')}</span>
             </Button>
             <Button variant="outline" onClick={handleRestoreClick} className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:w-auto group-data-[collapsible=icon]:justify-center">
-                <DatabaseRestore />
+                <Database />
                 <span className="group-data-[collapsible=icon]:hidden">{t('restore_data')}</span>
             </Button>
             <input
