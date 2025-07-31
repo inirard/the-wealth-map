@@ -560,22 +560,6 @@ const SidebarMenuButton = React.forwardRef<
   ) => {
     const Comp = asChild ? Slot : "button"
     const { isMobile, state } = useSidebar()
-    
-    const childrenWithProps = React.Children.map(children, (child) => {
-      if (React.isValidElement(child) && typeof child.type !== 'string') {
-        const grandChildren = React.Children.toArray((child.props as any).children);
-        const newGrandChildren = grandChildren.map((grandChild: any) => {
-          if (grandChild.type === 'span') {
-            return React.cloneElement(grandChild, {
-              className: cn("group-data-[collapsible=icon]:hidden", grandChild.props.className),
-            });
-          }
-          return grandChild;
-        });
-        return React.cloneElement(child, { children: newGrandChildren });
-      }
-      return child;
-    });
 
     const button = (
       <Comp
@@ -586,7 +570,7 @@ const SidebarMenuButton = React.forwardRef<
         className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
         {...props}
       >
-        {asChild ? childrenWithProps : children}
+        {children}
       </Comp>
     )
 
@@ -780,5 +764,3 @@ export {
   SidebarTrigger,
   useSidebar,
 }
-
-    

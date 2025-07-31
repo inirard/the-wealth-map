@@ -36,6 +36,7 @@ import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
 import DataManagement from './data-management';
+import { cn } from '@/lib/utils';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -97,7 +98,7 @@ export default function AppSidebar() {
                 >
                   <Link href={item.href}>
                     <item.icon />
-                    {mounted ? <span>{item.label}</span> : <span>{t('dashboard')}</span>}
+                    {mounted ? <span className="group-data-[collapsible=icon]:hidden">{item.label}</span> : <span className="group-data-[collapsible=icon]:hidden">{t('dashboard')}</span>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -113,7 +114,7 @@ export default function AppSidebar() {
                 >
                   <Link href={item.href}>
                     <item.icon />
-                    {mounted ? <span>{item.label}</span> : <span>...</span>}
+                    {mounted ? <span className="group-data-[collapsible=icon]:hidden">{item.label}</span> : <span className="group-data-[collapsible=icon]:hidden">...</span>}
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
