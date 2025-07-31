@@ -129,23 +129,25 @@ export default function ProjectionsPage() {
         return transactions.length > 0 || goals.length > 0;
     }, [transactions, goals]);
     
+    const renderSkeletons = () => (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(5)].map((_, i) => (
+                <Card key={i}>
+                    <CardHeader>
+                        <Skeleton className="h-6 w-3/4" />
+                    </CardHeader>
+                    <CardContent>
+                        <Skeleton className="h-4 w-full mb-2" />
+                        <Skeleton className="h-4 w-5/6" />
+                    </CardContent>
+                </Card>
+            ))}
+        </div>
+    );
+    
     const renderContent = () => {
-        if (isLoading) {
-            return (
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {[...Array(5)].map((_, i) => (
-                        <Card key={i}>
-                            <CardHeader>
-                                <Skeleton className="h-6 w-3/4" />
-                            </CardHeader>
-                            <CardContent>
-                                <Skeleton className="h-4 w-full mb-2" />
-                                <Skeleton className="h-4 w-5/6" />
-                            </CardContent>
-                        </Card>
-                    ))}
-                </div>
-            )
+        if (!isClient || isLoading) {
+            return renderSkeletons();
         }
         
         if(aiError) {
