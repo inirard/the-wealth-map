@@ -49,15 +49,12 @@ export default function AppSidebar() {
     setMounted(true);
   }, []);
 
-  const mainNavItems = [
+  const navItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: t('dashboard') },
     { href: '/dashboard/goals', icon: Target, label: t('goals_mapping') },
     { href: '/dashboard/wealth-wheel', icon: Donut, label: t('wealth_wheel') },
     { href: '/dashboard/tracker', icon: ListChecks, label: t('monthly_tracker') },
     { href: '/dashboard/investments', icon: LineChart, label: t('investments') },
-  ];
-  
-  const secondaryNavItems = [
     { href: '/dashboard/reflection', icon: BookOpen, label: t('reflection') },
     { href: '/dashboard/projections', icon: Bot, label: t('ai_projections_title') },
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
@@ -91,7 +88,7 @@ export default function AppSidebar() {
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            {mainNavItems.map((item) => (
+            {navItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
@@ -107,49 +104,28 @@ export default function AppSidebar() {
               </SidebarMenuItem>
             ))}
           </SidebarMenu>
-          
-          <SidebarSeparator className="my-2" />
-
-          <SidebarMenu>
-             {secondaryNavItems.map((item) => (
-              <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname === item.href}
-                  onClick={() => setOpenMobile(false)}
-                  tooltip={item.label}
-                >
-                  <Link href={item.href}>
-                    <item.icon />
-                    <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-
-           {/* This section is visible ONLY when the sidebar is EXPANDED */}
-           <div className="mt-auto group-data-[collapsible=icon]:hidden">
-              <SidebarSeparator className="my-2" />
-              <DataManagement />
-              <div className="p-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
-                          <Languages/>
-                          <span>{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
-                      </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    {languages.map(lang => (
-                        <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
-                            {lang.name}
-                        </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-
+        </SidebarContent>
+        <SidebarFooter>
+            <div className="group-data-[collapsible=icon]:hidden">
+                <SidebarSeparator className="my-2" />
+                <div className="p-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
+                              <Languages/>
+                              <span>{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
+                          </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {languages.map(lang => (
+                            <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
+                                {lang.name}
+                            </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
+                <DataManagement />
                 <SidebarMenu>
                     {legalNavItems.map((item) => (
                          <SidebarMenuItem key={item.href}>
@@ -160,8 +136,6 @@ export default function AppSidebar() {
                     ))}
                 </SidebarMenu>
             </div>
-        </SidebarContent>
-        <SidebarFooter>
             <SidebarSeparator className="my-2" />
             <SidebarMenu>
                 <SidebarMenuItem>
