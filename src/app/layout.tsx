@@ -5,6 +5,7 @@ import './print.css';
 import { Toaster } from "@/components/ui/toaster";
 import { I18nProvider } from '@/hooks/use-i18n';
 import { Poppins } from 'next/font/google';
+import Link from 'next/link';
 
 const poppins = Poppins({
   subsets: ['latin'],

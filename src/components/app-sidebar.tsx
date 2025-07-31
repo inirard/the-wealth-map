@@ -19,8 +19,6 @@ import {
     Languages,
     FileText,
     ShieldCheck,
-    DatabaseZap,
-    Database,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -48,7 +46,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from '@/components/ui/button';
 import DataManagement from '@/components/data-management';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
@@ -86,7 +83,7 @@ export default function AppSidebar() {
 
   const handleResetData = () => {
     window.localStorage.clear();
-    router.push('/');
+    router.push('/activate');
   };
 
   return (
