@@ -188,5 +188,9 @@
   "your_investments_desc": "Une liste détaillée de tous vos actifs enregistrés.",
   "name": "Nom",
   "quantity": "Quantité",
-  "no_investments_yet": "Aucun investissement enregistré pour le moment."
+  "no_investments_yet": "Aucun investissement enregistré pour le moment.",
+  "investments_report_title": "Rapport sur les Investissements",
+  "investments_detail": "Détail des Investissements"
 }
+
+    

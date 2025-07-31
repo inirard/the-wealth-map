@@ -188,5 +188,9 @@
   "your_investments_desc": "Uma lista detalhada de todos os seus ativos registados.",
   "name": "Nome",
   "quantity": "Quantidade",
-  "no_investments_yet": "Ainda não há investimentos registados."
+  "no_investments_yet": "Ainda não há investimentos registados.",
+  "investments_report_title": "Relatório de Investimentos",
+  "investments_detail": "Detalhe dos Investimentos"
 }
+
+    
