@@ -159,5 +159,6 @@
   "restore_successful_title": "Restore Successful",
   "restore_successful_desc": "Your data has been restored. The app will now reload.",
   "restore_failed_title": "Restore Failed",
-  "restore_failed_desc": "The selected file is invalid or corrupted. Please try a different file."
+  "restore_failed_desc": "The selected file is invalid or corrupted. Please try a different file.",
+  "loading": "Loading"
 }

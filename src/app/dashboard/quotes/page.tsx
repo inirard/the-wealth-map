@@ -24,6 +24,7 @@ export default function QuotesPage() {
     }, [quotes]);
 
     useEffect(() => {
+        // This effect runs only on the client, after hydration.
         getNewQuote();
     }, [getNewQuote]);
 
@@ -34,15 +35,21 @@ export default function QuotesPage() {
                 <p className="text-muted-foreground mt-2">{t('quotes_affirmations_desc')}</p>
             </div>
             
-            <Card className="max-w-3xl w-full shadow-xl">
-                <CardContent className="p-8 md:p-12">
-                    <blockquote className="text-2xl md:text-3xl font-light italic text-foreground">
-                        “{quote.quote}”
-                    </blockquote>
+            <Card className="max-w-3xl w-full shadow-xl min-h-[200px]">
+                <CardContent className="p-8 md:p-12 flex items-center justify-center">
+                    {quote.quote ? (
+                        <blockquote className="text-2xl md:text-3xl font-light italic text-foreground">
+                            “{quote.quote}”
+                        </blockquote>
+                    ) : (
+                        <div className="animate-pulse-slow text-muted-foreground">{t('loading')}...</div>
+                    )}
                 </CardContent>
-                <CardFooter className="flex flex-col items-end p-6 bg-muted/50">
-                    <p className="text-lg font-medium text-primary">— {quote.author}</p>
-                </CardFooter>
+                {quote.author && (
+                    <CardFooter className="flex flex-col items-end p-6 bg-muted/50">
+                        <p className="text-lg font-medium text-primary">— {quote.author}</p>
+                    </CardFooter>
+                )}
             </Card>
 
             <Button onClick={getNewQuote} size="lg">

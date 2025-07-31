@@ -159,5 +159,6 @@
   "restore_successful_title": "Restauration Réussie",
   "restore_successful_desc": "Vos données ont été restaurées. L'application va maintenant se recharger.",
   "restore_failed_title": "Échec de la Restauration",
-  "restore_failed_desc": "Le fichier sélectionné est invalide ou corrompu. Veuillez essayer un autre fichier."
+  "restore_failed_desc": "Le fichier sélectionné est invalide ou corrompu. Veuillez essayer un autre fichier.",
+  "loading": "Chargement"
 }

@@ -159,5 +159,6 @@
   "restore_successful_title": "Restauro Bem-sucedido",
   "restore_successful_desc": "Os seus dados foram restaurados. A aplicação será recarregada agora.",
   "restore_failed_title": "Falha no Restauro",
-  "restore_failed_desc": "O ficheiro selecionado é inválido ou está corrompido. Por favor, tente um ficheiro diferente."
+  "restore_failed_desc": "O ficheiro selecionado é inválido ou está corrompido. Por favor, tente um ficheiro diferente.",
+  "loading": "A carregar"
 }

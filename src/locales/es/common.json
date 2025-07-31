@@ -159,5 +159,6 @@
   "restore_successful_title": "Restauración Exitosa",
   "restore_successful_desc": "Tus datos han sido restaurados. La aplicación se recargará ahora.",
   "restore_failed_title": "Falló la Restauración",
-  "restore_failed_desc": "El archivo seleccionado es inválido o está corrupto. Por favor, prueba con un archivo diferente."
+  "restore_failed_desc": "El archivo seleccionado es inválido o está corrupto. Por favor, prueba con un archivo diferente.",
+  "loading": "Cargando"
 }
