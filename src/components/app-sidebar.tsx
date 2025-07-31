@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem, MoreVertical } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -44,26 +44,30 @@ export default function AppSidebar() {
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
   const { t, language, setLanguage } = useI18n();
   const [mounted, setMounted] = React.useState(false);
+  const { state: sidebarState } = useSidebar();
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  const navItems = [
+  const mainNavItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: t('dashboard') },
     { href: '/dashboard/goals', icon: Target, label: t('goals_mapping') },
     { href: '/dashboard/wealth-wheel', icon: Donut, label: t('wealth_wheel') },
     { href: '/dashboard/tracker', icon: ListChecks, label: t('monthly_tracker') },
     { href: '/dashboard/investments', icon: LineChart, label: t('investments') },
+  ];
+  
+  const secondaryNavItems = [
     { href: '/dashboard/reflection', icon: BookOpen, label: t('reflection') },
     { href: '/dashboard/projections', icon: Bot, label: t('ai_projections_title') },
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
   ];
-  
+
   const legalItems = [
     { href: '/legal/terms', icon: FileText, label: t('terms_of_service') },
     { href: '/legal/privacy', icon: ShieldCheck, label: t('privacy_policy') },
-  ]
+  ];
 
   const languages: { code: Language, name: string }[] = [
     { code: 'pt', name: 'Português' },
@@ -77,6 +81,8 @@ export default function AppSidebar() {
     router.push('/');
   };
 
+  const allSecondaryItems = [...secondaryNavItems, ...legalItems];
+
   return (
     <>
       <Sidebar>
@@ -88,7 +94,7 @@ export default function AppSidebar() {
         </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
-            {navItems.map((item) => (
+            {mainNavItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
@@ -103,6 +109,49 @@ export default function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
+
+            {/* "More" menu for collapsed sidebar */}
+            {sidebarState === 'collapsed' ? (
+                <SidebarMenuItem>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <SidebarMenuButton tooltip={t('more')}>
+                                <MoreVertical />
+                            </SidebarMenuButton>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right" align="start">
+                            {allSecondaryItems.map((item) => (
+                                <DropdownMenuItem key={item.href} asChild>
+                                    <Link href={item.href} className="flex items-center gap-2">
+                                        <item.icon className="h-4 w-4" />
+                                        <span>{item.label}</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </SidebarMenuItem>
+            ) : (
+                <>
+                    {secondaryNavItems.map((item) => (
+                      <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton
+                          asChild
+                          isActive={pathname === item.href}
+                          onClick={() => setOpenMobile(false)}
+                          tooltip={item.label}
+                        >
+                          <Link href={item.href}>
+                            <item.icon />
+                            <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+                          </Link>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    ))}
+                </>
+            )}
+
+
              <SidebarSeparator className="my-2" />
               <SidebarMenuItem>
                  <SidebarMenuButton
@@ -119,7 +168,7 @@ export default function AppSidebar() {
                   </SidebarMenuButton>
               </SidebarMenuItem>
              <SidebarSeparator className="my-2" />
-             {legalItems.map((item) => (
+             {sidebarState !== 'collapsed' && legalItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
