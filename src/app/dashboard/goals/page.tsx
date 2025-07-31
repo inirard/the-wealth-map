@@ -11,7 +11,7 @@ import { Calendar as CalendarIcon, Trash2, Target, Heart, Edit } from "lucide-re
 
 import type { Goal } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -206,7 +206,7 @@ export default function GoalsPage() {
                 <CardDescription>{t('no_goals_yet_desc')}</CardDescription>
             </CardHeader>
             <CardContent>
-                <Target className="h-16 w-16 text-muted-foreground" />
+                <Button onClick={() => handleOpenDialog()} size="lg">{t('add_new_goal')}</Button>
             </CardContent>
         </Card>
       )}
