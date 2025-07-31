@@ -3,7 +3,7 @@
 
 import React, { forwardRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CircleDollarSign, Bot, Sparkles, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb } from 'lucide-react';
+import { Bot, Sparkles, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, CircleDollarSign } from 'lucide-react';
 import { format } from "date-fns";
 import { useI18n } from '@/hooks/use-i18n';
 import type { PredictiveInsightsOutput } from '@/lib/ai-types';
@@ -92,7 +92,7 @@ const ProjectionsReport = forwardRef<HTMLDivElement, ProjectionsReportProps>(({ 
                             </CardHeader>
                             <CardContent>
                                 <ul className="list-disc pl-5 space-y-2 text-gray-700">
-                                    {aiPredictions.goalProjetions.map((p, i) => <li key={i}><b>{p.goalName}:</b> {p.projection}</li>)}
+                                    {aiPredictions.goalProjections.map((p, i) => <li key={i}><b>{p.goalName}:</b> {p.projection}</li>)}
                                 </ul>
                             </CardContent>
                         </Card>
