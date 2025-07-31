@@ -12,7 +12,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useI18n } from '@/hooks/use-i18n';
-import { CheckCircle2, CloudSync, BarChart, BellRing, Banknote, Gem } from 'lucide-react';
+import { CloudSync, BarChart, BellRing, Banknote, Gem } from 'lucide-react';
 
 interface UpgradeToProProps {
     open: boolean;
@@ -46,12 +46,15 @@ export default function UpgradeToPro({ open, onOpenChange }: UpgradeToProProps) 
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <div className="my-6 space-y-4">
-                    {proFeatures.map((feature, index) => (
-                        <div key={index} className="flex items-start gap-4">
-                            <feature.icon className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
-                            <p className="text-foreground/80">{feature.text}</p>
-                        </div>
-                    ))}
+                    {proFeatures.map((feature, index) => {
+                        const Icon = feature.icon;
+                        return (
+                            <div key={index} className="flex items-start gap-4">
+                                <Icon className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                                <p className="text-foreground/80">{feature.text}</p>
+                            </div>
+                        )
+                    })}
                 </div>
                 <AlertDialogFooter>
                     <AlertDialogAction className="w-full">{t('notify_me')}</AlertDialogAction>
