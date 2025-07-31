@@ -196,14 +196,16 @@
   "unlock_pro_desc": "Upgrade in the future to unlock powerful features for automating and maximizing your wealth.",
   "pro_features_title": "Exclusive PRO Features",
   "pro_features_desc": "Upgrade to unlock a new level of financial control and insight.",
-  "pro_feature_cloud_sync": "Cloud backup and multi-device sync.",
-  "pro_feature_bank_integration": "Automatic import from your bank accounts.",
-  "pro_feature_advanced_reports": "Advanced reports with predictive insights and charts.",
-  "pro_feature_smart_alerts": "Smart alerts for investment opportunities and bill payments.",
+  "pro_feature_cloud_sync_title": "Cloud Sync",
+  "pro_feature_cloud_sync_desc": "Cloud backup and multi-device sync.",
+  "pro_feature_bank_integration_title": "Bank Integration",
+  "pro_feature_bank_integration_desc": "Automatic import from your bank accounts.",
+  "pro_feature_advanced_reports_title": "Advanced Reports",
+  "pro_feature_advanced_reports_desc": "Advanced reports with predictive insights and charts.",
+  "pro_feature_smart_alerts_title": "Smart Alerts",
+  "pro_feature_smart_alerts_desc": "Smart alerts for investment opportunities and bill payments.",
   "notify_me": "Notify Me When It's Ready",
   "ai_limit_title": "Monthly Limit Reached",
   "ai_limit_description": "You have already used your free AI analysis for this month. Upgrade to PRO for unlimited insights.",
   "more": "More"
 }
-
-    

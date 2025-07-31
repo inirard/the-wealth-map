@@ -196,14 +196,16 @@
   "unlock_pro_desc": "Passez à la version supérieure à l'avenir pour débloquer des fonctionnalités puissantes afin d'automatiser et de maximiser votre patrimoine.",
   "pro_features_title": "Fonctionnalités Exclusives PRO",
   "pro_features_desc": "Passez à la version supérieure pour débloquer un nouveau niveau de contrôle financier et de perspectives.",
-  "pro_feature_cloud_sync": "Sauvegarde dans le cloud et synchronisation multi-appareils.",
-  "pro_feature_bank_integration": "Importation automatique depuis vos comptes bancaires.",
-  "pro_feature_advanced_reports": "Rapports avancés avec des aperçus prédictifs et des graphiques.",
-  "pro_feature_smart_alerts": "Alertes intelligentes pour les opportunités d'investissement et les paiements de factures.",
+  "pro_feature_cloud_sync_title": "Synchronisation Cloud",
+  "pro_feature_cloud_sync_desc": "Sauvegarde dans le cloud et synchronisation multi-appareils.",
+  "pro_feature_bank_integration_title": "Intégration Bancaire",
+  "pro_feature_bank_integration_desc": "Importation automatique depuis vos comptes bancaires.",
+  "pro_feature_advanced_reports_title": "Rapports Avancés",
+  "pro_feature_advanced_reports_desc": "Rapports avancés avec des aperçus prédictifs et des graphiques.",
+  "pro_feature_smart_alerts_title": "Alertes Intelligentes",
+  "pro_feature_smart_alerts_desc": "Alertes intelligentes pour les opportunités d'investissement et les paiements de factures.",
   "notify_me": "Prévenez-moi Quand ce Sera Prêt",
   "ai_limit_title": "Limite Mensuelle Atteinte",
   "ai_limit_description": "Vous avez déjà utilisé votre analyse IA gratuite pour ce mois-ci. Passez à PRO pour des aperçus illimités.",
   "more": "Plus"
 }
-
-    

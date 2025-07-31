@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -8,10 +7,10 @@ import { useI18n } from '@/hooks/use-i18n';
 import { CloudSync, BarChart, BellRing, Banknote, Gem, Sparkles } from 'lucide-react';
 
 const proFeaturesList = [
-    { Icon: CloudSync, textKey: 'pro_feature_cloud_sync' },
-    { Icon: Banknote, textKey: 'pro_feature_bank_integration' },
-    { Icon: BarChart, textKey: 'pro_feature_advanced_reports' },
-    { Icon: BellRing, textKey: 'pro_feature_smart_alerts' },
+    { Icon: CloudSync, titleKey: 'pro_feature_cloud_sync_title', descKey: 'pro_feature_cloud_sync_desc' },
+    { Icon: Banknote, titleKey: 'pro_feature_bank_integration_title', descKey: 'pro_feature_bank_integration_desc' },
+    { Icon: BarChart, titleKey: 'pro_feature_advanced_reports_title', descKey: 'pro_feature_advanced_reports_desc' },
+    { Icon: BellRing, titleKey: 'pro_feature_smart_alerts_title', descKey: 'pro_feature_smart_alerts_desc' },
 ];
 
 export default function UpgradePage() {
@@ -39,16 +38,23 @@ export default function UpgradePage() {
                     {proFeaturesList.map((feature) => {
                         const Icon = feature.Icon;
                         return (
-                            <div key={feature.textKey} className="flex items-start gap-4 p-4 rounded-lg bg-background hover:bg-primary/5 transition-colors">
+                            <div
+                                key={feature.titleKey}
+                                className="flex items-start gap-4 p-4 rounded-lg bg-background hover:bg-primary/5 transition-colors"
+                            >
                                 <div className="p-3 rounded-full bg-primary/10">
                                     <Icon className="h-6 w-6 text-primary flex-shrink-0" />
                                 </div>
                                 <div>
-                                    <h3 className="font-semibold">{t(feature.textKey.replace('_desc',''))}</h3>
-                                    <p className="text-sm text-muted-foreground">{t(feature.textKey)}</p>
+                                    <h3 className="font-semibold">
+                                        {t(feature.titleKey)}
+                                    </h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        {t(feature.descKey)}
+                                    </p>
                                 </div>
                             </div>
-                        )
+                        );
                     })}
                 </CardContent>
             </Card>

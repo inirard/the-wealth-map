@@ -196,14 +196,16 @@
   "unlock_pro_desc": "Faça o upgrade no futuro para desbloquear funcionalidades poderosas para automatizar e maximizar a sua riqueza.",
   "pro_features_title": "Funcionalidades Exclusivas PRO",
   "pro_features_desc": "Faça o upgrade para desbloquear um novo nível de controlo financeiro e visão.",
-  "pro_feature_cloud_sync": "Backup na nuvem e sincronização entre vários dispositivos.",
-  "pro_feature_bank_integration": "Importação automática das suas contas bancárias.",
-  "pro_feature_advanced_reports": "Relatórios avançados com insights preditivos e gráficos.",
-  "pro_feature_smart_alerts": "Alertas inteligentes para oportunidades de investimento e pagamentos.",
+  "pro_feature_cloud_sync_title": "Sincronização na Nuvem",
+  "pro_feature_cloud_sync_desc": "Backup na nuvem e sincronização entre vários dispositivos.",
+  "pro_feature_bank_integration_title": "Integração Bancária",
+  "pro_feature_bank_integration_desc": "Importação automática das suas contas bancárias.",
+  "pro_feature_advanced_reports_title": "Relatórios Avançados",
+  "pro_feature_advanced_reports_desc": "Relatórios avançados com insights preditivos e gráficos.",
+  "pro_feature_smart_alerts_title": "Alertas Inteligentes",
+  "pro_feature_smart_alerts_desc": "Alertas inteligentes para oportunidades de investimento e pagamentos.",
   "notify_me": "Notifiquem-me Quando Estiver Pronto",
   "ai_limit_title": "Limite Mensal Atingido",
   "ai_limit_description": "Já utilizou a sua análise de IA gratuita para este mês. Faça o upgrade para PRO para obter insights ilimitados.",
   "more": "Mais"
 }
-
-    
