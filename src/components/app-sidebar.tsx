@@ -44,7 +44,6 @@ export default function AppSidebar() {
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
   const { t, language, setLanguage } = useI18n();
   const [mounted, setMounted] = React.useState(false);
-  const { state: sidebarState } = useSidebar();
 
   React.useEffect(() => {
     setMounted(true);
@@ -102,31 +101,27 @@ export default function AppSidebar() {
                 >
                   <Link href={item.href}>
                     <item.icon />
-                    {mounted ? <span className="group-data-[collapsible=icon]:hidden">{item.label}</span> : <span className="group-data-[collapsible=icon]:hidden">{t('dashboard')}</span>}
+                    <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
 
-            {sidebarState !== 'collapsed' && (
-                <>
-                    {secondaryNavItems.map((item) => (
-                      <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton
-                          asChild
-                          isActive={pathname === item.href}
-                          onClick={() => setOpenMobile(false)}
-                          tooltip={item.label}
-                        >
-                          <Link href={item.href}>
-                            <item.icon />
-                            <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
-                          </Link>
-                        </SidebarMenuButton>
-                      </SidebarMenuItem>
-                    ))}
-                </>
-            )}
+            {secondaryNavItems.map((item) => (
+              <SidebarMenuItem key={item.href}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === item.href}
+                  onClick={() => setOpenMobile(false)}
+                  tooltip={item.label}
+                >
+                  <Link href={item.href}>
+                    <item.icon />
+                    <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
 
              <SidebarSeparator className="my-2" />
               <SidebarMenuItem>
@@ -139,31 +134,29 @@ export default function AppSidebar() {
                   >
                    <Link href="/dashboard/upgrade">
                         <Gem />
-                        {mounted ? <span className="group-data-[collapsible=icon]:hidden">{t('unlock_pro_plan')}</span> : <span className="group-data-[collapsible=icon]:hidden">...</span>}
+                        <span className="group-data-[collapsible=icon]:hidden">{t('unlock_pro_plan')}</span>
                    </Link>
                   </SidebarMenuButton>
               </SidebarMenuItem>
              
-             {sidebarState !== 'collapsed' && (
-                <>
-                    <SidebarSeparator className="my-2" />
-                    {legalItems.map((item) => (
-                        <SidebarMenuItem key={item.href}>
-                            <SidebarMenuButton
-                            asChild
-                            isActive={pathname === item.href}
-                            onClick={() => setOpenMobile(false)}
-                            tooltip={item.label}
-                            >
-                            <Link href={item.href}>
-                                <item.icon />
-                                <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
-                            </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
-                    ))}
-                </>
-             )}
+              <div className="group-data-[collapsible=expanded]:contents hidden">
+                <SidebarSeparator className="my-2" />
+                {legalItems.map((item) => (
+                    <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton
+                        asChild
+                        isActive={pathname === item.href}
+                        onClick={() => setOpenMobile(false)}
+                        tooltip={item.label}
+                        >
+                        <Link href={item.href}>
+                            <item.icon />
+                            <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+                        </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                ))}
+            </div>
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="flex flex-col gap-2">
@@ -190,6 +183,7 @@ export default function AppSidebar() {
             variant="ghost"
             className="w-full justify-start gap-2 text-destructive hover:bg-destructive hover:text-destructive-foreground"
             onClick={() => setResetDialogOpen(true)}
+            title={mounted ? t('delete_data') : 'Delete Data'}
           >
             <Trash2 />
             <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_data'): 'Delete Data'}</span>
@@ -216,4 +210,3 @@ export default function AppSidebar() {
     </>
   );
 }
-
