@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem, MoreHorizontal } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -21,6 +21,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
@@ -63,11 +65,6 @@ export default function AppSidebar() {
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
   ];
 
-  const legalItems = [
-    { href: '/legal/terms', icon: FileText, label: t('terms_of_service') },
-    { href: '/legal/privacy', icon: ShieldCheck, label: t('privacy_policy') },
-  ];
-
   const languages: { code: Language, name: string }[] = [
     { code: 'pt', name: 'Português' },
     { code: 'en', name: 'English' },
@@ -107,7 +104,9 @@ export default function AppSidebar() {
               </SidebarMenuItem>
             ))}
 
-            {secondaryNavItems.map((item) => (
+            <SidebarSeparator className="my-2" />
+
+             {secondaryNavItems.map((item) => (
               <SidebarMenuItem key={item.href}>
                 <SidebarMenuButton
                   asChild
@@ -122,9 +121,10 @@ export default function AppSidebar() {
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
-
-             <SidebarSeparator className="my-2" />
-              <SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarContent>
+        <SidebarFooter className="flex flex-col gap-2">
+            <SidebarMenuItem>
                  <SidebarMenuButton
                     asChild
                     isActive={pathname === '/dashboard/upgrade'}
@@ -137,30 +137,10 @@ export default function AppSidebar() {
                         <span className="group-data-[collapsible=icon]:hidden">{t('unlock_pro_plan')}</span>
                    </Link>
                   </SidebarMenuButton>
-              </SidebarMenuItem>
-             
-              <div className="group-data-[collapsible=expanded]:contents hidden">
+            </SidebarMenuItem>
+            
+            <div className="group-data-[collapsible=expanded]:contents hidden">
                 <SidebarSeparator className="my-2" />
-                {legalItems.map((item) => (
-                    <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton
-                        asChild
-                        isActive={pathname === item.href}
-                        onClick={() => setOpenMobile(false)}
-                        tooltip={item.label}
-                        >
-                        <Link href={item.href}>
-                            <item.icon />
-                            <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
-                        </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
-            </div>
-          </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter className="flex flex-col gap-2">
-            <div className="group-data-[collapsible=icon]:hidden">
                 <DataManagement />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -177,17 +157,30 @@ export default function AppSidebar() {
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
+
+                 <SidebarMenu>
+                    <SidebarMenuItem>
+                        <SidebarMenuButton asChild tooltip={t('terms_of_service')}>
+                             <Link href="/legal/terms"><FileText /> <span className="group-data-[collapsible=icon]:hidden">{t('terms_of_service')}</span></Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                     <SidebarMenuItem>
+                        <SidebarMenuButton asChild tooltip={t('privacy_policy')}>
+                            <Link href="/legal/privacy"><ShieldCheck /> <span className="group-data-[collapsible=icon]:hidden">{t('privacy_policy')}</span></Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
+                 </SidebarMenu>
             </div>
 
-          <Button
-            variant="ghost"
-            className="w-full justify-start gap-2 text-destructive hover:bg-destructive hover:text-destructive-foreground"
-            onClick={() => setResetDialogOpen(true)}
-            title={mounted ? t('delete_data') : 'Delete Data'}
-          >
-            <Trash2 />
-            <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_data'): 'Delete Data'}</span>
-          </Button>
+            <Button
+                variant="ghost"
+                className="w-full justify-start gap-2 text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                onClick={() => setResetDialogOpen(true)}
+                title={mounted ? t('delete_data') : 'Delete Data'}
+            >
+                <Trash2 />
+                <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_data'): 'Delete Data'}</span>
+            </Button>
         </SidebarFooter>
       </Sidebar>
 
