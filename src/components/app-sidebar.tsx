@@ -4,7 +4,24 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Gem, Bot, LineChart } from 'lucide-react';
+import { 
+    CircleDollarSign, 
+    LayoutDashboard, 
+    Target, 
+    Donut, 
+    ListChecks, 
+    BookOpen, 
+    Quote, 
+    Trash2, 
+    Gem, 
+    Bot, 
+    LineChart,
+    Languages,
+    FileText,
+    ShieldCheck,
+    DatabaseZap,
+    Database,
+} from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -25,15 +42,24 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Button } from '@/components/ui/button';
+import DataManagement from '@/components/data-management';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
+import type { Language } from '@/lib/types';
 
 export default function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { setOpenMobile } = useSidebar();
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
-  const { t } = useI18n();
+  const { t, language, setLanguage } = useI18n();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -49,6 +75,13 @@ export default function AppSidebar() {
     { href: '/dashboard/reflection', icon: BookOpen, label: t('reflection') },
     { href: '/dashboard/projections', icon: Bot, label: t('ai_projections_title') },
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
+  ];
+  
+  const languages: { code: Language; name: string }[] = [
+    { code: 'en', name: 'English' },
+    { code: 'pt', name: 'Português' },
+    { code: 'es', name: 'Español' },
+    { code: 'fr', name: 'Français' },
   ];
 
   const handleResetData = () => {
@@ -82,6 +115,40 @@ export default function AppSidebar() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 ))}
+            </SidebarMenu>
+
+            <SidebarSeparator className="my-3" />
+            
+            <SidebarMenu>
+                 <SidebarMenuItem>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <SidebarMenuButton variant="ghost" className="w-full justify-start" tooltip={t('languages')}>
+                                <Languages />
+                                <span className="group-data-[collapsible=icon]:hidden">{t('languages')}</span>
+                            </SidebarMenuButton>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right" align="start">
+                            {languages.map(lang => (
+                                <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-accent' : ''}>
+                                    {lang.name}
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </SidebarMenuItem>
+                <DataManagement />
+
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild variant="ghost" tooltip={t('terms_of_service')}>
+                        <Link href="/legal/terms"><FileText /><span className="group-data-[collapsible=icon]:hidden">{t('terms_of_service')}</span></Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <SidebarMenuButton asChild variant="ghost" tooltip={t('privacy_policy')}>
+                        <Link href="/legal/privacy"><ShieldCheck /><span className="group-data-[collapsible=icon]:hidden">{t('privacy_policy')}</span></Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
             </SidebarMenu>
         </SidebarContent>
         <SidebarFooter>

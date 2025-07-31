@@ -2,12 +2,12 @@
 "use client";
 
 import React, { useRef } from 'react';
-import { Button } from '@/components/ui/button';
+import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { DatabaseZap, Database } from 'lucide-react';
 import { useI18n } from '@/hooks/use-i18n';
 import { useToast } from "@/hooks/use-toast";
 
-const LOCAL_STORAGE_KEYS = ['username', 'goals', 'transactions', 'wealthWheel', 'reflections', 'monthlyMood', 'language'];
+const LOCAL_STORAGE_KEYS = ['username', 'goals', 'transactions', 'wealthWheel', 'reflections', 'monthlyMood', 'language', 'aiProjections', 'investments', 'aiInsight'];
 
 export default function DataManagement() {
   const { t } = useI18n();
@@ -67,8 +67,6 @@ export default function DataManagement() {
         }
         const data = JSON.parse(text);
 
-        // Validate data before restoring
-        const missingKeys = LOCAL_STORAGE_KEYS.filter(key => !(key in data) && localStorage.getItem(key) !== null);
         if (Object.keys(data).length === 0) throw new Error("Backup file is empty or invalid.");
 
         Object.keys(data).forEach(key => {
@@ -82,7 +80,6 @@ export default function DataManagement() {
           description: t('restore_successful_desc'),
         });
         
-        // Force a reload to apply all restored settings (like language)
         setTimeout(() => window.location.reload(), 1000);
 
       } catch (error) {
@@ -93,7 +90,6 @@ export default function DataManagement() {
           description: t('restore_failed_desc'),
         });
       } finally {
-        // Reset the file input so the user can select the same file again
         if(fileInputRef.current) {
             fileInputRef.current.value = "";
         }
@@ -103,24 +99,26 @@ export default function DataManagement() {
   };
 
   return (
-    <div className="group-data-[collapsible=icon]:p-0 p-2">
-        <div className="flex flex-col gap-2 group-data-[collapsible=icon]:items-center">
-            <Button variant="outline" onClick={handleBackup} className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:w-auto group-data-[collapsible=icon]:justify-center">
-                <DatabaseZap />
-                <span className="group-data-[collapsible=icon]:hidden">{t('backup_data')}</span>
-            </Button>
-            <Button variant="outline" onClick={handleRestoreClick} className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:w-auto group-data-[collapsible=icon]:justify-center">
-                <Database />
-                <span className="group-data-[collapsible=icon]:hidden">{t('restore_data')}</span>
-            </Button>
-            <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                accept="application/json"
-                className="hidden"
-            />
-        </div>
-    </div>
+    <>
+      <SidebarMenuItem>
+        <SidebarMenuButton variant="ghost" onClick={handleBackup} className="w-full justify-start" tooltip={t('backup_data')}>
+            <DatabaseZap />
+            <span className="group-data-[collapsible=icon]:hidden">{t('backup_data')}</span>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+      <SidebarMenuItem>
+         <SidebarMenuButton variant="ghost" onClick={handleRestoreClick} className="w-full justify-start" tooltip={t('restore_data')}>
+            <Database />
+            <span className="group-data-[collapsible=icon]:hidden">{t('restore_data')}</span>
+        </SidebarMenuButton>
+        <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            accept="application/json"
+            className="hidden"
+        />
+      </SidebarMenuItem>
+    </>
   );
 }

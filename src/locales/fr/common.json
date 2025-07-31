@@ -207,5 +207,6 @@
   "notify_me": "Prévenez-moi Quand ce Sera Prêt",
   "ai_limit_title": "Limite Mensuelle Atteinte",
   "ai_limit_description": "Vous avez déjà utilisé votre analyse IA gratuite pour ce mois-ci. Passez à PRO pour des aperçus illimités.",
-  "more": "Plus"
+  "more": "Plus",
+  "languages": "Langues"
 }
