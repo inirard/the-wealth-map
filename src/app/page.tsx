@@ -4,67 +4,25 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CircleDollarSign, Eye, EyeOff } from "lucide-react";
+import { CircleDollarSign } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useI18n } from '@/hooks/use-i18n';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from '@/components/ui/label';
-import { auth } from '@/lib/firebase';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { useToast } from '@/hooks/use-toast';
 
-
-export default function AuthPage() {
+export default function WelcomePage() {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('login');
-  const [showPassword, setShowPassword] = useState(false);
-
+  const [storedName, setStoredName] = useLocalStorage('username', '');
   const router = useRouter();
   const { t } = useI18n();
-  const { toast } = useToast();
   
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleStart = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-        router.push('/dashboard');
-    } catch (error: any) {
-        toast({
-            variant: "destructive",
-            title: "Login Failed",
-            description: error.message,
-        });
-    } finally {
-        setIsLoading(false);
+    if (name.trim()) {
+      setStoredName(name);
+      router.push('/dashboard');
     }
   };
-  
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        if (userCredential.user) {
-            await updateProfile(userCredential.user, { displayName: name });
-        }
-        router.push('/dashboard');
-    } catch (error: any) {
-        toast({
-            variant: "destructive",
-            title: "Sign Up Failed",
-            description: error.message,
-        });
-    } finally {
-        setIsLoading(false);
-    }
-  }
-
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
@@ -76,7 +34,7 @@ export default function AuthPage() {
         `
       }}></div>
 
-      <main className="relative z-10 flex w-full max-w-md flex-col items-center justify-center text-center">
+      <main className="relative z-10 flex w-full max-w-2xl flex-col items-center justify-center text-center">
         <Link href="/" className="mb-8">
           <CircleDollarSign className="h-24 w-24 text-primary drop-shadow-lg" />
         </Link>
@@ -87,72 +45,23 @@ export default function AuthPage() {
           {t('welcome_subtitle')}
         </p>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-10">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Login</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
-          </TabsList>
-          <TabsContent value="login">
-            <Card>
-              <CardHeader>
-                <CardTitle>Welcome Back</CardTitle>
-                <CardDescription>
-                  Sign in to continue your journey.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                 <form onSubmit={handleLogin} className="space-y-4 text-left">
-                    <div className="space-y-2">
-                        <Label htmlFor="login-email">Email</Label>
-                        <Input id="login-email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                    </div>
-                    <div className="space-y-2 relative">
-                        <Label htmlFor="login-password">Password</Label>
-                        <Input id="login-password" type={showPassword ? "text" : "password"} required value={password} onChange={(e) => setPassword(e.target.value)} />
-                        <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-7 h-7 w-7 text-muted-foreground hover:bg-transparent hover:text-primary" onClick={() => setShowPassword(!showPassword)}>
-                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </Button>
-                    </div>
-                    <Button type="submit" className="w-full" disabled={isLoading}>
-                      {isLoading ? "Logging in..." : "Login"}
-                    </Button>
-                 </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          <TabsContent value="signup">
-            <Card>
-              <CardHeader>
-                <CardTitle>Create an Account</CardTitle>
-                <CardDescription>
-                  Start your journey to financial freedom today.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                 <form onSubmit={handleSignUp} className="space-y-4 text-left">
-                     <div className="space-y-2">
-                        <Label htmlFor="signup-name">{t('what_is_your_name')}</Label>
-                        <Input id="signup-name" type="text" placeholder="John Doe" required value={name} onChange={(e) => setName(e.target.value)} />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="signup-email">Email</Label>
-                        <Input id="signup-email" type="email" placeholder="m@example.com" required value={email} onChange={(e) => setEmail(e.target.value)} />
-                    </div>
-                    <div className="space-y-2 relative">
-                        <Label htmlFor="signup-password">Password</Label>
-                        <Input id="signup-password" type={showPassword ? "text" : "password"} placeholder="Must be 6+ characters" required value={password} onChange={(e) => setPassword(e.target.value)} />
-                        <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-7 h-7 w-7 text-muted-foreground hover:bg-transparent hover:text-primary" onClick={() => setShowPassword(!showPassword)}>
-                            {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                        </Button>
-                    </div>
-                    <Button type="submit" className="w-full" disabled={isLoading}>
-                      {isLoading ? "Creating Account..." : "Sign Up"}
-                    </Button>
-                 </form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        <form onSubmit={handleStart} className="mt-10 flex w-full max-w-sm flex-col items-center gap-4">
+          <label htmlFor="name" className="text-lg font-medium text-foreground">
+            {t('what_is_your_name')}
+          </label>
+          <Input 
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="John Doe"
+            className="h-12 text-center text-lg"
+            required 
+          />
+          <Button type="submit" size="lg" className="w-full">
+            {t('start_your_journey')}
+          </Button>
+        </form>
       </main>
       
       <footer className="absolute bottom-4 text-xs text-muted-foreground z-10">

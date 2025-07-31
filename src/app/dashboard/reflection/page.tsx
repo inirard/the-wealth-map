@@ -13,15 +13,13 @@ import { useI18n } from '@/hooks/use-i18n';
 import MonthlySummary from './monthly-summary';
 import { generateInsights } from '@/ai/flows/generate-insights-flow';
 import type { GenerateInsightsOutput } from '@/lib/ai-types';
-import { Sparkles, Bot, Download, TriangleAlert, Lock } from 'lucide-react';
+import { Sparkles, Bot, Download, TriangleAlert } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import FinancialReport from './report';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-import { usePlan } from '@/hooks/use-plan';
-import UpgradeButton from '@/components/upgrade-button';
 
 const emotionalStates = [
     { emoji: '😃', label: 'excellent' },
@@ -34,7 +32,6 @@ const emotionalStates = [
 export default function ReflectionPage() {
     const { t, language } = useI18n();
     const { toast } = useToast();
-    const { plan } = usePlan();
     const reportRef = useRef<HTMLDivElement>(null);
 
     const reflectionPrompts = useMemo(() => [
@@ -59,7 +56,7 @@ export default function ReflectionPage() {
 
     const handleDownloadPdf = async () => {
         const reportElement = reportRef.current;
-        if (!reportElement || plan === 'basic') return;
+        if (!reportElement) return;
 
         setIsDownloading(true);
 
@@ -124,7 +121,6 @@ export default function ReflectionPage() {
         }
     };
 
-
     useEffect(() => {
         const initialData = reflectionPrompts.map(p => {
             const saved = lsReflections.find(s => s.id === p.id);
@@ -135,9 +131,9 @@ export default function ReflectionPage() {
     }, [t, lsReflections, reflectionPrompts]); 
 
     const handleContentChange = (id: string, content: string) => {
-        setReflections(currentReflections =>
-            currentReflections.map(r => (r.id === id ? { ...r, content } : r))
-        );
+        const newReflections = reflections.map(r => (r.id === id ? { ...r, content } : r));
+        setReflections(newReflections);
+        setLsReflections(newReflections);
     };
 
     const handleGenerateInsights = async () => {
@@ -186,36 +182,6 @@ export default function ReflectionPage() {
             </div>
         );
     }
-    
-    const renderDownloadButton = () => {
-        const isDisabled = !hasDataToReport || isDownloading || plan === 'basic';
-        
-        const button = (
-             <Button onClick={handleDownloadPdf} disabled={isDisabled}>
-                <Download className="mr-2 h-4 w-4" />
-                {isDownloading ? t('downloading') : t('download_pdf')}
-            </Button>
-        );
-
-        if (plan === 'basic') {
-            return (
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            {/* The disabled button needs a wrapper for the tooltip to work */}
-                            <div className="inline-block">
-                               {button}
-                            </div>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>{t('upgrade_for_pdf_export')}</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            );
-        }
-        return button;
-    };
 
     return (
         <div className="space-y-6">
@@ -224,7 +190,10 @@ export default function ReflectionPage() {
                     <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
                     <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
                 </div>
-                {renderDownloadButton()}
+                <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading}>
+                    <Download className="mr-2 h-4 w-4" />
+                    {isDownloading ? t('downloading') : t('download_pdf')}
+                </Button>
             </div>
 
             <div>
@@ -312,28 +281,20 @@ export default function ReflectionPage() {
                         )}
                     </CardContent>
                     <CardFooter>
-                         {plan === 'basic' ? (
-                            <div className='flex items-center gap-2 text-sm text-muted-foreground'>
-                                <Lock className="h-4 w-4" />
-                                <span>{t('premium_feature')}</span>
-                                <UpgradeButton size="sm" />
-                            </div>
-                        ) : (
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
-                                            {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
-                                        </Button>
-                                    </TooltipTrigger>
-                                    {!canGenerate && (
-                                        <TooltipContent>
-                                            <p>{t('ai_coach_disabled_tooltip')}</p>
-                                        </TooltipContent>
-                                    )}
-                                </Tooltip>
-                            </TooltipProvider>
-                        )}
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
+                                        {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
+                                    </Button>
+                                </TooltipTrigger>
+                                {!canGenerate && (
+                                    <TooltipContent>
+                                        <p>{t('ai_coach_disabled_tooltip')}</p>
+                                    </TooltipContent>
+                                )}
+                            </Tooltip>
+                        </TooltipProvider>
                     </CardFooter>
                 </Card>
             </div>

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Trash2, TrendingUp, TrendingDown, Wallet, Download, Crown } from "lucide-react";
+import { Calendar as CalendarIcon, Trash2, TrendingUp, TrendingDown, Wallet, Download } from "lucide-react";
 
 import type { Transaction } from '@/lib/types';
 import { exportToCsv } from '@/lib/csv';
@@ -22,15 +22,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useI18n } from '@/hooks/use-i18n';
-import { usePlan } from '@/hooks/use-plan';
-import UpgradePrompt from '@/components/upgrade-prompt';
-import UpgradeButton from '@/components/upgrade-button';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 export default function TrackerPage() {
   const { t } = useI18n();
-  const { plan } = usePlan();
-  const transactionLimit = 20;
 
   const transactionSchema = useMemo(() => z.object({
     description: z.string().min(2, t('description_error')),
@@ -92,50 +86,24 @@ export default function TrackerPage() {
   }, [transactions]);
   
   const handleExport = useCallback(() => {
-    if(plan === 'basic') return;
     const dataToExport = transactions.map(transaction => ({
         ...transaction, 
         date: format(new Date(transaction.date), "yyyy-MM-dd"),
         type: transaction.type === 'income' ? t('income') : t('expense')
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
-  }, [transactions, t, plan]);
-
-  const atTransactionLimit = plan === 'basic' && transactions.length >= transactionLimit;
-
-  const renderExportButton = () => {
-    const isDisabled = transactions.length === 0 || plan === 'basic';
-    const button = (
-        <Button variant="outline" onClick={handleExport} disabled={isDisabled} className="hover:bg-primary hover:text-primary-foreground">
-            <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
-        </Button>
-    );
-
-     if (plan === 'basic') {
-        return (
-            <TooltipProvider>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <div className="inline-block">{button}</div>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>{t('upgrade_for_csv_export')}</p>
-                    </TooltipContent>
-                </Tooltip>
-            </TooltipProvider>
-        );
-    }
-    return button;
-  }
+  }, [transactions, t]);
 
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
         <div className="flex gap-2">
-            {renderExportButton()}
+            <Button variant="outline" onClick={handleExport} disabled={transactions.length === 0} className="hover:bg-primary hover:text-primary-foreground">
+                <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
+            </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild><Button disabled={atTransactionLimit}>{t('add_transaction')}</Button></DialogTrigger>
+              <DialogTrigger asChild><Button>{t('add_transaction')}</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>{t('add_new_transaction')}</DialogTitle></DialogHeader>
                 <Form {...form}>
@@ -181,12 +149,6 @@ export default function TrackerPage() {
         <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('balance')}</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold">€{balance.toFixed(2)}</div></CardContent></Card>
       </div>
 
-      {atTransactionLimit && (
-        <div className="mt-8">
-            <UpgradePrompt message={t('upgrade_for_unlimited_transactions', {limit: transactionLimit})} />
-        </div>
-      )}
-      
       <Card>
           <Table>
             <TableHeader>

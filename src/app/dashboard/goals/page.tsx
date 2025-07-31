@@ -11,7 +11,7 @@ import { Calendar as CalendarIcon, Trash2, Target, Heart, Edit } from "lucide-re
 
 import type { Goal } from '@/lib/types';
 import { Button } from '@/components/ui/button';
-import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/components/ui/card';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -21,13 +21,9 @@ import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from "@/lib/utils";
 import { useI18n } from '@/hooks/use-i18n';
-import { usePlan } from '@/hooks/use-plan';
-import UpgradePrompt from '@/components/upgrade-prompt';
 
 export default function GoalsPage() {
   const { t } = useI18n();
-  const { plan } = usePlan();
-  const goalLimit = 2;
 
   const goalSchema = useMemo(() => z.object({
     id: z.string().optional(),
@@ -72,7 +68,7 @@ export default function GoalsPage() {
         });
       }
     }
-  }, [isDialogOpen, editingGoal, form.reset]);
+  }, [isDialogOpen, editingGoal, form]);
 
   function onSubmit(values: z.infer<typeof goalSchema>) {
     if (editingGoal) {
@@ -110,15 +106,13 @@ export default function GoalsPage() {
     setIsDialogOpen(true);
   }
 
-  const atGoalLimit = plan === 'basic' && goals.length >= goalLimit;
-
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">{t('goals_mapping')}</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button onClick={() => handleOpenDialog()} disabled={atGoalLimit}>{t('add_new_goal')}</Button>
+            <Button onClick={() => handleOpenDialog()}>{t('add_new_goal')}</Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
@@ -161,10 +155,6 @@ export default function GoalsPage() {
           </DialogContent>
         </Dialog>
       </div>
-
-      {atGoalLimit && !editingGoal && (
-        <UpgradePrompt message={t('upgrade_for_unlimited_goals', {limit: goalLimit})} />
-      )}
 
       {goals.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
