@@ -4,7 +4,7 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CircleDollarSign } from "lucide-react";
+import { CircleDollarSign, Compass } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useLocalStorage } from '@/hooks/use-local-storage';
@@ -35,9 +35,10 @@ export default function WelcomePage() {
       }}></div>
 
       <main className="relative z-10 flex w-full max-w-2xl flex-col items-center justify-center text-center">
-        <Link href="/" className="mb-8">
-          <CircleDollarSign className="h-24 w-24 text-primary drop-shadow-lg" />
-        </Link>
+        <div className="relative mb-8">
+            <CircleDollarSign className="h-24 w-24 text-primary drop-shadow-lg" />
+            <Compass className="absolute -bottom-2 -right-2 h-10 w-10 text-emphasis drop-shadow-md" />
+        </div>
         <h1 className="font-headline text-5xl font-bold tracking-tight text-primary md:text-7xl">
           The Wealth Map
         </h1>
