@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks/use-i18n';
 import { predictFinancialFuture } from '@/ai/flows/predictive-insights-flow';
 import type { PredictiveInsightsOutput } from '@/lib/ai-types';
-import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Clock, Download, ArrowUp } from 'lucide-react';
+import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Clock, Download, RefreshCw } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -286,7 +286,7 @@ export default function ProjectionsPage() {
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                      <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate} variant="outline" size="icon">
-                                        <ArrowUp className="h-5 w-5" />
+                                        <RefreshCw className="h-5 w-5" />
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
@@ -316,3 +316,4 @@ export default function ProjectionsPage() {
 }
 
     
+
