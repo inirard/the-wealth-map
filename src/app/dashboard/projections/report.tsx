@@ -59,15 +59,15 @@ const ProjectionsReport = forwardRef<HTMLDivElement, ProjectionsReportProps>(({ 
                     </CardContent>
                 </Card>
 
-                <section className="space-y-6">
-                    <Card style={cardStyle}>
+                <section className="space-y-6" style={cardStyle}>
+                    <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3"><TrendingUp className="text-primary"/>{t('future_balance_prediction')}</CardTitle>
                         </CardHeader>
                         <CardContent><p className="text-gray-700">{aiPredictions.futureBalancePrediction}</p></CardContent>
                     </Card>
 
-                    <Card style={cardStyle}>
+                    <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3"><AlertCircle className="text-primary"/>{t('proactive_alerts')}</CardTitle>
                         </CardHeader>
@@ -78,7 +78,7 @@ const ProjectionsReport = forwardRef<HTMLDivElement, ProjectionsReportProps>(({ 
                         </CardContent>
                     </Card>
 
-                    <Card style={cardStyle}>
+                    <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3"><FlaskConical className="text-primary"/>{t('spending_pattern_analysis')}</CardTitle>
                         </CardHeader>
@@ -86,19 +86,19 @@ const ProjectionsReport = forwardRef<HTMLDivElement, ProjectionsReportProps>(({ 
                     </Card>
 
                     {aiPredictions.goalProjections.length > 0 && (
-                         <Card style={cardStyle}>
+                         <Card>
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-3"><Target className="text-primary"/>{t('goal_projections')}</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <ul className="list-disc pl-5 space-y-2 text-gray-700">
-                                    {aiPredictions.goalProjections.map((p, i) => <li key={i}><b>{p.goalName}:</b> {p.projection}</li>)}
+                                    {aiPredictions.goalProjetions.map((p, i) => <li key={i}><b>{p.goalName}:</b> {p.projection}</li>)}
                                 </ul>
                             </CardContent>
                         </Card>
                     )}
 
-                    <Card style={cardStyle}>
+                    <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3"><Lightbulb className="text-primary"/>{t('what_if_scenario')}</CardTitle>
                         </CardHeader>
