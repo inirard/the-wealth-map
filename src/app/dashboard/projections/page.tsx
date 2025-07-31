@@ -31,6 +31,11 @@ export default function ProjectionsPage() {
     const [isLoading, setIsLoading] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
     const [aiError, setAiError] = useState<boolean>(false);
+    const [isClient, setIsClient] = useState(false);
+
+    useEffect(() => {
+        setIsClient(true);
+    }, []);
 
     const handleGeneratePredictions = async () => {
         setIsLoading(true);
@@ -239,7 +244,7 @@ export default function ProjectionsPage() {
                     <p className="text-muted-foreground mt-2">{t('ai_projections_description')}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    {aiPredictions && (
+                    {isClient && aiPredictions && (
                         <>
                             <Button onClick={handleDownloadPdf} disabled={isDownloading}>
                                 <Download className="mr-2 h-4 w-4" />
