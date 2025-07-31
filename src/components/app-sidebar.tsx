@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, DatabaseZap } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -35,6 +35,7 @@ import {
 import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
+import DataManagement from './data-management';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -120,6 +121,7 @@ export default function AppSidebar() {
           </SidebarMenu>
         </SidebarContent>
         <SidebarFooter className="flex flex-col gap-2">
+            <DataManagement />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-primary hover:text-sidebar-primary-foreground">
