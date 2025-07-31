@@ -553,12 +553,33 @@ const SidebarMenuButton = React.forwardRef<
       tooltip,
       tooltipProps,
       className,
+      children,
       ...props
     },
     ref
   ) => {
     const Comp = asChild ? Slot : "button"
     const { isMobile, state } = useSidebar()
+    
+    // This is a workaround to pass the props to the children.
+    // It's not ideal, but it's the only way to make it work.
+    const childrenWithProps = React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+            // We find the span and add the class to it.
+            const grandChildren = React.Children.toArray((child.props as any).children)
+            return React.cloneElement(child, {
+                children: grandChildren.map((grandChild: any) => {
+                    if (grandChild.type === 'span') {
+                        return React.cloneElement(grandChild, {
+                            className: cn("group-data-[collapsible=icon]:hidden", grandChild.props.className),
+                        })
+                    }
+                    return grandChild
+                }),
+            })
+        }
+        return child
+    })
 
     const button = (
       <Comp
@@ -568,7 +589,9 @@ const SidebarMenuButton = React.forwardRef<
         data-active={isActive}
         className={cn(sidebarMenuButtonVariants({ variant, size }), className)}
         {...props}
-      />
+      >
+        {childrenWithProps}
+      </Comp>
     )
 
     if (!tooltip) {
