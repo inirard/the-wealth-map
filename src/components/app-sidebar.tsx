@@ -127,7 +127,7 @@ export default function AppSidebar() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent side="right" align="start">
                             {languages.map(lang => (
-                                <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-accent' : ''}>
+                                <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-primary/10' : ''}>
                                     {lang.name}
                                 </DropdownMenuItem>
                             ))}
