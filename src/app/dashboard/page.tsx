@@ -93,13 +93,12 @@ export default function DashboardPage() {
           </div>
           <div className="p-4 flex items-center justify-center">
             <Image
-              src="https://placehold.co/400x300.png"
+              src="/images/dashboardimage.png"
               alt="Dashboard Illustration"
               width={400}
               height={300}
               className="w-full max-w-[400px] h-auto rounded-lg"
               priority
-              data-ai-hint="finance growth"
             />
           </div>
         </div>
