@@ -37,10 +37,11 @@ export default function UpgradePage() {
                 </CardHeader>
                 <CardContent className="grid gap-6 sm:grid-cols-2">
                     {proFeaturesList.map((feature) => {
+                        const Icon = feature.Icon;
                         return (
                             <div key={feature.textKey} className="flex items-start gap-4 p-4 rounded-lg bg-background hover:bg-primary/5 transition-colors">
                                 <div className="p-3 rounded-full bg-primary/10">
-                                    <feature.Icon className="h-6 w-6 text-primary flex-shrink-0" />
+                                    <Icon className="h-6 w-6 text-primary flex-shrink-0" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold">{t(feature.textKey.replace('_desc',''))}</h3>
