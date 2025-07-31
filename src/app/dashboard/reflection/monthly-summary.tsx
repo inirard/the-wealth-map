@@ -73,7 +73,7 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                     </div>
                 </CardHeader>
                 <CardContent>
-                    <p className={cn("text-3xl font-bold", summary.balance >= 0 ? 'text-green-600' : 'text-destructive')}>
+                    <p className={cn("text-2xl font-bold", summary.balance >= 0 ? 'text-green-600' : 'text-destructive')}>
                         €{summary.balance.toFixed(2)}
                     </p>
                 </CardContent>
