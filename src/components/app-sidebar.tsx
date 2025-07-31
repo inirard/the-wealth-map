@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem, MoreHorizontal } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -21,7 +21,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
@@ -130,7 +129,7 @@ export default function AppSidebar() {
           </SidebarMenu>
 
            {/* This section is visible ONLY when the sidebar is EXPANDED */}
-           <div className="mt-auto group-data-[collapsible=expanded]:contents hidden">
+           <div className="mt-auto group-data-[collapsible=icon]:hidden">
               <SidebarSeparator className="my-2" />
               <DataManagement />
               <div className="p-2">
@@ -138,7 +137,7 @@ export default function AppSidebar() {
                   <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground">
                           <Languages/>
-                          <span className="group-data-[collapsible=icon]:hidden">{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
+                          <span>{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
                       </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent>
@@ -155,47 +154,12 @@ export default function AppSidebar() {
                     {legalNavItems.map((item) => (
                          <SidebarMenuItem key={item.href}>
                             <SidebarMenuButton asChild tooltip={item.label}>
-                                  <Link href={item.href}><item.icon /> <span className="group-data-[collapsible=icon]:hidden">{item.label}</span></Link>
+                                  <Link href={item.href}><item.icon /> <span>{item.label}</span></Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     ))}
                 </SidebarMenu>
             </div>
-
-            {/* This section is visible ONLY when the sidebar is COLLAPSED (icon mode) */}
-            <div className="group-data-[collapsible=icon]:contents hidden">
-                <SidebarMenu>
-                    <SidebarMenuItem>
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <SidebarMenuButton variant="ghost" tooltip={t('more')}>
-                                    <MoreHorizontal />
-                                     <span className="group-data-[collapsible=icon]:hidden">{t('more')}</span>
-                                </SidebarMenuButton>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent side="right" align="start">
-                                <DataManagement />
-                                 <DropdownMenuSeparator />
-                                 {legalNavItems.map(item => (
-                                     <DropdownMenuItem key={item.href} asChild>
-                                        <Link href={item.href} className="flex items-center gap-2">
-                                            <item.icon />
-                                            <span>{item.label}</span>
-                                        </Link>
-                                     </DropdownMenuItem>
-                                 ))}
-                                 <DropdownMenuSeparator />
-                                 {languages.map(lang => (
-                                    <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
-                                        {lang.name}
-                                    </DropdownMenuItem>
-                                ))}
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </SidebarMenuItem>
-                </SidebarMenu>
-            </div>
-
         </SidebarContent>
         <SidebarFooter>
             <SidebarSeparator className="my-2" />
