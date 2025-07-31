@@ -4,7 +4,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Languages, ShieldCheck, FileText, Bot, LineChart, Gem, DatabaseZap, Database, MoreHorizontal } from 'lucide-react';
+import { CircleDollarSign, LayoutDashboard, Target, Donut, ListChecks, BookOpen, Quote, Trash2, Gem, Bot, LineChart } from 'lucide-react';
 import {
   Sidebar,
   SidebarHeader,
@@ -15,13 +15,6 @@ import {
   SidebarMenuButton,
   SidebarSeparator,
 } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -34,16 +27,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
-import type { Language } from '@/lib/types';
-import DataManagement from './data-management';
-import { ScrollArea } from './ui/scroll-area';
 
 export default function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { setOpenMobile } = useSidebar();
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
-  const { t, language, setLanguage } = useI18n();
+  const { t } = useI18n();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -60,18 +50,6 @@ export default function AppSidebar() {
     { href: '/dashboard/projections', icon: Bot, label: t('ai_projections_title') },
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
   ];
-  
-  const legalNavItems = [
-      { href: '/legal/terms', icon: FileText, label: t('terms_of_service')},
-      { href: '/legal/privacy', icon: ShieldCheck, label: t('privacy_policy')}
-  ]
-
-  const languages: { code: Language, name: string }[] = [
-    { code: 'pt', name: 'Português' },
-    { code: 'en', name: 'English' },
-    { code: 'es', name: 'Español' },
-    { code: 'fr', name: 'Français' },
-  ];
 
   const handleResetData = () => {
     window.localStorage.clear();
@@ -87,57 +65,24 @@ export default function AppSidebar() {
             <span className="text-xl font-semibold text-primary group-data-[collapsible=icon]:hidden">Wealth Map</span>
           </Link>
         </SidebarHeader>
-        <SidebarContent className="flex flex-col justify-between p-2">
+        <SidebarContent>
             <SidebarMenu>
                 {mainNavItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                    asChild
-                    isActive={pathname === item.href}
-                    onClick={() => setOpenMobile(false)}
-                    tooltip={item.label}
-                    >
-                    <Link href={item.href}>
-                        <item.icon />
-                        <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
-                    </Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
+                    <SidebarMenuItem key={item.href}>
+                        <SidebarMenuButton
+                            asChild
+                            isActive={pathname === item.href}
+                            onClick={() => setOpenMobile(false)}
+                            tooltip={item.label}
+                        >
+                            <Link href={item.href}>
+                                <item.icon />
+                                <span className="group-data-[collapsible=icon]:hidden">{item.label}</span>
+                            </Link>
+                        </SidebarMenuButton>
+                    </SidebarMenuItem>
                 ))}
             </SidebarMenu>
-
-            <div className="mt-auto">
-                 <div className="group-data-[collapsible=expanded]:contents hidden">
-                    <SidebarSeparator className="my-2" />
-                    <SidebarMenu>
-                         <div className="p-2 group-data-[collapsible=icon]:p-0">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="w-full justify-start gap-2 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:w-auto group-data-[collapsible=icon]:justify-center">
-                                        <Languages />
-                                        <span className="group-data-[collapsible=icon]:hidden">{mounted ? languages.find(l => l.code === language)?.name : 'English'}</span>
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    {languages.map(lang => (
-                                        <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)}>
-                                            {lang.name}
-                                        </DropdownMenuItem>
-                                    ))}
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                        <DataManagement />
-                        {legalNavItems.map((item) => (
-                            <SidebarMenuItem key={item.href}>
-                                <SidebarMenuButton asChild tooltip={item.label}>
-                                    <Link href={item.href}><item.icon /> <span className="group-data-[collapsible=icon]:hidden">{item.label}</span></Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        ))}
-                    </SidebarMenu>
-                 </div>
-            </div>
         </SidebarContent>
         <SidebarFooter>
             <SidebarSeparator className="my-2" />
