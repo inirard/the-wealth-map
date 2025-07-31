@@ -19,6 +19,7 @@ import {
     Languages,
     FileText,
     ShieldCheck,
+    MoreHorizontal
 } from 'lucide-react';
 import {
   Sidebar,
@@ -45,6 +46,10 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuPortal
 } from "@/components/ui/dropdown-menu";
 import DataManagement from '@/components/data-management';
 import { useSidebar } from '@/components/ui/sidebar';
@@ -85,6 +90,42 @@ export default function AppSidebar() {
     window.localStorage.clear();
     router.push('/activate');
   };
+  
+  const SecondaryMenu = ({ isDropdown }: { isDropdown?: boolean }) => {
+    const Wrapper = isDropdown ? DropdownMenuContent : React.Fragment;
+    const DropdownItem = isDropdown ? DropdownMenuItem : React.Fragment;
+    const DataManagementComp = <DataManagement isDropdown={isDropdown} />;
+
+    return (
+      <Wrapper {...(isDropdown ? { side: "right", align: "start" } : {})}>
+         <DropdownMenuSub>
+            <DropdownMenuSubTrigger asChild={isDropdown} disabled={!isDropdown}>
+               <DropdownItem>
+                  <Languages /> {t('languages')}
+               </DropdownItem>
+            </DropdownMenuSubTrigger>
+            <DropdownMenuPortal>
+               <DropdownMenuSubContent>
+                  {languages.map(lang => (
+                     <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-primary/10' : ''}>
+                           {lang.name}
+                     </DropdownMenuItem>
+                  ))}
+               </DropdownMenuSubContent>
+            </DropdownMenuPortal>
+         </DropdownMenuSub>
+
+         {DataManagementComp}
+
+         <DropdownItem asChild>
+            <Link href="/legal/terms"><FileText /> {t('terms_of_service')}</Link>
+         </DropdownItem>
+         <DropdownItem asChild>
+             <Link href="/legal/privacy"><ShieldCheck /> {t('privacy_policy')}</Link>
+         </DropdownItem>
+      </Wrapper>
+    )
+  }
 
   return (
     <>
@@ -116,11 +157,11 @@ export default function AppSidebar() {
 
             <SidebarSeparator className="my-3" />
             
-            <SidebarMenu>
-                 <SidebarMenuItem>
+             <SidebarMenu className="group-data-[collapsible=icon]:hidden">
+                <SidebarMenuItem>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <SidebarMenuButton variant="ghost" className="w-full justify-start" tooltip={t('languages')}>
+                            <SidebarMenuButton variant="ghost" className="w-full justify-start">
                                 <Languages />
                                 <span className="group-data-[collapsible=icon]:hidden">{t('languages')}</span>
                             </SidebarMenuButton>
@@ -147,6 +188,18 @@ export default function AppSidebar() {
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>
+            
+            <SidebarMenu className="hidden group-data-[collapsible=icon]:flex">
+                 <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <SidebarMenuButton tooltip={t('more')}>
+                             <MoreHorizontal />
+                        </SidebarMenuButton>
+                    </DropdownMenuTrigger>
+                    <SecondaryMenu isDropdown />
+                 </DropdownMenu>
+            </SidebarMenu>
+
         </SidebarContent>
         <SidebarFooter>
             <SidebarSeparator className="my-2" />

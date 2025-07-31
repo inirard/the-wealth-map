@@ -3,16 +3,20 @@
 
 import React, { useRef } from 'react';
 import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import { DatabaseZap, Database } from 'lucide-react';
 import { useI18n } from '@/hooks/use-i18n';
 import { useToast } from "@/hooks/use-toast";
 
 const LOCAL_STORAGE_KEYS = ['username', 'goals', 'transactions', 'wealthWheel', 'reflections', 'monthlyMood', 'language', 'aiProjections', 'investments', 'aiInsight'];
 
-export default function DataManagement() {
+export default function DataManagement({ isDropdown }: { isDropdown?: boolean }) {
   const { t } = useI18n();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  
+  const ItemWrapper = isDropdown ? DropdownMenuItem : SidebarMenuItem;
+  const ButtonComp = isDropdown ? 'div' : SidebarMenuButton;
 
   const handleBackup = () => {
     try {
@@ -97,20 +101,26 @@ export default function DataManagement() {
     };
     reader.readAsText(file);
   };
+  
+  const buttonProps = {
+    variant: "ghost",
+    className: "w-full justify-start",
+    tooltip: t('backup_data')
+  };
 
   return (
     <>
-      <SidebarMenuItem>
-        <SidebarMenuButton variant="ghost" onClick={handleBackup} className="w-full justify-start" tooltip={t('backup_data')}>
+      <ItemWrapper>
+        <ButtonComp {...(isDropdown ? { onSelect: handleBackup, className: "flex items-center gap-2" } : { ...buttonProps, onClick: handleBackup })}>
             <DatabaseZap />
-            <span className="group-data-[collapsible=icon]:hidden">{t('backup_data')}</span>
-        </SidebarMenuButton>
-      </SidebarMenuItem>
-      <SidebarMenuItem>
-         <SidebarMenuButton variant="ghost" onClick={handleRestoreClick} className="w-full justify-start" tooltip={t('restore_data')}>
+            <span>{t('backup_data')}</span>
+        </ButtonComp>
+      </ItemWrapper>
+      <ItemWrapper>
+         <ButtonComp {...(isDropdown ? { onSelect: handleRestoreClick, className: "flex items-center gap-2" } : { ...buttonProps, onClick: handleRestoreClick, tooltip: t('restore_data') })}>
             <Database />
-            <span className="group-data-[collapsible=icon]:hidden">{t('restore_data')}</span>
-        </SidebarMenuButton>
+            <span>{t('restore_data')}</span>
+        </ButtonComp>
         <input
             type="file"
             ref={fileInputRef}
@@ -118,7 +128,7 @@ export default function DataManagement() {
             accept="application/json"
             className="hidden"
         />
-      </SidebarMenuItem>
+      </ItemWrapper>
     </>
   );
 }
