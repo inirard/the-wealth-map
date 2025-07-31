@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,6 +22,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useI18n } from '@/hooks/use-i18n';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function TrackerPage() {
   const { t } = useI18n();
@@ -35,6 +36,11 @@ export default function TrackerPage() {
 
   const [transactions, setTransactions] = useLocalStorage<Transaction[]>('transactions', []);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const form = useForm<z.infer<typeof transactionSchema>>({
     resolver: zodResolver(transactionSchema),
@@ -94,12 +100,40 @@ export default function TrackerPage() {
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
   }, [transactions, t]);
 
+  const renderSummaryCards = () => {
+    if (!isClient) {
+        return (
+            <div className="grid gap-4 md:grid-cols-3">
+                {[...Array(3)].map((_, i) => (
+                    <Card key={i}>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <Skeleton className="h-4 w-[100px]" />
+                            <Skeleton className="h-4 w-4" />
+                        </CardHeader>
+                        <CardContent>
+                            <Skeleton className="h-8 w-[120px]" />
+                        </CardContent>
+                    </Card>
+                ))}
+            </div>
+        );
+    }
+
+    return (
+        <div className="grid gap-4 md:grid-cols-3">
+            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_income')}</CardTitle><TrendingUp className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-green-600">€{totalIncome.toFixed(2)}</div></CardContent></Card>
+            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_expenses')}</CardTitle><TrendingDown className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-destructive">€{totalExpenses.toFixed(2)}</div></CardContent></Card>
+            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('balance')}</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold">€{balance.toFixed(2)}</div></CardContent></Card>
+        </div>
+    );
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
         <div className="flex gap-2">
-            <Button variant="outline" onClick={handleExport} disabled={transactions.length === 0} className="hover:bg-primary hover:text-primary-foreground">
+            <Button variant="outline" onClick={handleExport} disabled={!isClient || transactions.length === 0} className="hover:bg-primary hover:text-primary-foreground">
                 <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
             </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -143,11 +177,7 @@ export default function TrackerPage() {
         </div>
       </div>
       
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_income')}</CardTitle><TrendingUp className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-green-600">€{totalIncome.toFixed(2)}</div></CardContent></Card>
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_expenses')}</CardTitle><TrendingDown className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold text-destructive">€{totalExpenses.toFixed(2)}</div></CardContent></Card>
-        <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('balance')}</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-2xl font-bold">€{balance.toFixed(2)}</div></CardContent></Card>
-      </div>
+      {renderSummaryCards()}
 
       <Card>
           <Table>
@@ -161,7 +191,7 @@ export default function TrackerPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {transactions.length > 0 ? (
+              {isClient && transactions.length > 0 ? (
                 transactions.map(transaction => (
                   <TableRow key={transaction.id}>
                     <TableCell>{format(new Date(transaction.date), "PPP")}</TableCell>
@@ -183,7 +213,9 @@ export default function TrackerPage() {
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="h-24 text-center">{t('no_transactions_yet')}</TableCell>
+                  <TableCell colSpan={5} className="h-24 text-center">
+                    {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
+                    </TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -192,3 +224,5 @@ export default function TrackerPage() {
     </div>
   );
 }
+
+    
