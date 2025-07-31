@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks/use-i18n';
 import { predictFinancialFuture } from '@/ai/flows/predictive-insights-flow';
 import type { PredictiveInsightsOutput } from '@/lib/ai-types';
-import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Clock, Download } from 'lucide-react';
+import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Clock, Download, ArrowUp } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -171,13 +171,23 @@ export default function ProjectionsPage() {
                 <div className="grid gap-6 md:grid-cols-2">
                      <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-3"><TrendingUp className="text-primary"/>{t('future_balance_prediction')}</CardTitle>
+                            <CardTitle className="flex items-center gap-3">
+                                <div className="p-3 rounded-full bg-green-100">
+                                    <TrendingUp className="text-green-600"/>
+                                </div>
+                                {t('future_balance_prediction')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent><p className="text-muted-foreground">{aiPredictions.futureBalancePrediction}</p></CardContent>
                      </Card>
                      <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-3"><AlertCircle className="text-primary"/>{t('proactive_alerts')}</CardTitle>
+                            <CardTitle className="flex items-center gap-3">
+                                 <div className="p-3 rounded-full bg-blue-100">
+                                    <AlertCircle className="text-blue-600"/>
+                                </div>
+                                {t('proactive_alerts')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
@@ -187,19 +197,34 @@ export default function ProjectionsPage() {
                      </Card>
                      <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-3"><FlaskConical className="text-primary"/>{t('spending_pattern_analysis')}</CardTitle>
+                            <CardTitle className="flex items-center gap-3">
+                                <div className="p-3 rounded-full bg-purple-100">
+                                    <FlaskConical className="text-purple-600"/>
+                                </div>
+                                {t('spending_pattern_analysis')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent><p className="text-muted-foreground">{aiPredictions.spendingAnalysis}</p></CardContent>
                      </Card>
                     <Card>
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-3"><Lightbulb className="text-primary"/>{t('what_if_scenario')}</CardTitle>
+                            <CardTitle className="flex items-center gap-3">
+                                <div className="p-3 rounded-full bg-yellow-100">
+                                    <Lightbulb className="text-yellow-600"/>
+                                </div>
+                                {t('what_if_scenario')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent><p className="text-muted-foreground">{aiPredictions.whatIfScenario}</p></CardContent>
                     </Card>
                     <Card className="md:col-span-2">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-3"><Target className="text-primary"/>{t('goal_projections')}</CardTitle>
+                            <CardTitle className="flex items-center gap-3">
+                                 <div className="p-3 rounded-full bg-primary/10">
+                                    <Target className="text-primary"/>
+                                </div>
+                                {t('goal_projections')}
+                            </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
@@ -261,7 +286,7 @@ export default function ProjectionsPage() {
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                      <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate} variant="outline" size="icon">
-                                        <Clock className="h-5 w-5" />
+                                        <ArrowUp className="h-5 w-5" />
                                     </Button>
                                 </TooltipTrigger>
                                 <TooltipContent>
