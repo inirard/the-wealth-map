@@ -8,10 +8,10 @@ import { useI18n } from '@/hooks/use-i18n';
 import { CloudSync, BarChart, BellRing, Banknote, Gem, Sparkles } from 'lucide-react';
 
 const proFeaturesList = [
-    { icon: CloudSync, textKey: 'pro_feature_cloud_sync' },
-    { icon: Banknote, textKey: 'pro_feature_bank_integration' },
-    { icon: BarChart, textKey: 'pro_feature_advanced_reports' },
-    { icon: BellRing, textKey: 'pro_feature_smart_alerts' },
+    { Icon: CloudSync, textKey: 'pro_feature_cloud_sync' },
+    { Icon: Banknote, textKey: 'pro_feature_bank_integration' },
+    { Icon: BarChart, textKey: 'pro_feature_advanced_reports' },
+    { Icon: BellRing, textKey: 'pro_feature_smart_alerts' },
 ];
 
 export default function UpgradePage() {
@@ -37,11 +37,10 @@ export default function UpgradePage() {
                 </CardHeader>
                 <CardContent className="grid gap-6 sm:grid-cols-2">
                     {proFeaturesList.map((feature) => {
-                        const Icon = feature.icon;
                         return (
                             <div key={feature.textKey} className="flex items-start gap-4 p-4 rounded-lg bg-background hover:bg-primary/5 transition-colors">
                                 <div className="p-3 rounded-full bg-primary/10">
-                                    <Icon className="h-6 w-6 text-primary flex-shrink-0" />
+                                    <feature.Icon className="h-6 w-6 text-primary flex-shrink-0" />
                                 </div>
                                 <div>
                                     <h3 className="font-semibold">{t(feature.textKey.replace('_desc',''))}</h3>
