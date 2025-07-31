@@ -91,41 +91,31 @@ export default function AppSidebar() {
     router.push('/activate');
   };
   
-  const SecondaryMenu = ({ isDropdown }: { isDropdown?: boolean }) => {
-    const Wrapper = isDropdown ? DropdownMenuContent : React.Fragment;
-    const DropdownItem = isDropdown ? DropdownMenuItem : React.Fragment;
-    const DataManagementComp = <DataManagement isDropdown={isDropdown} />;
-
-    return (
-      <Wrapper {...(isDropdown ? { side: "right", align: "start" } : {})}>
-         <DropdownMenuSub>
-            <DropdownMenuSubTrigger asChild={isDropdown} disabled={!isDropdown}>
-               <DropdownItem>
-                  <Languages /> {t('languages')}
-               </DropdownItem>
-            </DropdownMenuSubTrigger>
-            <DropdownMenuPortal>
-               <DropdownMenuSubContent>
-                  {languages.map(lang => (
-                     <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-primary/10' : ''}>
-                           {lang.name}
-                     </DropdownMenuItem>
-                  ))}
-               </DropdownMenuSubContent>
-            </DropdownMenuPortal>
-         </DropdownMenuSub>
-
-         {DataManagementComp}
-
-         <DropdownItem asChild>
-            <Link href="/legal/terms"><FileText /> {t('terms_of_service')}</Link>
-         </DropdownItem>
-         <DropdownItem asChild>
-             <Link href="/legal/privacy"><ShieldCheck /> {t('privacy_policy')}</Link>
-         </DropdownItem>
-      </Wrapper>
-    )
-  }
+  const SecondaryMenuContent = () => (
+    <>
+      <DropdownMenuSub>
+        <DropdownMenuSubTrigger>
+          <Languages /> {t('languages')}
+        </DropdownMenuSubTrigger>
+        <DropdownMenuPortal>
+          <DropdownMenuSubContent>
+            {languages.map(lang => (
+              <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-primary/10' : ''}>
+                {lang.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuSubContent>
+        </DropdownMenuPortal>
+      </DropdownMenuSub>
+      <DataManagement isDropdown={true} />
+      <DropdownMenuItem asChild>
+        <Link href="/legal/terms"><FileText /> {t('terms_of_service')}</Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem asChild>
+        <Link href="/legal/privacy"><ShieldCheck /> {t('privacy_policy')}</Link>
+      </DropdownMenuItem>
+    </>
+  );
 
   return (
     <>
@@ -196,7 +186,9 @@ export default function AppSidebar() {
                              <MoreHorizontal />
                         </SidebarMenuButton>
                     </DropdownMenuTrigger>
-                    <SecondaryMenu isDropdown />
+                    <DropdownMenuContent side="right" align="start">
+                      <SecondaryMenuContent />
+                    </DropdownMenuContent>
                  </DropdownMenu>
             </SidebarMenu>
 
