@@ -55,6 +55,7 @@ import DataManagement from '@/components/data-management';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
+import { cn } from '@/lib/utils';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -94,7 +95,7 @@ export default function AppSidebar() {
   const SecondaryMenuContent = () => (
     <>
       <DropdownMenuSub>
-        <DropdownMenuSubTrigger>
+        <DropdownMenuSubTrigger className="focus:bg-primary/10 focus:text-primary">
           <Languages /> {t('languages')}
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
@@ -151,7 +152,7 @@ export default function AppSidebar() {
                 <SidebarMenuItem>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <SidebarMenuButton variant="ghost" className="w-full justify-start">
+                            <SidebarMenuButton variant="ghost" className="w-full justify-start hover:bg-primary/10 hover:text-primary">
                                 <Languages />
                                 <span className="group-data-[collapsible=icon]:hidden">{t('languages')}</span>
                             </SidebarMenuButton>
