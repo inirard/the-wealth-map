@@ -3,7 +3,6 @@
 // Mantém apenas plugins estáveis (GoogleAI) e flows locais
 
 import { googleAI } from '@genkit-ai/googleai';
-import { defineDotprompt } from '@genkit-ai/dotprompt';
 
 export default {
   plugins: [
