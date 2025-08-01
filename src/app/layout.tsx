@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   },
   icons: {
     shortcut: "/favicon.ico",
-    apple: "/icon-192x192.png",
+    apple: "/icons/icon-192x192.png",
   },
 };
 
@@ -52,7 +52,7 @@ export default function RootLayout({
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="font-body antialiased">
           <I18nProvider>
