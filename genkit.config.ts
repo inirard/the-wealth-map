@@ -8,8 +8,7 @@ export default {
   plugins: [
     googleAI(),
   ],
-  traceStore: 'firebase',
-  cacheStore: 'firebase',
+  logLevel: 'debug',
   enableFlowLogs: true,
   flows: [
     './src/ai/flows/generate-insights-flow.ts',
