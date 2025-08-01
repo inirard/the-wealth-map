@@ -202,7 +202,7 @@ export default function InvestmentsPage() {
           <CardDescription>{t('total_invested_capital_desc')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-3xl font-bold text-primary">€{isClient ? totalInvested.toFixed(2) : '0.00'}</p>
+          <p className="text-2xl font-bold text-primary">€{isClient ? totalInvested.toFixed(2) : '0.00'}</p>
         </CardContent>
       </Card>
 
