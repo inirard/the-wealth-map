@@ -1,3 +1,5 @@
-# This file is for server-based deployments on Firebase App Hosting.
-# As we are deploying a static site (output: 'export'), this file is not needed.
-# Firebase will automatically detect the /out folder and serve it.
+# Este ficheiro é para implementações baseadas em servidor no Firebase App Hosting.
+# Quando a aplicação utiliza funcionalidades de servidor como as Server Actions do Next.js,
+# este ficheiro ajuda a configurar o ambiente de execução.
+runConfig:
+  minInstances: 0
