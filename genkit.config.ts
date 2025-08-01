@@ -1,16 +1,16 @@
+// genkit.config.ts - Ajustado para Genkit v1.15.x
 
-import {defineConfig} from '@genkit-ai/core';
-import {googleAI} from '@genkit-ai/googleai';
-import {genkitEval} from '@genkit-ai/eval';
-import {dotprompt} from '@genkit-ai/dotprompt';
+import { createConfig } from '@genkit-ai/core';
+import { googleAI } from '@genkit-ai/googleai';
+// Os plugins abaixo foram comentados porque não estão disponíveis na v1.15.x
+// import { genkitEval } from '@genkit-ai/eval';
+// import { dotprompt } from '@genkit-ai/dotprompt';
 
-export default defineConfig({
+export default createConfig({
   plugins: [
     googleAI(),
-    genkitEval(),
-    dotprompt({
-      promptDir: './src/ai/prompts',
-    }),
+    // genkitEval(),  // Ative se o pacote for reinstalado e compatível
+    // dotprompt({ promptDir: './src/ai/prompts' }),
   ],
   flowStateStore: 'firebase',
   traceStore: 'firebase',

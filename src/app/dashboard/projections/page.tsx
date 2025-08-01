@@ -14,8 +14,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ProjectionsReport from './report';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 
 export default function ProjectionsPage() {
@@ -64,65 +62,11 @@ export default function ProjectionsPage() {
     };
     
     const handleDownloadPdf = async () => {
-        const reportElement = reportRef.current;
-        if (!reportElement) return;
-
-        setIsDownloading(true);
-
-        try {
-            const a4Width = 794;
-            reportElement.style.width = `${a4Width}px`;
-            
-            const canvas = await html2canvas(reportElement, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                windowHeight: reportElement.scrollHeight,
-                windowWidth: a4Width, 
-            });
-
-            reportElement.style.width = '';
-
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'pt',
-                format: 'a4'
-            });
-
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            const canvasWidth = canvas.width;
-            const canvasHeight = canvas.height;
-            
-            const ratio = canvasWidth / pdfWidth;
-            const imgHeight = canvasHeight / ratio;
-
-            let heightLeft = imgHeight;
-            let position = 0;
-
-            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-            heightLeft -= pdfHeight;
-
-            while (heightLeft > 0) {
-                position -= pdfHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-                heightLeft -= pdfHeight;
-            }
-            
-            pdf.save(`financial-projections-${new Date().toISOString().split('T')[0]}.pdf`);
-
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-            toast({
-                variant: "destructive",
-                title: t('ai_error_title'),
-                description: 'Failed to generate PDF report.',
-            });
-        } finally {
-            setIsDownloading(false);
-        }
+        // This functionality is temporarily disabled
+        toast({
+            title: "Funcionalidade Indisponível",
+            description: "A exportação de PDF está a ser melhorada. Tente novamente mais tarde.",
+        });
     };
 
     const canGenerate = useMemo(() => {
@@ -275,7 +219,7 @@ export default function ProjectionsPage() {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button onClick={handleDownloadPdf} disabled={isDownloading} variant="outline" size="icon">
+                                    <Button onClick={handleDownloadPdf} disabled={true || isDownloading} variant="outline" size="icon">
                                         <Download className="h-5 w-5" />
                                     </Button>
                                 </TooltipTrigger>
@@ -300,7 +244,7 @@ export default function ProjectionsPage() {
 
             {renderContent()}
 
-            <div className="fixed -left-[9999px] top-0">
+            <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
                 {isClient && aiPredictions && (
                     <ProjectionsReport 
                         ref={reportRef}
@@ -314,6 +258,3 @@ export default function ProjectionsPage() {
         </div>
     );
 }
-
-    
-

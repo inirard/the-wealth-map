@@ -18,8 +18,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import FinancialReport from './report';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 const emotionalStates = [
     { emoji: '😃', label: 'excellent' },
@@ -55,70 +53,11 @@ export default function ReflectionPage() {
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     const handleDownloadPdf = async () => {
-        const reportElement = reportRef.current;
-        if (!reportElement) return;
-
-        setIsDownloading(true);
-
-        try {
-            // A4 size in pixels at 96 DPI: 794x1123
-            const a4Width = 794;
-            
-            // Set element width to match A4 page for consistent rendering
-            reportElement.style.width = `${a4Width}px`;
-            
-            const canvas = await html2canvas(reportElement, {
-                scale: 2, // Use higher scale for better resolution
-                useCORS: true,
-                backgroundColor: '#ffffff',
-                windowHeight: reportElement.scrollHeight,
-                windowWidth: a4Width, 
-            });
-
-            // Reset element width after canvas generation
-            reportElement.style.width = '';
-
-            const imgData = canvas.toDataURL('image/png');
-            const pdf = new jsPDF({
-                orientation: 'portrait',
-                unit: 'pt',
-                format: 'a4'
-            });
-
-            const pdfWidth = pdf.internal.pageSize.getWidth();
-            const pdfHeight = pdf.internal.pageSize.getHeight();
-            const canvasWidth = canvas.width;
-            const canvasHeight = canvas.height;
-            
-            // The ratio should be based on the canvas width and the PDF width
-            const ratio = canvasWidth / pdfWidth;
-            const imgHeight = canvasHeight / ratio;
-
-            let heightLeft = imgHeight;
-            let position = 0;
-
-            pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-            heightLeft -= pdfHeight;
-
-            while (heightLeft > 0) {
-                position -= pdfHeight;
-                pdf.addPage();
-                pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-                heightLeft -= pdfHeight;
-            }
-            
-            pdf.save(`financial-report-${new Date().toISOString().split('T')[0]}.pdf`);
-
-        } catch (error) {
-            console.error("Error generating PDF:", error);
-            toast({
-                variant: "destructive",
-                title: t('ai_error_title'),
-                description: 'Failed to generate PDF report.',
-            });
-        } finally {
-            setIsDownloading(false);
-        }
+        // This functionality is temporarily disabled
+        toast({
+            title: "Funcionalidade Indisponível",
+            description: "A exportação de PDF está a ser melhorada. Tente novamente mais tarde.",
+        });
     };
 
     useEffect(() => {
@@ -194,7 +133,7 @@ export default function ReflectionPage() {
                      <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                 <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="outline" size="icon">
+                                 <Button onClick={handleDownloadPdf} disabled={true || !hasDataToReport || isDownloading} variant="outline" size="icon">
                                     <Download className="h-5 w-5" />
                                 </Button>
                             </TooltipTrigger>
@@ -309,7 +248,7 @@ export default function ReflectionPage() {
                 </Card>
             </div>
             
-            <div className="fixed -left-[9999px] top-0">
+            <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
                  <FinancialReport 
                     ref={reportRef}
                     data={{
@@ -326,5 +265,3 @@ export default function ReflectionPage() {
         </div>
     );
 }
-
-    

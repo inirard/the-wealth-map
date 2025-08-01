@@ -109,11 +109,11 @@ export default function AppSidebar() {
         </DropdownMenuPortal>
       </DropdownMenuSub>
       <DataManagement isDropdown={true} />
-      <DropdownMenuItem asChild>
-        <Link href="/legal/terms"><FileText /> {t('terms_of_service')}</Link>
+      <DropdownMenuItem onSelect={() => router.push('/legal/terms')}>
+        <FileText /> {t('terms_of_service')}
       </DropdownMenuItem>
-      <DropdownMenuItem asChild>
-        <Link href="/legal/privacy"><ShieldCheck /> {t('privacy_policy')}</Link>
+      <DropdownMenuItem onSelect={() => router.push('/legal/privacy')}>
+        <ShieldCheck /> {t('privacy_policy')}
       </DropdownMenuItem>
     </>
   );

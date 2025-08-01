@@ -7,8 +7,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Trash2, Edit, LineChart, PlusCircle, Download } from "lucide-react";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 
 import type { Investment } from '@/lib/types';
 import { Button } from '@/components/ui/button';
@@ -109,55 +107,11 @@ export default function InvestmentsPage() {
   }, [investments]);
 
   const handleDownloadPdf = async () => {
-      const reportElement = reportRef.current;
-      if (!reportElement) return;
-
-      setIsDownloading(true);
-      try {
-          const a4Width = 794;
-          reportElement.style.width = `${a4Width}px`;
-          
-          const canvas = await html2canvas(reportElement, {
-              scale: 2,
-              useCORS: true,
-              backgroundColor: '#ffffff',
-              windowHeight: reportElement.scrollHeight,
-              windowWidth: a4Width, 
-          });
-
-          reportElement.style.width = '';
-          const imgData = canvas.toDataURL('image/png');
-          const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
-          const pdfWidth = pdf.internal.pageSize.getWidth();
-          const pdfHeight = pdf.internal.pageSize.getHeight();
-          const canvasWidth = canvas.width;
-          const canvasHeight = canvas.height;
-          const ratio = canvasWidth / pdfWidth;
-          const imgHeight = canvasHeight / ratio;
-          let heightLeft = imgHeight;
-          let position = 0;
-
-          pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-          heightLeft -= pdfHeight;
-
-          while (heightLeft > 0) {
-              position -= pdfHeight;
-              pdf.addPage();
-              pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
-              heightLeft -= pdfHeight;
-          }
-          
-          pdf.save(`investments-report-${new Date().toISOString().split('T')[0]}.pdf`);
-      } catch (error) {
-          console.error("Error generating PDF:", error);
-          toast({
-              variant: "destructive",
-              title: t('ai_error_title'),
-              description: 'Failed to generate PDF report.',
-          });
-      } finally {
-          setIsDownloading(false);
-      }
+    // This functionality is temporarily disabled
+    toast({
+        title: "Funcionalidade Indisponível",
+        description: "A exportação de PDF está a ser melhorada. Tente novamente mais tarde.",
+    });
   };
 
 
@@ -169,7 +123,7 @@ export default function InvestmentsPage() {
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                         <Button onClick={handleDownloadPdf} disabled={!isClient || investments.length === 0 || isDownloading} variant="outline" size="icon">
+                         <Button onClick={handleDownloadPdf} disabled={true || !isClient || investments.length === 0 || isDownloading} variant="outline" size="icon">
                             <Download className="h-5 w-5" />
                         </Button>
                     </TooltipTrigger>
@@ -301,7 +255,7 @@ export default function InvestmentsPage() {
           </CardContent>
       </Card>
 
-        <div className="fixed -left-[9999px] top-0">
+        <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
             {isClient && (
                 <InvestmentsReport 
                     ref={reportRef}
@@ -317,5 +271,3 @@ export default function InvestmentsPage() {
     </div>
   );
 }
-
-    
