@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   icons: {
     shortcut: "/favicon.ico",
-    apple: "/icon-192x192.png",
+    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -50,13 +50,6 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-
-        {/* Ícones principais para PWA */}
-        <link rel="icon" href="/icon-192x192.png" sizes="192x192" type="image/png" />
-        <link rel="icon" href="/icon-512x512.png" sizes="512x512" type="image/png" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
-
-        {/* Manifest PWA */}
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
       </head>
       <body className="font-body antialiased">

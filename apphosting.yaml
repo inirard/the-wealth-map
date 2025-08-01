@@ -2,4 +2,12 @@
 # Quando a aplicação utiliza funcionalidades de servidor como as Server Actions do Next.js,
 # este ficheiro ajuda a configurar o ambiente de execução.
 runConfig:
+  cpu: 1
   maxInstances: 10
+  env:
+    - variable: GEMINI_API_KEY
+      secret: GEMINI_API_KEY
+    - variable: NODE_ENV
+      value: production
+stack:
+  name: 'nodejs20'
