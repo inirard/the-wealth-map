@@ -5,7 +5,7 @@
  *
  * - predictFinancialFuture - A function that handles the financial prediction process.
  */
-
+import {googleAI} from '@genkit-ai/googleai';
 import {ai} from '@/ai/genkit';
 import { PredictiveInsightsInputSchema, PredictiveInsightsOutputSchema, type PredictiveInsightsInput, type PredictiveInsightsOutput } from '@/lib/ai-types';
 
@@ -17,6 +17,7 @@ const prompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
   input: {schema: PredictiveInsightsInputSchema},
   output: {schema: PredictiveInsightsOutputSchema},
+  model: googleAI.model('gemini-pro'),
   prompt: `
     You are a proactive and insightful financial analyst for "The Wealth Map" app. 
     Your role is to analyze a user's financial data to provide future predictions and actionable advice.

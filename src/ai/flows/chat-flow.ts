@@ -5,7 +5,7 @@
  *
  * - chat - A function that handles the chatbot conversation.
  */
-
+import {googleAI} from '@genkit-ai/googleai';
 import {ai} from '@/ai/genkit';
 import { ChatInputSchema, ChatOutputSchema, type ChatInput, type ChatOutput } from '@/lib/ai-types';
 
@@ -17,6 +17,7 @@ const prompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
+  model: googleAI.model('gemini-pro'),
   prompt: `
     You are a friendly, helpful, and slightly informal financial coach for "The Wealth Map" app.
     Your goal is to answer the user's questions based on their financial data, providing insights and encouragement.
