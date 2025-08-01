@@ -106,12 +106,13 @@ export default function InvestmentsPage() {
     return investments.reduce((acc, curr) => acc + curr.amount, 0);
   }, [investments]);
 
-  const handleDownloadPdf = async () => {
-    // This functionality is temporarily disabled
-    toast({
-        title: "Funcionalidade Indisponível",
-        description: "A exportação de PDF está a ser melhorada. Tente novamente mais tarde.",
-    });
+  const handleDownloadPdf = () => {
+    setIsDownloading(true);
+    // Timeout to allow state to update and show loading state
+    setTimeout(() => {
+        window.print();
+        setIsDownloading(false);
+    }, 100);
   };
 
 
@@ -123,7 +124,7 @@ export default function InvestmentsPage() {
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                         <Button onClick={handleDownloadPdf} disabled={true || !isClient || investments.length === 0 || isDownloading} variant="outline" size="icon">
+                         <Button onClick={handleDownloadPdf} disabled={!isClient || investments.length === 0 || isDownloading} variant="outline" size="icon">
                             <Download className="h-5 w-5" />
                         </Button>
                     </TooltipTrigger>

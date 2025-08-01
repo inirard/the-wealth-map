@@ -52,12 +52,13 @@ export default function ReflectionPage() {
     const [isDownloading, setIsDownloading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-    const handleDownloadPdf = async () => {
-        // This functionality is temporarily disabled
-        toast({
-            title: "Funcionalidade Indisponível",
-            description: "A exportação de PDF está a ser melhorada. Tente novamente mais tarde.",
-        });
+    const handleDownloadPdf = () => {
+        setIsDownloading(true);
+        // Timeout to allow state to update and show loading state
+        setTimeout(() => {
+            window.print();
+            setIsDownloading(false);
+        }, 100);
     };
 
     useEffect(() => {
@@ -133,7 +134,7 @@ export default function ReflectionPage() {
                      <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                 <Button onClick={handleDownloadPdf} disabled={true || !hasDataToReport || isDownloading} variant="outline" size="icon">
+                                 <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="outline" size="icon">
                                     <Download className="h-5 w-5" />
                                 </Button>
                             </TooltipTrigger>
