@@ -19,6 +19,7 @@ export const ai = genkit({
   plugins: [
     googleAI({
       apiKey: apiKey,
+      apiVersion: 'v1', // Força o uso da API estável v1
     }),
   ],
   // O modelo pode ser especificado aqui ou em cada chamada `ai.generate()`
