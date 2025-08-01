@@ -7,10 +7,8 @@ import { googleAI } from '@genkit-ai/googleai';
 export default {
   plugins: [
     googleAI(),
-    // ✅ Caso futuramente a integração Firebase seja atualizada,
-    // basta importar e ativar aqui o novo plugin compatível
   ],
-  traceStore: 'firebase', // Mantém Firebase como destino de logs, se configurado
+  traceStore: 'firebase',
   cacheStore: 'firebase',
   enableFlowLogs: true,
   flows: [
