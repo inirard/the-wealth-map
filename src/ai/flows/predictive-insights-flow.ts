@@ -7,6 +7,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import { PredictiveInsightsInputSchema, PredictiveInsightsOutputSchema, type PredictiveInsightsInput, type PredictiveInsightsOutput } from '@/lib/ai-types';
 
 export async function predictFinancialFuture(input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> {
@@ -15,6 +16,7 @@ export async function predictFinancialFuture(input: PredictiveInsightsInput): Pr
 
 const prompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
+  model: googleAI.model('gemini-pro'),
   input: {schema: PredictiveInsightsInputSchema},
   output: {schema: PredictiveInsightsOutputSchema},
   prompt: `
