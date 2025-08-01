@@ -17,7 +17,7 @@ const prompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
-  model: googleAI.model('gemini-pro'),
+  model: googleAI.model('gemini-1.5-flash-latest'),
   prompt: `
     You are a friendly, helpful, and slightly informal financial coach for "The Wealth Map" app.
     Your goal is to answer the user's questions based on their financial data, providing insights and encouragement.
