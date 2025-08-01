@@ -1,3 +1,4 @@
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
@@ -12,6 +13,9 @@
 /.next/
 /out/
 
+# production
+/build
+
 # misc
 .DS_Store
 *.pem
@@ -22,8 +26,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -32,6 +36,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# genkit
-.genkit/
-.genkit-cache.json
+# pwa
+.next/workbox-*
+.next/sw*

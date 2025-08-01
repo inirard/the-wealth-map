@@ -11,15 +11,20 @@ export default function WelcomePage() {
   const [username] = useLocalStorage<string | null>('username', null);
 
   useEffect(() => {
-    if (licenseKey) {
-        if(username) {
-            router.replace('/dashboard');
-        } else {
-            router.replace('/welcome');
-        }
-    } else {
-        router.replace('/activate');
-    }
+    // Adicionado um tempo de espera para garantir que os valores do localStorage são lidos
+    const timer = setTimeout(() => {
+      if (licenseKey) {
+          if(username) {
+              router.replace('/dashboard');
+          } else {
+              router.replace('/welcome');
+          }
+      } else {
+          router.replace('/activate');
+      }
+    }, 100); // pequeno atraso para garantir a leitura do estado de hidratação
+
+    return () => clearTimeout(timer);
   }, [router, licenseKey, username]);
 
   return (
