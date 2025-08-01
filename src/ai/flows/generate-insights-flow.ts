@@ -39,16 +39,6 @@ const prompt = ai.definePrompt({
   `,
 });
 
-// Function to extract retry delay from the error message
-const getRetryDelay = (errorMessage: string): number | null => {
-    const match = errorMessage.match(/"retryDelay":"(\d+(\.\d+)?)s"/);
-    if (match && match[1]) {
-        return Math.ceil(parseFloat(match[1])) * 1000; // Convert to ms and round up
-    }
-    return null;
-};
-
-
 const generateInsightsFlow = ai.defineFlow(
   {
     name: 'generateInsightsFlow',
@@ -56,36 +46,7 @@ const generateInsightsFlow = ai.defineFlow(
     outputSchema: GenerateInsightsOutputSchema,
   },
   async (input) => {
-    const maxRetries = 3;
-    for (let i = 0; i < maxRetries; i++) {
-      try {
-        const {output} = await prompt(input);
-        return output!;
-      } catch (e: any) {
-         if (i === maxRetries - 1) { // If it's the last retry, throw the error
-          console.error(`Final attempt failed: ${e.message}`);
-          throw e;
-        }
-
-        const errorMessage = e.message || '';
-        let delay: number;
-
-        if (e.status === 429 || e.status === 503) {
-            const retryDelay = getRetryDelay(errorMessage);
-            // Use suggested delay if available, otherwise use exponential backoff
-            delay = retryDelay !== null ? retryDelay : 1000 * (2 ** i);
-            console.warn(`Attempt ${i + 1} failed with ${e.status} status. Retrying in ${delay}ms...`);
-        } else {
-            // Use exponential backoff for other errors
-            delay = 1000 * (2 ** i);
-            console.warn(`Attempt ${i + 1} failed, retrying in ${delay}ms... Error: ${errorMessage}`);
-        }
-        
-        await new Promise(resolve => setTimeout(resolve, delay));
-      }
-    }
-    // This part should not be reachable due to the error being thrown in the loop,
-    // but it satisfies TypeScript's need for a return path.
-    throw new Error("Failed to generate insights after multiple retries.");
+    const {output} = await prompt(input);
+    return output!;
   }
 );
