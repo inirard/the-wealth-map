@@ -1,7 +1,10 @@
-
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
+// A chave de API é lida diretamente das variáveis de ambiente configuradas no servidor.
+// Para desenvolvimento local, use o ficheiro .env.local.
+// Para produção no Firebase App Hosting, defina o segredo com o comando:
+// firebase apphosting:env:set GEMINI_API_KEY="SUA_CHAVE_AQUI"
 const apiKey = process.env.GEMINI_API_KEY;
 
 if (!apiKey) {
@@ -17,5 +20,5 @@ export const ai = genkit({
       apiKey: apiKey,
     }),
   ],
-  model: 'googleai/gemini-1.5-flash-latest',
+  // O modelo pode ser especificado aqui ou em cada chamada `ai.generate()`
 });

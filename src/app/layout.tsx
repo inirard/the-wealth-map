@@ -1,4 +1,3 @@
-
 import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import './print.css';
@@ -52,7 +51,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <link rel="icon" href="/icon-192x192.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
       <body className="font-body antialiased">
