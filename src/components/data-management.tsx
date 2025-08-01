@@ -106,7 +106,7 @@ export default function DataManagement({ isDropdown }: { isDropdown?: boolean })
     variant: "ghost",
     className: "w-full justify-start",
     tooltip: t('backup_data')
-  };
+  } as const;
 
   return (
     <>
