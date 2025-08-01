@@ -1,11 +1,9 @@
-
-import type {Metadata, Viewport} from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './print.css';
 import { Toaster } from "@/components/ui/toaster";
 import { I18nProvider } from '@/hooks/use-i18n';
 import { Poppins } from 'next/font/google';
-import Link from 'next/link';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -52,14 +50,20 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+
+        {/* Ícones principais para PWA */}
+        <link rel="icon" href="/icon-192x192.png" sizes="192x192" type="image/png" />
+        <link rel="icon" href="/icon-512x512.png" sizes="512x512" type="image/png" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
+
+        {/* Manifest PWA */}
+        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
       </head>
       <body className="font-body antialiased">
-          <I18nProvider>
-            {children}
-            <Toaster />
-          </I18nProvider>
+        <I18nProvider>
+          {children}
+          <Toaster />
+        </I18nProvider>
       </body>
     </html>
   );
