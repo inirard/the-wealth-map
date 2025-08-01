@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
-        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+         {/* O Next.js gere as metatags e o manifesto através dos objetos 'metadata' e 'viewport' acima. */}
       </head>
       <body className="font-body antialiased">
         <I18nProvider>

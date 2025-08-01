@@ -18,6 +18,10 @@ const nextConfig = {
       },
     ],
   },
+  serverRuntimeConfig: {
+    // Garante que a chave da API Gemini está disponível no ambiente do servidor
+    geminiApiKey: process.env.GEMINI_API_KEY,
+  },
 };
 
 module.exports = nextConfig;
