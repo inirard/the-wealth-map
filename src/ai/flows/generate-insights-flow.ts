@@ -7,7 +7,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {googleAI} from '@genkit-ai/googleai';
 import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
 
 export async function generateInsights(input: GenerateInsightsInput): Promise<GenerateInsightsOutput> {
@@ -16,7 +15,6 @@ export async function generateInsights(input: GenerateInsightsInput): Promise<Ge
 
 const prompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
-  model: googleAI.model('gemini-pro'),
   input: {schema: GenerateInsightsInputSchema},
   output: {schema: GenerateInsightsOutputSchema},
   prompt: `

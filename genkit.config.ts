@@ -6,6 +6,12 @@ export default {
   plugins: [
     googleAI(),
   ],
+  models: [
+    {
+      name: 'gemini-pro',
+      path: 'gemini-pro',
+    }
+  ],
   logLevel: 'debug',
   enableFlowLogs: true,
 };

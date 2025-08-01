@@ -7,7 +7,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {googleAI} from '@genkit-ai/googleai';
 import { ChatInputSchema, ChatOutputSchema, type ChatInput, type ChatOutput } from '@/lib/ai-types';
 
 export async function chat(input: ChatInput): Promise<ChatOutput> {
@@ -16,7 +15,6 @@ export async function chat(input: ChatInput): Promise<ChatOutput> {
 
 const prompt = ai.definePrompt({
   name: 'chatPrompt',
-  model: googleAI.model('gemini-pro'),
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
   prompt: `
