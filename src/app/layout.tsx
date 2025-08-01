@@ -18,6 +18,19 @@ export const metadata: Metadata = {
   title: 'The Wealth Map | Your Interactive Financial Planner',
   description: 'Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.',
   manifest: '/manifest.json',
+  applicationName: "The Wealth Map",
+  appleWebApp: {
+    capable: true,
+    title: "The Wealth Map",
+    statusBarStyle: "default",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    shortcut: "/favicon.ico",
+    apple: "/icons/icon-192x192.png",
+  },
 };
 
 export const viewport: Viewport = {
@@ -39,8 +52,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <link rel="icon" href="/icon-192x192.png" />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="font-body antialiased">
           <I18nProvider>
