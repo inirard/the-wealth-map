@@ -32,7 +32,7 @@ const prompt = ai.definePrompt({
     1.  **Future Balance Prediction**: Analyze the income and expenses from the last 30 days. Based on the net balance, predict the user's likely account balance at the end of the current month. If there isn't enough data, state that.
         Example: "If you maintain your current spending habits, you're on track to have approximately €350 available at the end of the month."
 
-    2.  **Goal Projections**: For each of the user's goals, calculate a realistic projection for when they might achieve it based on their recent savings rate (average monthly positive balance). If their balance is negative, state that they are not on track.
+    2.  **Goal Projections**: For each of the user's goals, calculate a realistic projection for when they might achieve it based on their recent savings rate (average monthly positive balance). If their balance is negative, state that they are not on track. **Important**: When you predict a date, format it in a friendly, human-readable way (e.g., "in approximately 8 months", "by August 2025"). Do NOT use a full ISO date format like YYYY-MM-DDTHH:mm:ss.sssZ.
         Example for a goal: { goalName: "Trip to Japan", projection: "At your current savings rate, you could reach this goal in approximately 8 months." }
 
     3.  **Spending Pattern Analysis**: Identify the top 2-3 spending categories or recurring expenses. Point out one specific area where they could potentially save money without making drastic changes.
