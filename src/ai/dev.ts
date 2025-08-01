@@ -1,6 +1,4 @@
 
-// Flows will be imported for their side effects in this file.
-import './flows/generate-insights-flow';
-import './flows/chat-flow';
-import './flows/predictive-insights-flow';
+// This file is used for the Genkit developer UI and can be left empty
+// for the application's runtime.
 
