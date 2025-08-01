@@ -1,17 +1,16 @@
-// genkit.config.ts
-import { genkit } from 'genkit';
 import { googleAI } from '@genkit-ai/googleai';
-import { firebase } from '@genkit-ai/firebase/plugin';
-import { firebaseFunctions } from '@genkit-ai/firebase/functions';
+import { firebase } from '@genkit-ai/firebase';
 
-export default genkit({
+export default {
   plugins: [
-    firebase(), // Configures Firebase for flow state, trace store, and cache
     googleAI(),
-    firebaseFunctions(),
+    firebase(),
   ],
-  flowStateStore: 'firebase',
-  traceStore: 'firebase',
-  cacheStore: 'firebase',
-  enableFlowLogs: true,
-});
+  flows: [
+    './src/ai/flows/generate-insights-flow.ts',
+    './src/ai/flows/chat-flow.ts',
+    './src/ai/flows/predictive-insights-flow.ts',
+  ],
+  logLevel: 'debug',
+  enableFlowState: true,
+};
