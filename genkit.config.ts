@@ -1,7 +1,7 @@
 
 // genkit.config.ts – Configuração compatível com Genkit v1.15.x
 // Mantém apenas plugins estáveis (GoogleAI) e flows locais
-
+import 'dotenv/config';
 import { googleAI } from '@genkit-ai/googleai';
 
 export default {
