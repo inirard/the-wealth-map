@@ -29,14 +29,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const faviconSvg = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 100 100">
-      <rect width="100" height="100" rx="20" fill="#007C7C"></rect>
-      <path d="M25 50 L50 25 L75 50 L50 75 Z" fill="none" stroke="#FFFFFF" stroke-width="8"></path>
-      <circle cx="50" cy="50" r="10" fill="#FFFFFF"></circle>
-    </svg>
-  `;
-  const faviconDataUrl = `data:image/svg+xml,${encodeURIComponent(faviconSvg)}`;
 
   return (
     <html lang="en" suppressHydrationWarning className={`${poppins.variable}`}>
@@ -47,8 +39,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="format-detection" content="telephone=no" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <link rel="icon" type="image/svg+xml" href={faviconDataUrl} />
-        <link rel="icon" href="data:," />
+        <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="font-body antialiased">
