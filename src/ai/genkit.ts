@@ -13,7 +13,7 @@ export const ai = genkit({
       // O plugin do Next.js gere a obtenção da chave de forma automática e segura.
     }),
     googleAI({
-      apiKey: serverRuntimeConfig?.geminiApiKey,
+      apiKey: serverRuntimeConfig?.geminiApiKey || process.env.GEMINI_API_KEY,
     }),
   ],
 });
