@@ -18,9 +18,12 @@ const nextConfig = {
       },
     ],
   },
+  // Adiciona a configuração do lado do servidor para expor as variáveis de ambiente de forma segura
   serverRuntimeConfig: {
-    // Garante que a chave da API Gemini está disponível no ambiente do servidor
     geminiApiKey: process.env.GEMINI_API_KEY,
+  },
+  publicRuntimeConfig: {
+    // As chaves expostas aqui também estão disponíveis no lado do cliente
   },
 };
 
