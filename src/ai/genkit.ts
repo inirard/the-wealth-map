@@ -6,7 +6,9 @@ import {googleAI} from '@genkit-ai/googleai';
 export const ai = genkit({
   plugins: [
     googleAI({
-      apiKey: process.env.GEMINI_API_KEY,
+      // Usa uma função para obter a chave da API no momento da execução.
+      // Isto garante que 'process.env' está disponível no ambiente do servidor de produção.
+      apiKey: () => process.env.GEMINI_API_KEY || '',
     }),
   ],
 });
