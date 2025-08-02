@@ -18,9 +18,6 @@ const nextConfig = {
       },
     ],
   },
-   serverRuntimeConfig: {
-    geminiApiKey: process.env.GEMINI_API_KEY,
-  },
 };
 
 module.exports = nextConfig;
