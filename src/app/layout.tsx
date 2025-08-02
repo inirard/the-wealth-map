@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './print.css';
@@ -44,7 +45,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${poppins.variable}`}>
       <head />
-      <body className="font-body antialiased">
+      <body>
         <I18nProvider>
           {children}
           <Toaster />
