@@ -1,1 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 24 24" fill="none" stroke="#007C7C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-dollar-sign"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4h-6"/><path d="M12 18V6"/></svg>
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="192" height="192" rx="48" fill="#007C7C"/>
+<path d="M117.257 66.8571C115.82 65.42 113.882 64 109.714 64H82.2857C76.2891 64 72 68.2891 72 74.2857C72 80.2823 76.2891 84.5714 82.2857 84.5714H109.714C115.711 84.5714 120 88.8605 120 94.8571C120 100.854 115.711 105.143 109.714 105.143H82.2857C76.2891 105.143 72 109.432 72 115.429C72 121.425 76.2891 125.714 82.2857 125.714H96M96 64V54.2857M96 125.714V135.429" stroke="white" stroke-width="12" stroke-linecap="round"/>
+</svg>
