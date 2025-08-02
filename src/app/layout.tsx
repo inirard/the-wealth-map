@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './print.css';
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
   },
   icons: {
     shortcut: "/favicon.ico",
-    apple: "/icon-192x192.png",
+    apple: "/icons/icon-192x192.png",
   },
 };
 
@@ -43,9 +44,6 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning className={`${poppins.variable}`}>
-      <head>
-         {/* O Next.js gere as metatags e o manifesto através dos objetos 'metadata' e 'viewport' acima. */}
-      </head>
       <body className="font-body antialiased">
         <I18nProvider>
           {children}
