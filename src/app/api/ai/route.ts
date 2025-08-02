@@ -32,16 +32,25 @@ export async function POST(req: Request) {
 
     switch (flow) {
       case 'chat':
-        const chatInput = ChatInputSchema.parse(payload);
-        result = await chatFlow(chatInput);
+        const chatInput = ChatInputSchema.safeParse(payload);
+        if (!chatInput.success) {
+          return NextResponse.json({ error: "Payload inválido para 'chat'." }, { status: 400 });
+        }
+        result = await chatFlow(chatInput.data);
         break;
       case 'generateInsights':
-        const insightsInput = GenerateInsightsInputSchema.parse(payload);
-        result = await generateInsightsFlow(insightsInput);
+        const insightsInput = GenerateInsightsInputSchema.safeParse(payload);
+        if (!insightsInput.success) {
+          return NextResponse.json({ error: "Payload inválido para 'generateInsights'." }, { status: 400 });
+        }
+        result = await generateInsightsFlow(insightsInput.data);
         break;
       case 'predictFinancialFuture':
-        const predictiveInput = PredictiveInsightsInputSchema.parse(payload);
-        result = await predictiveInsightsFlow(predictiveInput);
+        const predictiveInput = PredictiveInsightsInputSchema.safeParse(payload);
+        if (!predictiveInput.success) {
+            return NextResponse.json({ error: "Payload inválido para 'predictFinancialFuture'." }, { status: 400 });
+        }
+        result = await predictiveInsightsFlow(predictiveInput.data);
         break;
       default:
         return NextResponse.json({ error: "Flow desconhecido." }, { status: 400 });
