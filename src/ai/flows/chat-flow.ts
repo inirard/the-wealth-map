@@ -1,54 +1,32 @@
 
-'use server';
-/**
- * @fileOverview A flow for an interactive financial chatbot.
- *
- * - chatFlow - A function that handles the chatbot conversation.
- */
-import { googleAI } from '@genkit-ai/googleai';
-import { ai } from '@/ai/genkit';
-import { ChatInputSchema, ChatOutputSchema, type ChatInput, type ChatOutput } from '@/lib/ai-types';
+import { z } from "zod";
 
-const chatPrompt = ai.definePrompt({
-  name: 'chatPrompt',
-  input: { schema: ChatInputSchema },
-  output: { schema: ChatOutputSchema },
-  model: googleAI.model('gemini-1.5-flash-latest'),
-  prompt: `
-    You are a friendly, helpful, and slightly informal financial coach for "The Wealth Map" app.
-    Your goal is to answer the user's questions based on their financial data, providing insights and encouragement.
-    The response must be in the specified language: {{language}}.
-
-    You have access to the user's financial data:
-    - Financial Goals: {{#if goals}}{{goals}}{{else}}No goals set.{{/if}}
-    - Recent Transactions: {{#if transactions}}{{transactions}}{{else}}No transactions recorded.{{/if}}
-    - Wealth Wheel Assessment: {{#if wheelData}}{{wheelData}}{{else}}Not completed.{{/if}}
-    - Personal Reflections: {{#if reflections}}{{reflections}}{{else}}No reflections written.{{/if}}
-
-    You also have the chat history with the user. Use it to maintain context.
-    - Chat History:
-    {{#each history}}
-      - {{role}}: {{content}}
-    {{/each}}
-    
-    This is the user's new message:
-    - User Message: {{message}}
-
-    Based on all this information, provide a concise, helpful, and encouraging answer to the user's message. 
-    If you don't have enough information to answer, gently ask the user to provide more details or fill out the relevant section of the app.
-    For example, if they ask about savings but have no transactions, suggest they start tracking their expenses.
-    Keep your answers short and to the point.
-  `,
+export const ChatInputSchema = z.object({
+  message: z.string().min(1, "A mensagem não pode estar vazia."),
+  context: z.string().optional(),
 });
 
-export const chatFlow = ai.defineFlow(
-  {
-    name: 'chatFlow',
-    inputSchema: ChatInputSchema,
-    outputSchema: ChatOutputSchema,
-  },
-  async (input) => {
-    const { output } = await chatPrompt(input);
-    return output!;
+/**
+ * Flow para gerar respostas de chat usando Gemini.
+ * @param input - Dados validados do chat.
+ * @param ai - Instância inicializada do Genkit.
+ */
+export async function chatFlow(
+  input: z.infer<typeof ChatInputSchema>,
+  ai?: any
+) {
+  try {
+    if (!ai) throw new Error("Instância da IA não encontrada.");
+
+    const result = await ai.generateText({
+      prompt: input.context ? `${input.context}\nUsuário: ${input.message}` : input.message,
+      temperature: 0.7,
+      maxOutputTokens: 500,
+    });
+
+    return { response: (result as any)?.output || "Não foi possível gerar uma resposta no momento." };
+  } catch (error: any) {
+    console.error("Erro no chatFlow:", error);
+    throw new Error("Erro ao gerar a resposta da IA.");
   }
-);
+}

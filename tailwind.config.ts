@@ -39,10 +39,9 @@ export default {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
-        emphasis: {
-          DEFAULT: 'hsl(var(--emphasis))',
-          foreground: 'hsl(var(--emphasis-foreground))',
-        },
+ emphasis: {
+ DEFAULT: 'hsl(var(--highlight))'
+ },
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
