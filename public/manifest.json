@@ -1,33 +1,21 @@
-
 {
-    "theme_color": "#007C7C",
-    "background_color": "#ffffff",
-    "display": "standalone",
-    "scope": "/",
-    "start_url": "/",
-    "name": "The Wealth Map",
-    "short_name": "Wealth Map",
-    "description": "Your interactive digital planner to navigate the journey to financial freedom.",
-    "icons": [
-        {
-            "src": "/icons/icon-192x192.png?v=2",
-            "sizes": "192x192",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-256x256.png?v=2",
-            "sizes": "256x256",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-384x384.png?v=2",
-            "sizes": "384x384",
-            "type": "image/png"
-        },
-        {
-            "src": "/icons/icon-512x512.png?v=2",
-            "sizes": "512x512",
-            "type": "image/png"
-        }
-    ]
+  "name": "The Wealth Map",
+  "short_name": "Wealth Map",
+  "description": "Your interactive digital planner to navigate the journey to financial freedom.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FDFCF9",
+  "theme_color": "#007C7C",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
