@@ -1,7 +1,11 @@
 {
   "name": "The Wealth Map",
-  "short_name": "WealthMap",
-  "description": "Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.",
+  "short_name": "Wealth Map",
+  "description": "Your interactive digital planner to navigate the journey to financial freedom.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#007C7C",
+  "theme_color": "#007C7C",
   "icons": [
     {
       "src": "/icons/icon-192x192.svg",
@@ -16,27 +20,16 @@
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icons/icon-maskable-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "maskable"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/icon-maskable-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-        "src": "/icons/maskable-icon.png",
-        "sizes": "512x512",
-        "type": "image/png",
-        "purpose": "maskable"
+      "purpose": "maskable"
     }
-  ],
-  "theme_color": "#007C7C",
-  "background_color": "#FDFCF9",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait"
+  ]
 }
