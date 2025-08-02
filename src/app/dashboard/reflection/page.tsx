@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks/use-i18n';
 import MonthlySummary from './monthly-summary';
-import { generateInsights } from '@/ai/flows/generate-insights-flow';
 import type { GenerateInsightsOutput } from '@/lib/ai-types';
 import { Sparkles, Bot, Download, TriangleAlert } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
@@ -83,14 +82,31 @@ export default function ReflectionPage() {
         setLsReflections(reflections);
 
         try {
-            const insight = await generateInsights({
+            const payload = {
                 language,
                 goals,
                 transactions,
                 wheelData,
                 reflections,
+            };
+
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flow: 'generateInsights', payload }),
             });
-            setAiInsight(insight);
+
+            if (!response.ok) {
+                 throw new Error(`API Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.error || 'AI request failed');
+            }
+            
+            setAiInsight(result.data as GenerateInsightsOutput);
         } catch (error) {
             console.error("Error generating AI insights:", error);
             setAiError(true);

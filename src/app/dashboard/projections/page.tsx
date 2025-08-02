@@ -7,7 +7,6 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from '@/com
 import type { Goal, Transaction } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks/use-i18n';
-import { predictFinancialFuture } from '@/ai/flows/predictive-insights-flow';
 import type { PredictiveInsightsOutput } from '@/lib/ai-types';
 import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Clock, Download, RefreshCw } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
@@ -41,13 +40,31 @@ export default function ProjectionsPage() {
         setAiError(false);
 
         try {
-            const predictions = await predictFinancialFuture({
+            const payload = {
                 language,
                 goals,
                 transactions,
                 currentDate: new Date().toISOString(),
+            };
+            
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
             });
-            setAiPredictions(predictions);
+
+            if (!response.ok) {
+                 throw new Error(`API Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (!result.success) {
+                throw new Error(result.error || 'AI request failed');
+            }
+            
+            setAiPredictions(result.data as PredictiveInsightsOutput);
+
         } catch (error) {
             console.error("Error generating AI predictions:", error);
             setAiError(true);

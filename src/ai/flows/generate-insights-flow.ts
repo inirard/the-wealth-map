@@ -3,20 +3,16 @@
 /**
  * @fileOverview An AI flow to generate financial insights based on user data.
  *
- * - generateInsights - A function that handles the financial analysis process.
+ * - generateInsightsFlow - A function that handles the financial analysis process.
  */
-import {googleAI} from '@genkit-ai/googleai';
-import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
+import { ai } from '@/ai/genkit';
 import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
 
-export async function generateInsights(input: GenerateInsightsInput): Promise<GenerateInsightsOutput> {
-  return generateInsightsFlow(input);
-}
-
-const prompt = ai.definePrompt({
+const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
-  input: {schema: GenerateInsightsInputSchema},
-  output: {schema: GenerateInsightsOutputSchema},
+  input: { schema: GenerateInsightsInputSchema },
+  output: { schema: GenerateInsightsOutputSchema },
   model: googleAI.model('gemini-1.5-flash-latest'),
   prompt: `
     You are a friendly and positive financial coach for the "The Wealth Map" app.
@@ -40,14 +36,14 @@ const prompt = ai.definePrompt({
   `,
 });
 
-const generateInsightsFlow = ai.defineFlow(
+export const generateInsightsFlow = ai.defineFlow(
   {
     name: 'generateInsightsFlow',
     inputSchema: GenerateInsightsInputSchema,
     outputSchema: GenerateInsightsOutputSchema,
   },
   async (input) => {
-    const {output} = await prompt(input);
+    const { output } = await generateInsightsPrompt(input);
     return output!;
   }
 );

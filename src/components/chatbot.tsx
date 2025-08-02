@@ -8,8 +8,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types';
-import type { ChatMessage } from '@/lib/ai-types';
-import { chat } from '@/ai/flows/chat-flow';
+import type { ChatMessage, ChatOutput } from '@/lib/ai-types';
 import Textarea from 'react-textarea-autosize';
 import { Bot, Send, User, X, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -57,7 +56,7 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
-            const result = await chat({
+            const payload = {
                 language,
                 history: messages,
                 message: input,
@@ -65,8 +64,26 @@ export default function Chatbot() {
                 transactions,
                 wheelData,
                 reflections,
+            };
+
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flow: 'chat', payload }),
             });
-            const modelMessage: ChatMessage = { role: 'model', content: result.response };
+
+            if (!response.ok) {
+                throw new Error(`API Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (!result.success) {
+                 throw new Error(result.error || 'AI request failed');
+            }
+            
+            const chatOutput = result.data as ChatOutput;
+            const modelMessage: ChatMessage = { role: 'model', content: chatOutput.response };
             setMessages(prev => [...prev, modelMessage]);
         } catch (error) {
             console.error("Error calling chat flow:", error);
@@ -75,7 +92,8 @@ export default function Chatbot() {
                 title: t('ai_error_title'),
                 description: t('ai_error_description'),
             });
-            setMessages(prev => prev.slice(0, -1)); // Remove user message on error
+            // Rollback the user message on error
+            setMessages(prev => prev.filter(msg => msg.content !== userMessage.content));
         } finally {
             setIsLoading(false);
         }

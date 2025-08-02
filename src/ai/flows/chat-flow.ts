@@ -3,20 +3,16 @@
 /**
  * @fileOverview A flow for an interactive financial chatbot.
  *
- * - chat - A function that handles the chatbot conversation.
+ * - chatFlow - A function that handles the chatbot conversation.
  */
-import {googleAI} from '@genkit-ai/googleai';
-import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
+import { ai } from '@/ai/genkit';
 import { ChatInputSchema, ChatOutputSchema, type ChatInput, type ChatOutput } from '@/lib/ai-types';
 
-export async function chat(input: ChatInput): Promise<ChatOutput> {
-  return chatFlow(input);
-}
-
-const prompt = ai.definePrompt({
+const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
-  input: {schema: ChatInputSchema},
-  output: {schema: ChatOutputSchema},
+  input: { schema: ChatInputSchema },
+  output: { schema: ChatOutputSchema },
   model: googleAI.model('gemini-1.5-flash-latest'),
   prompt: `
     You are a friendly, helpful, and slightly informal financial coach for "The Wealth Map" app.
@@ -45,14 +41,14 @@ const prompt = ai.definePrompt({
   `,
 });
 
-const chatFlow = ai.defineFlow(
+export const chatFlow = ai.defineFlow(
   {
     name: 'chatFlow',
     inputSchema: ChatInputSchema,
     outputSchema: ChatOutputSchema,
   },
   async (input) => {
-    const {output} = await prompt(input);
+    const { output } = await chatPrompt(input);
     return output!;
   }
 );

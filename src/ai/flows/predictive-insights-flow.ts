@@ -3,20 +3,16 @@
 /**
  * @fileOverview An AI flow to generate predictive financial scenarios and advice.
  *
- * - predictFinancialFuture - A function that handles the financial prediction process.
+ * - predictiveInsightsFlow - A function that handles the financial prediction process.
  */
-import {googleAI} from '@genkit-ai/googleai';
-import {ai} from '@/ai/genkit';
+import { googleAI } from '@genkit-ai/googleai';
+import { ai } from '@/ai/genkit';
 import { PredictiveInsightsInputSchema, PredictiveInsightsOutputSchema, type PredictiveInsightsInput, type PredictiveInsightsOutput } from '@/lib/ai-types';
 
-export async function predictFinancialFuture(input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> {
-  return predictiveInsightsFlow(input);
-}
-
-const prompt = ai.definePrompt({
+const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
-  input: {schema: PredictiveInsightsInputSchema},
-  output: {schema: PredictiveInsightsOutputSchema},
+  input: { schema: PredictiveInsightsInputSchema },
+  output: { schema: PredictiveInsightsOutputSchema },
   model: googleAI.model('gemini-1.5-flash-latest'),
   prompt: `
     You are a proactive and insightful financial analyst for "The Wealth Map" app. 
@@ -47,14 +43,14 @@ const prompt = ai.definePrompt({
   `,
 });
 
-const predictiveInsightsFlow = ai.defineFlow(
+export const predictiveInsightsFlow = ai.defineFlow(
   {
     name: 'predictiveInsightsFlow',
     inputSchema: PredictiveInsightsInputSchema,
     outputSchema: PredictiveInsightsOutputSchema,
   },
   async (input) => {
-    const {output} = await prompt(input);
+    const { output } = await predictiveInsightsPrompt(input);
     return output!;
   }
 );
