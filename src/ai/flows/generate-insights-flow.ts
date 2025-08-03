@@ -34,11 +34,13 @@ export async function generateInsightsFlow(
     A análise inteira deve ser um único parágrafo.
   `;
   
-  const result = await ai.generateText({
+  const { output } = await ai.generate({
       prompt: prompt,
-      temperature: 0.7,
-      maxOutputTokens: 1000,
+      model: 'googleai/gemini-pro',
+      config: {
+        temperature: 0.7,
+      }
   });
 
-  return { analysis: result?.output || 'Não foi possível gerar a análise no momento.' };
+  return { analysis: output?.text || 'Não foi possível gerar a análise no momento.' };
 }

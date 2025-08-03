@@ -9,8 +9,9 @@ import { chatFlow } from "@/ai/flows/chat-flow";
 
 // Helper function to initialize Genkit
 const initializeGenkit = () => {
-  const apiKey = process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
+    console.error("GEMINI_API_KEY not found in environment variables.");
     throw new Error("A chave da API Gemini não foi encontrada no ambiente.");
   }
   return genkit({
@@ -35,7 +36,7 @@ export async function POST(req: Request) {
       case 'chat': {
         const chatInput = ChatInputSchema.safeParse(payload);
         if (!chatInput.success) {
-          return NextResponse.json({ error: "Payload inválido para 'chat'." }, { status: 400 });
+          return NextResponse.json({ error: "Payload inválido para 'chat'.", details: chatInput.error.format() }, { status: 400 });
         }
         result = await chatFlow(chatInput.data, ai);
         break;
@@ -43,7 +44,7 @@ export async function POST(req: Request) {
       case 'generateInsights': {
         const insightsInput = GenerateInsightsInputSchema.safeParse(payload);
         if (!insightsInput.success) {
-          return NextResponse.json({ error: "Payload inválido para 'generateInsights'." }, { status: 400 });
+          return NextResponse.json({ error: "Payload inválido para 'generateInsights'.", details: insightsInput.error.format() }, { status: 400 });
         }
         result = await generateInsightsFlow(insightsInput.data, ai);
         break;
@@ -51,7 +52,7 @@ export async function POST(req: Request) {
       case 'predictFinancialFuture': {
         const predictiveInput = PredictiveInsightsInputSchema.safeParse(payload);
         if (!predictiveInput.success) {
-          return NextResponse.json({ error: "Payload inválido para 'predictFinancialFuture'." }, { status: 400 });
+          return NextResponse.json({ error: "Payload inválido para 'predictFinancialFuture'.", details: predictiveInput.error.format() }, { status: 400 });
         }
         result = await predictiveInsightsFlow(predictiveInput.data, ai);
         break;
@@ -63,7 +64,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true, data: result });
 
   } catch (error: any) {
-    console.error(`Erro na rota /api/ai para o flow:`, error);
+    console.error(`Error in /api/ai for flow '${body?.flow}':`, error);
     return NextResponse.json(
       { error: error.message || "Erro interno ao processar a IA." },
       { status: 500 }

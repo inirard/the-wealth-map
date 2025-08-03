@@ -14,49 +14,56 @@ export async function predictiveInsightsFlow(
   if (!ai) throw new Error("Instância da IA não encontrada.");
 
   const prompt = `
-      Você é o "The Wealth Map AI Forecaster", um motor de previsão financeira analítico e perspicaz.
-      Sua resposta DEVE estar no idioma especificado pelo usuário: ${input.language}.
-      A data atual é ${input.currentDate}.
+      You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
+      Your response MUST be in the user's specified language: ${input.language}.
+      The current date is ${input.currentDate}.
 
-      Analise os dados financeiros do usuário:
-      - Metas: ${input.goals.length ? JSON.stringify(input.goals) : 'Nenhuma meta definida.'}
-      - Transações: ${input.transactions.length ? JSON.stringify(input.transactions) : 'Nenhuma transação registrada.'}
+      Analyze the user's financial data:
+      - Goals: ${input.goals.length ? JSON.stringify(input.goals) : 'No goals set.'}
+      - Transactions: ${input.transactions.length ? JSON.stringify(input.transactions) : 'No transactions recorded.'}
 
-      Com base nos dados, gere as seguintes informações preditivas como um objeto JSON:
+      Based on the data, generate ONLY a valid JSON object that strictly follows this format:
       {
-        "futureBalancePrediction": "Uma previsão realista da variação do saldo líquido do usuário nos próximos 30 dias.",
+        "futureBalancePrediction": "A realistic prediction of the user's net balance change over the next 30 days.",
         "goalProjections": [
-          { "goalName": "Nome da Meta 1", "projection": "Uma projeção de quando eles poderiam alcançar esta meta com base em sua taxa de poupança atual." },
-          { "goalName": "Nome da Meta 2", "projection": "Projeção para outra meta." }
+          { "goalName": "Goal Name 1", "projection": "A projection on when they might achieve this goal based on their current savings rate." },
+          { "goalName": "Goal Name 2", "projection": "Projection for another goal." }
         ],
-        "spendingAnalysis": "Identifique a principal categoria de gastos e sugira uma maneira específica e acionável de reduzi-la.",
+        "spendingAnalysis": "Identify the top spending category and suggest one specific, actionable way to reduce it.",
         "proactiveAlerts": [
-          "Um ou dois alertas de estilo automatizado, como 'Gasto elevado em 'Restaurantes' detectado este mês' ou 'Você está no caminho certo para atingir sua meta de 'Férias'.'"
+          "One or two automated-style alerts, such as 'High spending on 'Eating Out' detected this month' or 'You are on track to meet your 'Vacation' goal.'"
         ],
-        "whatIfScenario": "Crie um cenário 'e se' simples e motivador, como 'Se você economizasse €50 a mais por mês, poderia atingir sua meta de fundo de emergência 3 meses antes.'"
+        "whatIfScenario": "Create a simple, motivating 'what if' scenario, like 'If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner.'"
       }
 
-      Sua saída inteira deve ser um objeto JSON válido, sem nenhum texto ou formatação adicional.
+      Do not include any text, formatting, or markdown like \`\`\`json before or after the JSON object.
   `;
 
-  const result = await ai.generateText({
+  const { output } = await ai.generate({
     prompt: prompt,
-    temperature: 0.5,
-    maxOutputTokens: 1500,
+    model: 'googleai/gemini-pro',
+    config: {
+        temperature: 0.5,
+    },
+    output: {
+        format: 'json',
+    }
   });
 
   try {
-    // Tenta analisar o resultado como JSON.
-    return JSON.parse(result?.output || '{}');
+    const jsonOutput = output?.json;
+    if (jsonOutput) {
+        return jsonOutput;
+    }
+    throw new Error("AI output was not valid JSON.");
   } catch (e) {
-    console.error("Failed to parse AI prediction JSON:", e);
-    // Retorna um objeto de erro se a análise falhar.
+    console.error("Failed to parse AI prediction JSON:", e, "Raw output:", output?.text);
     return { 
-      futureBalancePrediction: "Não foi possível gerar a previsão de saldo.",
+      futureBalancePrediction: "Could not generate balance prediction.",
       goalProjections: [],
-      spendingAnalysis: "Não foi possível analisar os padrões de gastos.",
-      proactiveAlerts: ["Erro ao gerar alertas."],
-      whatIfScenario: "Não foi possível criar um cenário."
+      spendingAnalysis: "Could not analyze spending patterns.",
+      proactiveAlerts: ["Error generating alerts."],
+      whatIfScenario: "Could not create a scenario."
     };
   }
 }

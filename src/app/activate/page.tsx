@@ -20,6 +20,7 @@ export default function ActivatePage() {
   const { toast } = useToast();
   
   const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
+  const [username] = useLocalStorage<string | null>('username', null);
   const [isClient, setIsClient] = useState(false);
   
   // This state prevents rendering the form while we check for an existing key.
@@ -34,13 +35,17 @@ export default function ActivatePage() {
     if (isClient) {
       // If a valid key already exists, skip the activation form and go to the next step.
       if (licenseKey && validKeys.includes(licenseKey)) {
-        router.replace('/welcome');
+        if (username) {
+            router.replace('/dashboard');
+        } else {
+            router.replace('/welcome');
+        }
       } else {
         // If there's no valid key, we are ready to show the activation form.
         setStatus('ready');
       }
     }
-  }, [isClient, licenseKey, router]);
+  }, [isClient, licenseKey, username, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
