@@ -1,13 +1,11 @@
-
-import {genkit, configureGenkit} from 'genkit';
+import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
-// This file is now primarily for type-checking and local development.
-// The actual Genkit instance for production is created on-demand in the API route.
+// Esta é uma instância genérica do Genkit usada para definir os prompts e fluxos.
+// A inicialização real com a chave de API será feita na rota da API (/api/ai)
+// para garantir que a chave nunca seja exposta no lado do cliente.
 export const ai = genkit({
   plugins: [
-    googleAI({
-      apiKey: process.env.GEMINI_API_KEY || process.env.NEXT_PUBLIC_GEMINI_API_KEY,
-    }),
+    googleAI(),
   ],
 });

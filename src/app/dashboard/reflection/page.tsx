@@ -81,53 +81,44 @@ export default function ReflectionPage() {
         setAiError(false);
         setLsReflections(reflections);
 
-        // DRASTIC MEASURE: Temporarily disable AI call
-        toast({
-            variant: "destructive",
-            title: t('ai_error_title'),
-            description: "This feature is temporarily unavailable. We are working on a fix."
-        });
-        setAiError(true);
-        setIsLoading(false);
-        return;
+        try {
+            const payload = {
+                language,
+                goals,
+                transactions,
+                wheelData,
+                reflections,
+            };
 
-        // try {
-        //     const payload = {
-        //         language,
-        //         goals,
-        //         transactions,
-        //         wheelData,
-        //         reflections,
-        //     };
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flow: 'generateInsights', payload }),
+            });
 
-        //     const response = await fetch('/api/ai', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ flow: 'generateInsights', payload }),
-        //     });
+            if (!response.ok) {
+                 const errorData = await response.json();
+                 throw new Error(errorData.error || `API Error: ${response.statusText}`);
+            }
 
-        //     if (!response.ok) {
-        //          throw new Error(`API Error: ${response.statusText}`);
-        //     }
-
-        //     const result = await response.json();
+            const result = await response.json();
             
-        //     if (!result.success) {
-        //         throw new Error(result.error || 'AI request failed');
-        //     }
+            if (!result.success) {
+                throw new Error(result.error || 'AI request failed');
+            }
             
-        //     setAiInsight(result.data as GenerateInsightsOutput);
-        // } catch (error) {
-        //     console.error("Error generating AI insights:", error);
-        //     setAiError(true);
-        //     toast({
-        //         variant: "destructive",
-        //         title: t('ai_error_title'),
-        //         description: t('ai_error_description'),
-        //     });
-        // } finally {
-        //     setIsLoading(false);
-        // }
+            setAiInsight(result.data as GenerateInsightsOutput);
+        } catch (error: any) {
+            console.error("Error generating AI insights:", error);
+            setAiError(true);
+            toast({
+                variant: "destructive",
+                title: t('ai_error_title'),
+                description: error.message || t('ai_error_description'),
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const canGenerate = useMemo(() => {

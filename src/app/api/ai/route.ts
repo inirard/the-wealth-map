@@ -20,8 +20,9 @@ const initializeGenkit = () => {
 };
 
 export async function POST(req: Request) {
+  let body;
   try {
-    const body = await req.json();
+    body = await req.json();
     const { flow, payload } = body;
 
     if (!flow || !payload) {

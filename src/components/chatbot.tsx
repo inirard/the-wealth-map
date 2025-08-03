@@ -55,57 +55,48 @@ export default function Chatbot() {
         setInput('');
         setIsLoading(true);
 
-        // DRASTIC MEASURE: Temporarily disable AI call to prevent server errors
-        setTimeout(() => {
-            const modelMessage: ChatMessage = { role: 'model', content: "The AI Coach is temporarily unavailable while we fix an issue. Please try again later." };
-            setMessages(prev => [...prev, modelMessage]);
-            setIsLoading(false);
-        }, 1000);
+        try {
+            const payload = {
+                language,
+                history: messages,
+                message: input,
+                goals,
+                transactions,
+                wheelData,
+                reflections,
+            };
 
-        return; 
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flow: 'chat', payload }),
+            });
 
-        // try {
-        //     const payload = {
-        //         language,
-        //         history: messages,
-        //         message: input,
-        //         goals,
-        //         transactions,
-        //         wheelData,
-        //         reflections,
-        //     };
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `API Error: ${response.statusText}`);
+            }
 
-        //     const response = await fetch('/api/ai', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ flow: 'chat', payload }),
-        //     });
+            const result = await response.json();
 
-        //     if (!response.ok) {
-        //         throw new Error(`API Error: ${response.statusText}`);
-        //     }
-
-        //     const result = await response.json();
-
-        //     if (!result.success) {
-        //          throw new Error(result.error || 'AI request failed');
-        //     }
+            if (!result.success) {
+                 throw new Error(result.error || 'AI request failed');
+            }
             
-        //     const chatOutput = result.data as ChatOutput;
-        //     const modelMessage: ChatMessage = { role: 'model', content: chatOutput.response };
-        //     setMessages(prev => [...prev, modelMessage]);
-        // } catch (error) {
-        //     console.error("Error calling chat flow:", error);
-        //     toast({
-        //         variant: "destructive",
-        //         title: t('ai_error_title'),
-        //         description: t('ai_error_description'),
-        //     });
-        //     // Rollback the user message on error
-        //     setMessages(prev => prev.filter(msg => msg.content !== userMessage.content));
-        // } finally {
-        //     setIsLoading(false);
-        // }
+            const chatOutput = result.data as ChatOutput;
+            const modelMessage: ChatMessage = { role: 'model', content: chatOutput.response };
+            setMessages(prev => [...prev, modelMessage]);
+        } catch (error: any) {
+            console.error("Error calling chat flow:", error);
+            toast({
+                variant: "destructive",
+                title: t('ai_error_title'),
+                description: error.message || t('ai_error_description'),
+            });
+            // Keep user message on error to allow retry or copy
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (

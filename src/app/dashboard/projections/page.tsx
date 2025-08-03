@@ -8,7 +8,7 @@ import type { Goal, Transaction } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks/use-i18n';
 import type { PredictiveInsightsOutput } from '@/lib/ai-types';
-import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Clock, Download, RefreshCw } from 'lucide-react';
+import { Sparkles, Bot, TriangleAlert, TrendingUp, Target, AlertCircle, FlaskConical, Lightbulb, Download, RefreshCw } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -39,53 +39,44 @@ export default function ProjectionsPage() {
         setAiPredictions(null);
         setAiError(false);
 
-        // DRASTIC MEASURE: Temporarily disable AI call
-        toast({
-            variant: "destructive",
-            title: t('ai_error_title'),
-            description: "This feature is temporarily unavailable. We are working on a fix."
-        });
-        setAiError(true);
-        setIsLoading(false);
-        return;
-
-        // try {
-        //     const payload = {
-        //         language,
-        //         goals,
-        //         transactions,
-        //         currentDate: new Date().toISOString(),
-        //     };
+        try {
+            const payload = {
+                language,
+                goals,
+                transactions,
+                currentDate: new Date().toISOString(),
+            };
             
-        //     const response = await fetch('/api/ai', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
-        //     });
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
+            });
 
-        //     if (!response.ok) {
-        //          throw new Error(`API Error: ${response.statusText}`);
-        //     }
+             if (!response.ok) {
+                 const errorData = await response.json();
+                 throw new Error(errorData.error || `API Error: ${response.statusText}`);
+            }
 
-        //     const result = await response.json();
+            const result = await response.json();
             
-        //     if (!result.success) {
-        //         throw new Error(result.error || 'AI request failed');
-        //     }
+            if (!result.success) {
+                 throw new Error(result.error || 'AI request failed');
+            }
             
-        //     setAiPredictions(result.data as PredictiveInsightsOutput);
+            setAiPredictions(result.data as PredictiveInsightsOutput);
 
-        // } catch (error) {
-        //     console.error("Error generating AI predictions:", error);
-        //     setAiError(true);
-        //     toast({
-        //         variant: "destructive",
-        //         title: t('ai_error_title'),
-        //         description: t('ai_error_description'),
-        //     });
-        // } finally {
-        //     setIsLoading(false);
-        // }
+        } catch (error: any) {
+            console.error("Error generating AI predictions:", error);
+            setAiError(true);
+            toast({
+                variant: "destructive",
+                title: t('ai_error_title'),
+                description: error.message || t('ai_error_description'),
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
     
     const handleDownloadPdf = () => {
