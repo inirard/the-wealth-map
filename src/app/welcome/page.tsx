@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -8,17 +7,23 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Sparkles } from "lucide-react";
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import AuthProvider from '@/components/auth-provider';
+import { validKeys } from '@/lib/keys';
 
-function WelcomeContent() {
+// The AuthProvider is removed from here as it should only protect the dashboard routes.
+export default function WelcomePage() {
   const [name, setName] = useState('');
   const [, setUsername] = useLocalStorage('username', '');
+  const [licenseKey] = useLocalStorage<string | null>('license_key', null);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    // If the user lands here without a valid license key, redirect to activation.
+    if (!licenseKey || !validKeys.includes(licenseKey)) {
+        router.replace('/activate');
+    }
+  }, [licenseKey, router]);
 
   const handleStart = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +32,14 @@ function WelcomeContent() {
       router.push('/dashboard');
     }
   };
+
+  if (!isClient || !licenseKey) {
+     return (
+        <div className="flex min-h-screen flex-col items-center justify-center bg-background">
+            <div className="animate-pulse text-muted-foreground">A verificar acesso...</div>
+        </div>
+     );
+  }
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
@@ -70,13 +83,4 @@ function WelcomeContent() {
       </main>
     </div>
   );
-}
-
-
-export default function WelcomePage() {
-    return (
-        <AuthProvider>
-            <WelcomeContent />
-        </AuthProvider>
-    )
 }

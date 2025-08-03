@@ -2,24 +2,27 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useLocalStorage } from '@/hooks/use-local-storage';
 
-/**
- * This is the root page of the application.
- * Its sole purpose is to redirect the user to the correct starting point of the app flow,
- * which is the activation page. The logic for authentication and further redirection
- * is handled by the subsequent pages (`/activate`, `/welcome`, and AuthProvider).
- */
 export default function RootPage() {
   const router = useRouter();
+  // We don't use the values directly, but calling useLocalStorage triggers client-side hydration.
+  const [licenseKey] = useLocalStorage<string | null>('license_key', null);
+  const [username] = useLocalStorage<string | null>('username', '');
 
   useEffect(() => {
-    // Unconditionally redirect to the start of the activation flow.
-    // This simplifies the logic and prevents the app from getting stuck
-    // on this page trying to read from localStorage.
-    router.replace('/activate');
-  }, [router]);
+    // This effect now runs reliably on the client side after hydration.
+    if (licenseKey && username) {
+      router.replace('/dashboard');
+    } else if (licenseKey) {
+      router.replace('/welcome');
+    } else {
+      router.replace('/activate');
+    }
+  }, [licenseKey, username, router]);
 
-  // Render a simple loading state while the redirect is happening.
+  // Render a simple loading state to prevent a flash of unstyled content
+  // and give feedback while the redirect logic is processing on the client.
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="animate-pulse text-muted-foreground">A carregar...</div>
