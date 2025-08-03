@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -20,15 +19,12 @@ export default function ActivatePage() {
   const { toast } = useToast();
   
   const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
-  const [username] = useLocalStorage<string | null>('username', null);
+  const [username] = useLocalStorage<string | null>('username', '');
   
-  // This state prevents rendering the form while we check for an existing key.
   const [status, setStatus] = useState<'checking' | 'ready'>('checking');
 
   useEffect(() => {
-    // This logic runs only on the client side.
     if (status === 'checking') {
-      // If a valid key already exists, skip the activation form and go to the next step.
       if (licenseKey && validKeys.includes(licenseKey)) {
         if (username) {
             router.replace('/dashboard');
@@ -36,7 +32,6 @@ export default function ActivatePage() {
             router.replace('/welcome');
         }
       } else {
-        // If there's no valid key, we are ready to show the activation form.
         setStatus('ready');
       }
     }
@@ -54,7 +49,6 @@ export default function ActivatePage() {
           title: 'Ativação bem-sucedida!',
           description: 'A preparar a sua conta...',
         });
-        // After setting the key, redirect to welcome page
         router.push('/welcome');
       } else {
         setError('Chave de licença inválida. Por favor, verifique e tente novamente.');
@@ -63,7 +57,6 @@ export default function ActivatePage() {
     }, 500);
   };
   
-  // While the client is checking for an existing key, show a loading state.
   if (status === 'checking') {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -72,7 +65,6 @@ export default function ActivatePage() {
     );
   }
 
-  // Only show the activation form if on the client AND there is no valid key.
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10"></div>

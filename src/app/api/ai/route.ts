@@ -1,73 +1,20 @@
+import { NextResponse } from 'next/server';
 
-import { NextResponse } from "next/server";
-import { genkit } from "genkit";
-import { googleAI } from "@genkit-ai/googleai";
-import { ChatInputSchema, GenerateInsightsInputSchema, PredictiveInsightsInputSchema } from '@/lib/ai-types';
-import { generateInsightsFlow } from "@/ai/flows/generate-insights-flow";
-import { predictiveInsightsFlow } from "@/ai/flows/predictive-insights-flow";
-import { chatFlow } from "@/ai/flows/chat-flow";
-
-// Helper function to initialize Genkit
-const initializeGenkit = () => {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    console.error("GEMINI_API_KEY not found in environment variables.");
-    throw new Error("A chave da API Gemini não foi encontrada no ambiente.");
-  }
-  return genkit({
-    plugins: [googleAI({ apiKey })],
-  });
-};
+// This API route is temporarily disabled to prevent server crashes.
+// The Genkit implementation caused build failures and runtime errors.
+// This will be fixed in a future update.
 
 export async function POST(req: Request) {
-  let body;
   try {
-    body = await req.json();
-    const { flow, payload } = body;
-
-    if (!flow || !payload) {
-      return NextResponse.json({ error: "Os campos 'flow' e 'payload' são obrigatórios." }, { status: 400 });
-    }
-    
-    const ai = initializeGenkit();
-
-    let result;
-
-    switch (flow) {
-      case 'chat': {
-        const chatInput = ChatInputSchema.safeParse(payload);
-        if (!chatInput.success) {
-          return NextResponse.json({ error: "Payload inválido para 'chat'.", details: chatInput.error.format() }, { status: 400 });
-        }
-        result = await chatFlow(chatInput.data, ai);
-        break;
-      }
-      case 'generateInsights': {
-        const insightsInput = GenerateInsightsInputSchema.safeParse(payload);
-        if (!insightsInput.success) {
-          return NextResponse.json({ error: "Payload inválido para 'generateInsights'.", details: insightsInput.error.format() }, { status: 400 });
-        }
-        result = await generateInsightsFlow(insightsInput.data, ai);
-        break;
-      }
-      case 'predictFinancialFuture': {
-        const predictiveInput = PredictiveInsightsInputSchema.safeParse(payload);
-        if (!predictiveInput.success) {
-          return NextResponse.json({ error: "Payload inválido para 'predictFinancialFuture'.", details: predictiveInput.error.format() }, { status: 400 });
-        }
-        result = await predictiveInsightsFlow(predictiveInput.data, ai);
-        break;
-      }
-      default:
-        return NextResponse.json({ error: "Flow desconhecido." }, { status: 400 });
-    }
-
-    return NextResponse.json({ success: true, data: result });
-
-  } catch (error: any) {
-    console.error(`Error in /api/ai for flow '${body?.flow}':`, error);
+    // Immediately return an error to any component that calls this endpoint.
     return NextResponse.json(
-      { error: error.message || "Erro interno ao processar a IA." },
+      { error: 'AI features are temporarily unavailable. The application is being updated.' },
+      { status: 503 } // Service Unavailable
+    );
+  } catch (error: any) {
+    console.error(`Error in disabled /api/ai route:`, error);
+    return NextResponse.json(
+      { error: 'An unexpected error occurred.' },
       { status: 500 }
     );
   }

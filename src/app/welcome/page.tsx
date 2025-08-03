@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -16,25 +15,20 @@ export default function WelcomePage() {
   const [licenseKey] = useLocalStorage<string | null>('license_key', null);
   const router = useRouter();
   
-  // This state prevents rendering the form while we check the prerequisites.
   const [status, setStatus] = useState<'checking' | 'ready'>('checking');
 
   useEffect(() => {
-    // This logic runs on the client side.
     if (status === 'checking') {
-      // If the user lands here without a valid license key, redirect to activation.
       if (!licenseKey || !validKeys.includes(licenseKey)) {
           router.replace('/activate');
           return;
       }
       
-      // If user is properly licensed and already has a name, move to dashboard.
       if (username) {
           router.replace('/dashboard');
           return;
       }
 
-      // Otherwise, we are ready to show the form.
       setStatus('ready');
     }
   }, [status, licenseKey, username, router]);
@@ -47,7 +41,6 @@ export default function WelcomePage() {
     }
   };
 
-  // Show a loading state until we can verify everything on the client.
   if (status === 'checking') {
      return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -56,7 +49,6 @@ export default function WelcomePage() {
      );
   }
 
-  // Render the welcome form only if the key is valid and username is not set.
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10"></div>

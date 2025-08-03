@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -40,6 +39,10 @@ export default function ProjectionsPage() {
         setAiError(false);
 
         try {
+            // Temporarily disable AI call
+            throw new Error(t('ai_error_description'));
+
+            /*
             const payload = {
                 language,
                 goals,
@@ -65,6 +68,7 @@ export default function ProjectionsPage() {
             }
             
             setAiPredictions(result.data as PredictiveInsightsOutput);
+            */
 
         } catch (error: any) {
             console.error("Error generating AI predictions:", error);
@@ -109,11 +113,15 @@ export default function ProjectionsPage() {
     );
     
     const renderContent = () => {
-        if (!isClient || isLoading) {
+        if (!isClient) { // Don't show skeleton if loading is not happening
+            return null;
+        }
+
+        if (isLoading) {
             return renderSkeletons();
         }
         
-        if(aiError) {
+        if(aiError && !aiPredictions) { // Show error only if there are no old predictions to display
             return (
                 <Card className="col-span-full">
                     <CardContent className="p-6">

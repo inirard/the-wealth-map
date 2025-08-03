@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -24,6 +23,7 @@ export default function Chatbot() {
     const { t, language } = useI18n();
     const { toast } = useToast();
     
+    // Data hooks are kept for future re-enabling
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
@@ -56,6 +56,10 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
+            // Temporarily disable AI call
+            throw new Error(t('ai_error_description'));
+
+            /*
             const payload = {
                 language,
                 history: messages,
@@ -86,14 +90,11 @@ export default function Chatbot() {
             const chatOutput = result.data as ChatOutput;
             const modelMessage: ChatMessage = { role: 'model', content: chatOutput.response };
             setMessages(prev => [...prev, modelMessage]);
+            */
         } catch (error: any) {
             console.error("Error calling chat flow:", error);
-            toast({
-                variant: "destructive",
-                title: t('ai_error_title'),
-                description: error.message || t('ai_error_description'),
-            });
-            // Keep user message on error to allow retry or copy
+            const modelMessage: ChatMessage = { role: 'model', content: t('ai_error_description') };
+            setMessages(prev => [...prev, modelMessage]);
         } finally {
             setIsLoading(false);
         }

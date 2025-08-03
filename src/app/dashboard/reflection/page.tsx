@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -53,7 +52,6 @@ export default function ReflectionPage() {
 
     const handleDownloadPdf = () => {
         setIsDownloading(true);
-        // Timeout to allow state to update and show loading state
         setTimeout(() => {
             window.print();
             setIsDownloading(false);
@@ -82,6 +80,10 @@ export default function ReflectionPage() {
         setLsReflections(reflections);
 
         try {
+            // Temporarily disable AI call
+            throw new Error(t('ai_error_description'));
+            
+            /*
             const payload = {
                 language,
                 goals,
@@ -108,6 +110,7 @@ export default function ReflectionPage() {
             }
             
             setAiInsight(result.data as GenerateInsightsOutput);
+            */
         } catch (error: any) {
             console.error("Error generating AI insights:", error);
             setAiError(true);
