@@ -22,8 +22,8 @@ export default function WelcomePage() {
   }, []);
 
   useEffect(() => {
+    // This effect runs on the client after hydration.
     // If the user lands here without a valid license key, redirect to activation.
-    // This runs after the client has hydrated and licenseKey is read from localStorage.
     if (isClient && (!licenseKey || !validKeys.includes(licenseKey))) {
         router.replace('/activate');
     }
@@ -38,6 +38,7 @@ export default function WelcomePage() {
   };
 
   // Show a loading state until we can verify the key on the client.
+  // This prevents flashing the content if a redirect is needed.
   if (!isClient || !licenseKey || !validKeys.includes(licenseKey)) {
      return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -46,6 +47,7 @@ export default function WelcomePage() {
      );
   }
 
+  // Render the welcome form only if the key is valid.
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10"></div>
