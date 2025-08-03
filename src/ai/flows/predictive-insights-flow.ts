@@ -5,6 +5,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import {
   PredictiveInsightsInputSchema,
   PredictiveInsightsOutputSchema,
@@ -14,6 +15,7 @@ import {
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
+  model: googleAI.model('gemini-1.5-flash-latest'),
   input: {schema: PredictiveInsightsInputSchema},
   output: {schema: PredictiveInsightsOutputSchema},
   prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.

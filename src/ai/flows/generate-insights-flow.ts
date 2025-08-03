@@ -4,10 +4,12 @@
  * - generateInsightsFlow - A function that handles the financial analysis process.
  */
 import { ai } from '@/ai/genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
 
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
+  model: googleAI.model('gemini-1.5-flash-latest'),
   input: { schema: GenerateInsightsInputSchema },
   output: { schema: GenerateInsightsOutputSchema },
   prompt: `
