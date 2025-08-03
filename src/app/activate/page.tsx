@@ -23,27 +23,31 @@ export default function ActivatePage() {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
+    // This effect acts as the main entry logic for the entire app.
+    // It runs once on the client side.
+    if (!isClient) {
+      setIsClient(true);
+      
+      // Check if the user is already activated and set up.
+      const storedKey = localStorage.getItem('license_key');
+      const storedUsername = localStorage.getItem('username');
 
-  useEffect(() => {
-    // This effect now acts as the main entry logic.
-    // If the user lands here but already has a valid key, redirect them.
-    if (isClient && licenseKey && validKeys.includes(licenseKey)) {
-      if (username) {
-        router.replace('/dashboard');
-      } else {
-        router.replace('/welcome');
+      if (storedKey && validKeys.includes(JSON.parse(storedKey))) {
+        if (storedUsername && JSON.parse(storedUsername)) {
+          router.replace('/dashboard');
+        } else {
+          router.replace('/welcome');
+        }
       }
     }
-  }, [isClient, licenseKey, username, router]);
+  }, [isClient, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Simulação de verificação
+    // Simulate verification
     setTimeout(() => {
       if (validKeys.includes(key.trim())) {
         setLicenseKey(key.trim());
@@ -61,7 +65,7 @@ export default function ActivatePage() {
   };
   
   // While checking for existing key on the client, or if we are redirecting, show a loading state.
-  if (!isClient || (licenseKey && validKeys.includes(licenseKey))) {
+  if (!isClient) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <div className="animate-pulse text-muted-foreground">A carregar...</div>

@@ -4,19 +4,18 @@
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-// This is a server component by default in App Router, but we need client-side logic for navigation.
-// However, to keep it simple and robust, we'll use a simple client component to redirect.
+// This component's sole responsibility is to redirect the user to the activation flow.
+// This simplifies the app's entry point and prevents complex state management issues on the root page.
 
 export default function RootRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect immediately to the activation page, which will handle all further logic.
-    // This avoids any complex state management or localStorage races on the root page.
+    // Immediately redirect to the activation page, which will handle all further logic.
     router.replace('/activate');
   }, [router]);
 
-  // Render a loading state while the redirect happens.
+  // Render a consistent loading state while the redirect happens.
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="animate-pulse text-muted-foreground">A carregar...</div>
