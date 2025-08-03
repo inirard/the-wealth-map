@@ -19,39 +19,34 @@ export default function ActivatePage() {
   const router = useRouter();
   const { toast } = useToast();
   
-  // These hooks are called at the top level, but their values are only
-  // relevant inside the useEffect, which runs client-side.
   const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
-  const [username] = useLocalStorage<string | null>('username', '');
   const [isClient, setIsClient] = useState(false);
+  
+  // This state prevents rendering the form while we check for an existing key.
+  const [status, setStatus] = useState<'checking' | 'ready'>('checking');
 
   useEffect(() => {
-    // This effect runs once on the client after hydration.
-    // This is now the main entry point logic for the app.
     setIsClient(true);
   }, []);
 
   useEffect(() => {
     // This logic runs only on the client side.
     if (isClient) {
-      // If a valid key already exists, redirect the user.
+      // If a valid key already exists, skip the activation form and go to the next step.
       if (licenseKey && validKeys.includes(licenseKey)) {
-        if (username) {
-          router.replace('/dashboard');
-        } else {
-          router.replace('/welcome');
-        }
+        router.replace('/welcome');
+      } else {
+        // If there's no valid key, we are ready to show the activation form.
+        setStatus('ready');
       }
-      // If no valid key, we stay on this page to show the activation form.
     }
-  }, [isClient, licenseKey, username, router]);
+  }, [isClient, licenseKey, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    // Simulate verification
     setTimeout(() => {
       if (validKeys.includes(key.trim())) {
         setLicenseKey(key.trim());
@@ -69,7 +64,7 @@ export default function ActivatePage() {
   };
   
   // While the client is hydrating and checking for an existing key, show a loading state.
-  if (!isClient || (licenseKey && validKeys.includes(licenseKey))) {
+  if (status === 'checking') {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <div className="animate-pulse text-muted-foreground">A carregar...</div>
