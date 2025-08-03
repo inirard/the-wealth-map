@@ -28,6 +28,7 @@ const flowMap: Record<
     schema: ChatInputSchema,
     flow: chatFlow,
     preprocessor: (payload) => {
+      // The history is now an array of objects, convert it to a simple string log.
       const historyText = payload.history
         .map((msg: {role: string; content: string}) => `${msg.role}: ${msg.content}`)
         .join('\n');
@@ -57,14 +58,14 @@ export async function POST(req: Request) {
     const {flow: flowName, payload} = body;
 
     if (!flowName || !flowMap[flowName]) {
-      return NextResponse.json({error: 'Flow desconhecido.'}, {status: 400});
+      return NextResponse.json({error: 'Unknown flow.'}, {status: 400});
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       console.error('GEMINI_API_KEY not found in environment variables.');
       return NextResponse.json(
-        {error: 'A chave da API Gemini não foi encontrada no ambiente.'},
+        {error: 'The Gemini API key was not found in the environment.'},
         {status: 500}
       );
     }
@@ -84,7 +85,7 @@ export async function POST(req: Request) {
     if (!parsedPayload.success) {
       return NextResponse.json(
         {
-          error: `Payload inválido para '${flowName}'.`,
+          error: `Invalid payload for '${flowName}'.`,
           details: parsedPayload.error.format(),
         },
         {status: 400}
@@ -95,9 +96,9 @@ export async function POST(req: Request) {
 
     return NextResponse.json({success: true, data: result});
   } catch (error: any) {
-    console.error(`Erro na rota /api/ai:`, error);
+    console.error(`Error in /api/ai route:`, error);
     const errorMessage =
-      error instanceof Error ? error.message : 'Erro interno ao processar a IA.';
+      error instanceof Error ? error.message : 'An internal error occurred while processing the AI request.';
     return NextResponse.json({error: errorMessage}, {status: 500});
   }
 }

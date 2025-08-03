@@ -73,21 +73,9 @@ export default function Chatbot() {
                 body: JSON.stringify({ flow: 'chat', payload }),
             });
             
-            // Check if the response is not ok (e.g., 500 server error)
-            if (!response.ok) {
-                // Try to get a specific error message from the server, otherwise use a generic one
-                let errorData;
-                try {
-                    errorData = await response.json();
-                } catch (e) {
-                    errorData = { error: t('ai_error_description') };
-                }
-                throw new Error(errorData.error || t('ai_error_description'));
-            }
-
             const result = await response.json();
 
-            if (!result.success) {
+            if (!response.ok || !result.success) {
                  throw new Error(result.error || 'AI request failed');
             }
             
