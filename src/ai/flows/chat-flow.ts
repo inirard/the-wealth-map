@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -6,16 +7,29 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
+import {z} from 'genkit';
+
 import {
-  ChatInputSchema as ChatInputSchemaBase,
   ChatOutputSchema,
-  type ChatInput,
-  type ChatOutput,
+  GoalSchema,
+  TransactionSchema,
+  WealthWheelDataSchema,
+  ReflectionSchema,
 } from '@/lib/ai-types';
 
-export const ChatInputSchema = ChatInputSchemaBase;
+// The input schema now expects a simple string for the history.
+export const ChatInputSchema = z.object({
+  language: z.enum(['pt', 'en', 'es', 'fr']),
+  history: z.string().describe("The conversation history, formatted as a string with each message on a new line, prefixed with 'User:' or 'AI:'."),
+  message: z.string(),
+  goals: z.array(GoalSchema),
+  transactions: z.array(TransactionSchema),
+  wheelData: z.array(WealthWheelDataSchema),
+  reflections: z.array(ReflectionSchema),
+});
+export type ChatInput = z.infer<typeof ChatInputSchema>;
+
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
@@ -34,13 +48,7 @@ You have access to the user's financial data to provide personalized responses.
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
 Conversation History:
-{{#each history}}
-  {{#if (eq role "model")}}
-    AI: {{{content}}}
-  {{else}}
-    User: {{{content}}}
-  {{/if}}
-{{/each}}
+{{history}}
 
 User's new message:
 {{{message}}}

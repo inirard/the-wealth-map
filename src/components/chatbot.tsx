@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -24,7 +25,7 @@ export default function Chatbot() {
     const { t, language } = useI18n();
     const { toast } = useToast();
     
-    const [goals] = useLocalStorage<Goal[]>('goals', []);
+    const [goals] = useLocalStorage<Goal[]>( 'goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
     const [reflections] = useLocalStorage<Reflection[]>('reflections', []);
@@ -57,9 +58,15 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
+            // Pre-format the history into a simple string to avoid complex logic in the AI prompt.
+            const historyAsString = newMessages
+                .slice(0, -1) // Exclude the current user message
+                .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
+                .join('\n');
+
             const payload = {
                 language,
-                history: newMessages.slice(0, -1), // Send history, excluding current message
+                history: historyAsString, // Send the pre-formatted string
                 message: input,
                 goals,
                 transactions,
@@ -76,23 +83,25 @@ export default function Chatbot() {
             const result = await response.json();
 
             if (!response.ok || !result.success) {
-                 throw new Error(result.error || 'AI request failed');
+                 // Check for specific error message in result, otherwise use a generic one.
+                const errorDetail = result.error || (result.details ? JSON.stringify(result.details) : 'AI request failed');
+                throw new Error(errorDetail);
             }
             
             const chatOutput = result.data as ChatOutput;
             const modelMessage: AIChatMessage = { role: 'model', content: chatOutput.response };
             setMessages(prev => [...prev, modelMessage]);
         } catch (error: any) {
-            const errorMessage = error.message || t('ai_error_description');
+            console.error("Error in Chatbot handleSubmit:", error);
+            const errorMessage = error.message.includes('DOCTYPE') ? t('ai_error_description') : error.message;
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
                 description: errorMessage,
             });
-            // Add an error message from the bot
+            // Add an error message from the bot to the chat window for visibility
             const modelErrorMessage: AIChatMessage = { role: 'model', content: errorMessage };
             setMessages(prev => [...prev, modelErrorMessage]);
-            // Do not remove user message, so they know what failed
         } finally {
             setIsLoading(false);
         }
