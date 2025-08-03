@@ -1,7 +1,7 @@
 
 import { NextResponse } from "next/server";
 import { genkit } from "genkit";
-import { googleAI } from "@genkit-ai/googleai"; // Ajuste para o caminho correto
+import { googleAI } from "@genkit-ai/googleai";
 import { ChatInputSchema, GenerateInsightsInputSchema, PredictiveInsightsInputSchema } from '@/lib/ai-types';
 import { generateInsightsFlow } from "@/ai/flows/generate-insights-flow";
 import { predictiveInsightsFlow } from "@/ai/flows/predictive-insights-flow";
@@ -24,39 +24,39 @@ export async function POST(req: Request) {
     const { flow, payload } = body;
 
     if (!flow || !payload) {
- return NextResponse.json({ error: "Os campos 'flow' e 'payload' são obrigatórios." }, { status: 400 });
+      return NextResponse.json({ error: "Os campos 'flow' e 'payload' são obrigatórios." }, { status: 400 });
     }
     
     const ai = initializeGenkit();
 
- let result;
+    let result;
 
-      switch (flow) {
-       case 'chat': {
-              const chatInput = ChatInputSchema.safeParse(payload);
-              if (!chatInput.success) {
-                return NextResponse.json({ error: "Payload inválido para 'chat'." }, { status: 400 });
-              }
-              result = await chatFlow(chatInput.data, ai as any);
-              break;
-       }
-       case 'generateInsights': {
-              const insightsInput = GenerateInsightsInputSchema.safeParse(payload);
-              if (!insightsInput.success) {
-                return NextResponse.json({ error: "Payload inválido para 'generateInsights'." }, { status: 400 });
-              }
-              result = await generateInsightsFlow(insightsInput.data, ai as any);
-              break;
-       }
-       case 'predictFinancialFuture': {
-              const predictiveInput = PredictiveInsightsInputSchema.safeParse(payload);
-              if (!predictiveInput.success) {
-       return NextResponse.json({ error: "Payload inválido para 'predictFinancialFuture'." }, { status: 400 });
-              }
-              result = await predictiveInsightsFlow(predictiveInput.data, ai as any);
-              break;
-       }
- default:
+    switch (flow) {
+      case 'chat': {
+        const chatInput = ChatInputSchema.safeParse(payload);
+        if (!chatInput.success) {
+          return NextResponse.json({ error: "Payload inválido para 'chat'." }, { status: 400 });
+        }
+        result = await chatFlow(chatInput.data, ai);
+        break;
+      }
+      case 'generateInsights': {
+        const insightsInput = GenerateInsightsInputSchema.safeParse(payload);
+        if (!insightsInput.success) {
+          return NextResponse.json({ error: "Payload inválido para 'generateInsights'." }, { status: 400 });
+        }
+        result = await generateInsightsFlow(insightsInput.data, ai);
+        break;
+      }
+      case 'predictFinancialFuture': {
+        const predictiveInput = PredictiveInsightsInputSchema.safeParse(payload);
+        if (!predictiveInput.success) {
+          return NextResponse.json({ error: "Payload inválido para 'predictFinancialFuture'." }, { status: 400 });
+        }
+        result = await predictiveInsightsFlow(predictiveInput.data, ai);
+        break;
+      }
+      default:
         return NextResponse.json({ error: "Flow desconhecido." }, { status: 400 });
     }
 
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
 
   } catch (error: any) {
     console.error(`Erro na rota /api/ai para o flow:`, error);
- return NextResponse.json(
+    return NextResponse.json(
       { error: error.message || "Erro interno ao processar a IA." },
       { status: 500 }
     );

@@ -1,49 +1,44 @@
 
-'use server';
+import { z } from "zod";
+import { GenerateInsightsInputSchema } from '@/lib/ai-types';
+
 /**
- * @fileOverview An AI flow to generate financial insights based on user data.
- *
- * - generateInsightsFlow - A function that handles the financial analysis process.
+ * Flow para gerar insights financeiros com base nos dados fornecidos.
+ * @param input - Dados validados para insights.
+ * @param ai - Instância inicializada do Genkit.
  */
-import { googleAI } from '@genkit-ai/googleai';
-import { ai } from '@/ai/genkit';
-import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
+export async function generateInsightsFlow(
+  input: z.infer<typeof GenerateInsightsInputSchema>,
+  ai: any
+) {
+  if (!ai) throw new Error("Instância da IA não encontrada.");
 
-const generateInsightsPrompt = ai.definePrompt({
-  name: 'generateInsightsPrompt',
-  input: { schema: GenerateInsightsInputSchema },
-  output: { schema: GenerateInsightsOutputSchema },
-  model: googleAI.model('gemini-1.5-flash-latest'),
-  prompt: `
-    You are a friendly and positive financial coach for the "The Wealth Map" app.
-    Your task is to provide a short, personalized, and encouraging analysis for the user based on their financial data.
-    The response must be in the specified language: {{language}}.
+  const prompt = `
+    Você é um coach financeiro amigável e positivo para o app "The Wealth Map".
+    Sua tarefa é fornecer uma análise curta, personalizada e encorajadora para o usuário com base em seus dados financeiros.
+    A resposta deve estar no idioma especificado: ${input.language}.
 
-    Here is the user's data:
-    - Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-    - Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
-    - Wealth Wheel Assessment: {{#if wheelData.length}}{{json wheelData}}{{else}}Not completed.{{/if}}
-    - Personal Reflections: {{#if reflections.length}}{{json reflections}}{{else}}No reflections written.{{/if}}
+    Aqui estão os dados do usuário:
+    - Metas: ${input.goals.length ? JSON.stringify(input.goals) : 'Nenhuma meta definida.'}
+    - Transações: ${input.transactions.length ? JSON.stringify(input.transactions) : 'Nenhuma transação registrada.'}
+    - Avaliação da Roda da Riqueza: ${input.wheelData.length ? JSON.stringify(input.wheelData) : 'Não preenchida.'}
+    - Reflexões Pessoais: ${input.reflections.length ? JSON.stringify(input.reflections) : 'Nenhuma reflexão escrita.'}
 
-    Based on this data, please generate a single paragraph of analysis that does the following:
-    1.  Acknowledge a specific positive point from their reflections or a goal they are progressing on.
-    2.  Gently point out a potential area for improvement, linking it to their transactions or their lowest-scoring Wealth Wheel category.
-    3.  Suggest one small, concrete, and actionable step they could take next month.
-    4.  End with a motivational and encouraging sentence.
+    Com base nesses dados, gere um único parágrafo de análise que faça o seguinte:
+    1. Reconheça um ponto positivo específico de suas reflexões ou uma meta em que estão progredindo.
+    2. Aponte gentilmente uma área potencial para melhoria, vinculando-a às suas transações ou à sua categoria de menor pontuação na Roda da Riqueza.
+    3. Sugira um passo pequeno, concreto e acionável que eles poderiam dar no próximo mês.
+    4. Termine com uma frase motivacional e encorajadora.
 
-    Keep the tone light, supportive, and non-judgmental. Do not sound like a robot. Write as a human coach would.
-    The entire analysis should be a single paragraph.
-  `,
-});
+    Mantenha o tom leve, solidário e sem julgamentos. Não soe como um robô. Escreva como um coach humano faria.
+    A análise inteira deve ser um único parágrafo.
+  `;
+  
+  const result = await ai.generateText({
+      prompt: prompt,
+      temperature: 0.7,
+      maxOutputTokens: 1000,
+  });
 
-export const generateInsightsFlow = ai.defineFlow(
-  {
-    name: 'generateInsightsFlow',
-    inputSchema: GenerateInsightsInputSchema,
-    outputSchema: GenerateInsightsOutputSchema,
-  },
-  async (input) => {
-    const { output } = await generateInsightsPrompt(input);
-    return output!;
-  }
-);
+  return { analysis: result?.output || 'Não foi possível gerar a análise no momento.' };
+}

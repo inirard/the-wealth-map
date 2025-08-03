@@ -13,20 +13,15 @@ export const ChatInputSchema = z.object({
  */
 export async function chatFlow(
   input: z.infer<typeof ChatInputSchema>,
-  ai?: any
+  ai: any
 ) {
-  try {
-    if (!ai) throw new Error("Instância da IA não encontrada.");
+  if (!ai) throw new Error("Instância da IA não encontrada.");
 
-    const result = await ai.generateText({
-      prompt: input.context ? `${input.context}\nUsuário: ${input.message}` : input.message,
-      temperature: 0.7,
-      maxOutputTokens: 500,
-    });
+  const result = await ai.generateText({
+    prompt: input.context ? `${input.context}\nUsuário: ${input.message}` : input.message,
+    temperature: 0.7,
+    maxOutputTokens: 500,
+  });
 
-    return { response: (result as any)?.output || "Não foi possível gerar uma resposta no momento." };
-  } catch (error: any) {
-    console.error("Erro no chatFlow:", error);
-    throw new Error("Erro ao gerar a resposta da IA.");
-  }
+  return { response: result?.output || "Não foi possível gerar uma resposta no momento." };
 }

@@ -1,0 +1,36 @@
+### 1️⃣ Teste - Prompt único (gemini-2.0-flash)
+POST http://127.0.0.1:5001/the-wealth-map/us-central1/callGemini
+Content-Type: application/json
+
+{
+  "prompt": "Escreva uma frase motivacional curta sobre perseverança."
+}
+
+###
+
+### 2️⃣ Teste - Múltiplos prompts (gemini-2.0-flash)
+POST http://127.0.0.1:5001/the-wealth-map/us-central1/callGemini
+Content-Type: application/json
+
+{
+  "prompts": [
+    "Dê uma frase motivacional.",
+    "Explique o que é blockchain em uma frase.",
+    "Sugira um slogan para um aplicativo de gestão financeira."
+  ]
+}
+
+###
+
+### 3️⃣ Teste - Múltiplos prompts (gemini-2.5-pro)
+POST http://127.0.0.1:5001/the-wealth-map/us-central1/callGemini
+Content-Type: application/json
+
+{
+  "model": "gemini-2.5-pro",
+  "prompts": [
+    "Dê uma frase motivacional curta.",
+    "Explique o que é blockchain em uma frase.",
+    "Sugira um slogan para um app financeiro."
+  ]
+}
