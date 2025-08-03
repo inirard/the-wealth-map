@@ -12,7 +12,7 @@ import { validKeys } from '@/lib/keys';
 
 export default function WelcomePage() {
   const [name, setName] = useState('');
-  const [, setUsername] = useLocalStorage('username', '');
+  const [username, setUsername] = useLocalStorage('username', '');
   const [licenseKey] = useLocalStorage<string | null>('license_key', null);
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
@@ -24,6 +24,7 @@ export default function WelcomePage() {
   useEffect(() => {
     // This effect runs on the client after hydration.
     // If the user lands here without a valid license key, redirect to activation.
+    // This prevents users from getting stuck on this page.
     if (isClient && (!licenseKey || !validKeys.includes(licenseKey))) {
         router.replace('/activate');
     }

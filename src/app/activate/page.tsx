@@ -16,33 +16,35 @@ export default function ActivatePage() {
   const [key, setKey] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
   const router = useRouter();
   const { toast } = useToast();
+  
+  // These hooks are called at the top level, but their values are only
+  // relevant inside the useEffect, which runs client-side.
+  const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
+  const [username] = useLocalStorage<string | null>('username', '');
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This effect runs once on the client to confirm hydration
-    // and then checks if the user is already activated.
+    // This effect runs once on the client after hydration.
+    // This is now the main entry point logic for the app.
     setIsClient(true);
   }, []);
 
   useEffect(() => {
+    // This logic runs only on the client side.
     if (isClient) {
-      const storedKey = localStorage.getItem('license_key');
-      const storedUsername = localStorage.getItem('username');
-
-      if (storedKey && validKeys.includes(JSON.parse(storedKey))) {
-        if (storedUsername && JSON.parse(storedUsername)) {
+      // If a valid key already exists, redirect the user.
+      if (licenseKey && validKeys.includes(licenseKey)) {
+        if (username) {
           router.replace('/dashboard');
         } else {
           router.replace('/welcome');
         }
       }
-      // If no valid key, we stay on this page to show the form.
+      // If no valid key, we stay on this page to show the activation form.
     }
-  }, [isClient, router]);
-
+  }, [isClient, licenseKey, username, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,8 +68,8 @@ export default function ActivatePage() {
     }, 500);
   };
   
-  // While checking for existing key on the client, or if we are redirecting, show a loading state.
-  if (!isClient) {
+  // While the client is hydrating and checking for an existing key, show a loading state.
+  if (!isClient || (licenseKey && validKeys.includes(licenseKey))) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <div className="animate-pulse text-muted-foreground">A carregar...</div>
@@ -75,7 +77,7 @@ export default function ActivatePage() {
     );
   }
 
-  // Only show the activation form if the user is on the client AND has no valid key.
+  // Only show the activation form if on the client AND there is no valid key.
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10"></div>
