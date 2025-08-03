@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -39,38 +40,17 @@ export default function ProjectionsPage() {
         setAiError(false);
 
         try {
-            // Temporarily disable AI call
-            throw new Error(t('ai_error_description'));
-
-            /*
-            const payload = {
-                language,
-                goals,
-                transactions,
-                currentDate: new Date().toISOString(),
-            };
-            
-            const response = await fetch('/api/ai', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
+            // AI functionality is temporarily disabled. We will simulate an error to show the user a message.
+            const simulatedError = new Error(t('ai_error_description'));
+            console.error("Error generating AI predictions:", simulatedError);
+            setAiError(true);
+            toast({
+                variant: "destructive",
+                title: t('ai_error_title'),
+                description: simulatedError.message || t('ai_error_description'),
             });
-
-             if (!response.ok) {
-                 const errorData = await response.json();
-                 throw new Error(errorData.error || `API Error: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-            
-            if (!result.success) {
-                 throw new Error(result.error || 'AI request failed');
-            }
-            
-            setAiPredictions(result.data as PredictiveInsightsOutput);
-            */
-
         } catch (error: any) {
+            // This catch block will handle any unexpected errors, though the above code simulates one.
             console.error("Error generating AI predictions:", error);
             setAiError(true);
             toast({
