@@ -17,8 +17,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <AppSidebar />
         <SidebarInset>
           <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6 no-print">
-            {/* Ajuste de tipagem para evitar erro no className */}
-            <SidebarTrigger {...({ className: "hover:text-primary" } as any)} />
+            <SidebarTrigger className="hover:text-primary" />
             <div className="flex items-center gap-2">
               <Chatbot />
             </div>
