@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -6,8 +7,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useI18n } from '@/hooks/use-i18n';
-import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types';
-import type { ChatMessage, ChatOutput } from '@/lib/ai-types';
+import type { Goal, Transaction, WealthWheelData, Reflection, ChatMessage } from '@/lib/types';
 import Textarea from 'react-textarea-autosize';
 import { Bot, Send, User, X, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -56,43 +56,13 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
-            // Temporarily disable AI call
-            throw new Error(t('ai_error_description'));
-
-            /*
-            const payload = {
-                language,
-                history: messages,
-                message: input,
-                goals,
-                transactions,
-                wheelData,
-                reflections,
-            };
-
-            const response = await fetch('/api/ai', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ flow: 'chat', payload }),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `API Error: ${response.statusText}`);
-            }
-
-            const result = await response.json();
-
-            if (!result.success) {
-                 throw new Error(result.error || 'AI request failed');
-            }
-            
-            const chatOutput = result.data as ChatOutput;
-            const modelMessage: ChatMessage = { role: 'model', content: chatOutput.response };
+            // AI functionality is temporarily disabled.
+            // We will just show the user a message.
+            const modelMessage: ChatMessage = { role: 'model', content: t('ai_error_description') };
             setMessages(prev => [...prev, modelMessage]);
-            */
+
         } catch (error: any) {
-            console.error("Error calling chat flow:", error);
+            console.error("Error in chatbot:", error);
             const modelMessage: ChatMessage = { role: 'model', content: t('ai_error_description') };
             setMessages(prev => [...prev, modelMessage]);
         } finally {
