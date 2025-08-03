@@ -1,43 +1,56 @@
-
-import { z } from "zod";
-import { ChatInputSchema } from '@/lib/ai-types';
+'use server';
 
 /**
- * Flow para gerar respostas de chat usando Gemini.
- * @param input - Dados validados do chat.
- * @param ai - Instância inicializada do Genkit.
+ * @fileOverview A chat flow for interacting with the AI financial coach.
+ * - chatFlow - A function that handles the chat interaction.
  */
-export async function chatFlow(
-  input: z.infer<typeof ChatInputSchema>,
-  ai: any
-) {
-  if (!ai) throw new Error("Instância da IA não encontrada.");
 
-  const prompt = `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
-Your answers MUST be in the user's specified language: ${input.language}.
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+import {
+  ChatInputSchema,
+  ChatOutputSchema,
+  type ChatInput,
+  type ChatOutput,
+} from '@/lib/ai-types';
+
+const chatPrompt = ai.definePrompt({
+  name: 'chatPrompt',
+  input: {schema: ChatInputSchema},
+  output: {schema: ChatOutputSchema},
+  prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
+Your answers MUST be in the user's specified language: {{language}}.
 
 You have access to the user's financial data to provide personalized responses.
-- User's financial goals: ${input.goals.length > 0 ? JSON.stringify(input.goals) : 'No goals set.'}
-- User's recent transactions: ${input.transactions.length > 0 ? JSON.stringify(input.transactions) : 'No transactions recorded.'}
-- User's Wealth Wheel assessment: ${input.wheelData.length > 0 ? JSON.stringify(input.wheelData) : 'Not completed.'}
-- User's personal reflections: ${input.reflections.length > 0 ? JSON.stringify(input.reflections) : 'No reflections written.'}
+- User's financial goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
+- User's recent transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
+- User's Wealth Wheel assessment: {{#if wheelData.length}}{{json wheelData}}{{else}}Not completed.{{/if}}
+- User's personal reflections: {{#if reflections.length}}{{json reflections}}{{else}}No reflections written.{{/if}}
 
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
 Conversation History:
-${input.history.map(m => `${m.role === 'model' ? 'AI' : 'User'}: ${m.content}`).join('\n')}
+{{#each history}}
+  {{#if (eq role "model")}}
+    AI: {{{content}}}
+  {{else}}
+    User: {{{content}}}
+  {{/if}}
+{{/each}}
 
 User's new message:
-${input.message}
-`;
+{{{message}}}
+`,
+});
 
-  const { output } = await ai.generate({
-    prompt: prompt,
-    model: 'googleai/gemini-pro',
-    config: {
-      temperature: 0.7,
-    }
-  });
-
-  return { response: output?.text || "Não foi possível gerar uma resposta no momento." };
-}
+export const chatFlow = ai.defineFlow(
+  {
+    name: 'chatFlow',
+    inputSchema: ChatInputSchema,
+    outputSchema: ChatOutputSchema,
+  },
+  async (input: ChatInput): Promise<ChatOutput> => {
+    const {output} = await chatPrompt(input);
+    return output!;
+  }
+);

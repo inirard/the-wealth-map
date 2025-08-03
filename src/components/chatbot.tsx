@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -7,7 +6,9 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { useI18n } from '@/hooks/use-i18n';
-import type { Goal, Transaction, WealthWheelData, Reflection, ChatMessage } from '@/lib/types';
+import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types';
+import type { ChatMessage as AIChatMessage } from '@/lib/ai-types';
+import type { ChatOutput } from '@/lib/ai-types';
 import Textarea from 'react-textarea-autosize';
 import { Bot, Send, User, X, Loader } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -16,14 +17,13 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function Chatbot() {
     const [isOpen, setIsOpen] = useState(false);
-    const [messages, setMessages] = useState<ChatMessage[]>([]);
+    const [messages, setMessages] = useState<AIChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const { t, language } = useI18n();
     const { toast } = useToast();
     
-    // Data hooks are kept for future re-enabling
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
@@ -50,21 +50,50 @@ export default function Chatbot() {
         e.preventDefault();
         if (!input.trim() || isLoading) return;
 
-        const userMessage: ChatMessage = { role: 'user', content: input };
+        const userMessage: AIChatMessage = { role: 'user', content: input };
         setMessages(prev => [...prev, userMessage]);
         setInput('');
         setIsLoading(true);
 
         try {
-            // AI functionality is temporarily disabled.
-            // We will just show the user a message.
-            const modelMessage: ChatMessage = { role: 'model', content: t('ai_error_description') };
-            setMessages(prev => [...prev, modelMessage]);
+            const payload = {
+                language,
+                history: messages,
+                message: input,
+                goals,
+                transactions,
+                wheelData,
+                reflections,
+            };
 
-        } catch (error: any) {
-            console.error("Error in chatbot:", error);
-            const modelMessage: ChatMessage = { role: 'model', content: t('ai_error_description') };
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flow: 'chat', payload }),
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `API Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (!result.success) {
+                 throw new Error(result.error || 'AI request failed');
+            }
+            
+            const chatOutput = result.data as ChatOutput;
+            const modelMessage: AIChatMessage = { role: 'model', content: chatOutput.response };
             setMessages(prev => [...prev, modelMessage]);
+        } catch (error: any) {
+            console.error("Error calling chat flow:", error);
+            toast({
+                variant: "destructive",
+                title: t('ai_error_title'),
+                description: error.message || t('ai_error_description'),
+            });
+            setMessages(prev => prev.slice(0, -1));
         } finally {
             setIsLoading(false);
         }

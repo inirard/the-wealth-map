@@ -80,10 +80,6 @@ export default function ReflectionPage() {
         setLsReflections(reflections);
 
         try {
-            // Temporarily disable AI call
-            throw new Error(t('ai_error_description'));
-            
-            /*
             const payload = {
                 language,
                 goals,
@@ -97,7 +93,7 @@ export default function ReflectionPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ flow: 'generateInsights', payload }),
             });
-
+            
             if (!response.ok) {
                  const errorData = await response.json();
                  throw new Error(errorData.error || `API Error: ${response.statusText}`);
@@ -110,7 +106,6 @@ export default function ReflectionPage() {
             }
             
             setAiInsight(result.data as GenerateInsightsOutput);
-            */
         } catch (error: any) {
             console.error("Error generating AI insights:", error);
             setAiError(true);

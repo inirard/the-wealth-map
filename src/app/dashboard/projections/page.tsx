@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -40,16 +39,33 @@ export default function ProjectionsPage() {
         setAiError(false);
 
         try {
-            // AI functionality is temporarily disabled. We will show the user a message.
-            setAiError(true);
-            toast({
-                variant: "destructive",
-                title: t('ai_error_title'),
-                description: t('ai_error_description'),
+            const payload = {
+                language,
+                goals,
+                transactions,
+                currentDate: new Date().toISOString(),
+            };
+            
+            const response = await fetch('/api/ai', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
             });
+
+            if (!response.ok) {
+                 const errorData = await response.json();
+                 throw new Error(errorData.error || `API Error: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+            
+            if (!result.success) {
+                 throw new Error(result.error || 'AI request failed');
+            }
+            
+            setAiPredictions(result.data as PredictiveInsightsOutput);
+
         } catch (error: any) {
-            // This catch block will handle any unexpected errors
-            console.error("An unexpected error occurred:", error);
             setAiError(true);
             toast({
                 variant: "destructive",
@@ -91,15 +107,11 @@ export default function ProjectionsPage() {
     );
     
     const renderContent = () => {
-        if (!isClient) { // Don't show skeleton if loading is not happening
-            return null;
-        }
-
-        if (isLoading) {
+        if (!isClient || isLoading) {
             return renderSkeletons();
         }
         
-        if(aiError && !aiPredictions) { // Show error only if there are no old predictions to display
+        if(aiError) {
             return (
                 <Card className="col-span-full">
                     <CardContent className="p-6">

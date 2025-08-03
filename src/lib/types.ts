@@ -1,4 +1,3 @@
-
 export interface Goal {
   id: string;
   name: string;
@@ -38,3 +37,9 @@ export interface Investment {
 }
 
 export type Language = 'pt' | 'en' | 'es' | 'fr';
+
+// This type is compatible with the AI ChatMessage schema
+export interface ChatMessage {
+  role: 'user' | 'model';
+  content: string;
+}
