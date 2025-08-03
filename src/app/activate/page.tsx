@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,9 +16,24 @@ export default function ActivatePage() {
   const [key, setKey] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
+  const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
+  const [username] = useLocalStorage<string | null>('username', '');
   const router = useRouter();
   const { toast } = useToast();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+    // If the user already has a valid key, redirect them appropriately.
+    // This makes this page the central entry logic.
+    if (licenseKey && validKeys.includes(licenseKey)) {
+      if (username) {
+        router.replace('/dashboard');
+      } else {
+        router.replace('/welcome');
+      }
+    }
+  }, [licenseKey, username, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,6 +48,7 @@ export default function ActivatePage() {
           title: 'Ativação bem-sucedida!',
           description: 'A preparar a sua conta...',
         });
+        // After setting the key, redirect to welcome page
         router.push('/welcome');
       } else {
         setError('Chave de licença inválida. Por favor, verifique e tente novamente.');
@@ -40,6 +56,15 @@ export default function ActivatePage() {
       }
     }, 500);
   };
+  
+  // While checking for existing key, show a loading state
+  if (!isClient || (licenseKey && validKeys.includes(licenseKey))) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-background">
+        <div className="animate-pulse text-muted-foreground">A carregar...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
