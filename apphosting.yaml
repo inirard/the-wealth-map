@@ -1,11 +1,14 @@
-# Este ficheiro é para implementações baseadas em servidor no Firebase App Hosting.
-# Quando a aplicação utiliza funcionalidades de servidor como as Server Actions do Next.js,
-# este ficheiro ajuda a configurar o ambiente de execução.
+# Settings for the backend server
 runConfig:
   cpu: 1
   maxInstances: 10
-  env:
-    - variable: GEMINI_API_KEY
-      secret: GEMINI_API_KEY
+
+# Environment variables and secrets
+env:
+  # Make the GEMINI_API_KEY secret available as an environment variable
+  - variable: GEMINI_API_KEY
+    secret: GEMINI_API_KEY
+
+# Next.js framework requires Node.js 20
 stack:
   name: 'nodejs20'
