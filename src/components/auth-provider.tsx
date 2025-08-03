@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { ReactNode, useEffect, useState } from 'react';
@@ -11,16 +12,25 @@ interface AuthProviderProps {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
+  // We need to use a state that tells us when client-side hooks are ready
+  const [isClient, setIsClient] = useState(false);
   const [licenseKey] = useLocalStorage<string | null>('license_key', null);
   const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
-    if (!licenseKey || !validKeys.includes(licenseKey)) {
-      router.replace('/activate');
-    } else {
-      setIsVerified(true);
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    // Only run this logic on the client side
+    if (isClient) {
+      if (!licenseKey || !validKeys.includes(licenseKey)) {
+        router.replace('/activate');
+      } else {
+        setIsVerified(true);
+      }
     }
-  }, [licenseKey, router]);
+  }, [isClient, licenseKey, router]);
 
   if (!isVerified) {
     return (
