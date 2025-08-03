@@ -41,10 +41,10 @@ export default function Chatbot() {
     }, [messages]);
     
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && messages.length === 0) {
             setMessages([{ role: 'model', content: t('chatbot_welcome') }]);
         }
-    }, [isOpen, t]);
+    }, [isOpen, t, messages]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -58,6 +58,7 @@ export default function Chatbot() {
 
         try {
             const formattedHistory = newMessages
+                .slice(0, -1) // Exclude the last message (current user input) from history
                 .map(msg => (msg.role === 'model' ? `AI: ${msg.content}` : `User: ${msg.content}`))
                 .join('\n');
             
@@ -77,14 +78,9 @@ export default function Chatbot() {
                 body: JSON.stringify({ flow: 'chat', payload }),
             });
             
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || `API Error: ${response.statusText}`);
-            }
-
             const result = await response.json();
 
-            if (!result.success) {
+            if (!response.ok || !result.success) {
                  throw new Error(result.error || 'AI request failed');
             }
             
@@ -92,13 +88,16 @@ export default function Chatbot() {
             const modelMessage: AIChatMessage = { role: 'model', content: chatOutput.response };
             setMessages(prev => [...prev, modelMessage]);
         } catch (error: any) {
-            console.error("Error calling chat flow:", error);
+            const errorMessage = error.message || t('ai_error_description');
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
-                description: error.message || t('ai_error_description'),
+                description: errorMessage,
             });
-            setMessages(prev => prev.slice(0, -1));
+            // Add an error message from the bot
+            const modelErrorMessage: AIChatMessage = { role: 'model', content: errorMessage };
+            setMessages(prev => [...prev, modelErrorMessage]);
+            // Do not remove user message, so they know what failed
         } finally {
             setIsLoading(false);
         }

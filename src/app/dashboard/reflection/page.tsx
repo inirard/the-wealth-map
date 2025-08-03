@@ -46,7 +46,7 @@ export default function ReflectionPage() {
     const [username] = useLocalStorage<string>('username', 'User');
     const [aiInsight, setAiInsight] = useLocalStorage<GenerateInsightsOutput | null>('aiInsight', null);
     const [isLoading, setIsLoading] = useState(false);
-    const [aiError, setAiError] = useState<boolean>(false);
+    const [aiError, setAiError] = useState<string | null>(null);
     const [isDownloading, setIsDownloading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
@@ -76,7 +76,7 @@ export default function ReflectionPage() {
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
-        setAiError(false);
+        setAiError(null);
         setLsReflections(reflections);
 
         try {
@@ -94,25 +94,21 @@ export default function ReflectionPage() {
                 body: JSON.stringify({ flow: 'generateInsights', payload }),
             });
             
-            if (!response.ok) {
-                 const errorData = await response.json();
-                 throw new Error(errorData.error || `API Error: ${response.statusText}`);
-            }
-
             const result = await response.json();
             
-            if (!result.success) {
+            if (!response.ok || !result.success) {
                 throw new Error(result.error || 'AI request failed');
             }
             
             setAiInsight(result.data as GenerateInsightsOutput);
         } catch (error: any) {
             console.error("Error generating AI insights:", error);
-            setAiError(true);
+            const errorMessage = error.message || t('ai_error_description');
+            setAiError(errorMessage);
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
-                description: error.message || t('ai_error_description'),
+                description: errorMessage,
             });
         } finally {
             setIsLoading(false);
@@ -234,7 +230,7 @@ export default function ReflectionPage() {
                         ) : aiError ? (
                              <div className="flex items-start gap-3 text-destructive">
                                 <TriangleAlert className="h-5 w-5 flex-shrink-0" />
-                                <p className="text-sm font-medium">{t('ai_coach_error_message')}</p>
+                                <p className="text-sm font-medium">{aiError}</p>
                             </div>
                         ) : aiInsight ? (
                             <div className="flex items-start gap-4">

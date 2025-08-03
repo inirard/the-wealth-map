@@ -1,30 +1,60 @@
 import {NextResponse} from 'next/server';
-import {genkit} from 'genkit';
+import {genkit, Flow, type Generation} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
+import {z} from 'zod';
 
-// Import the specific flow functions
-import {chatFlow} from '@/ai/flows/chat-flow';
-import {generateInsights} from '@/ai/flows/generate-insights-flow';
-import {predictiveInsights} from '@/ai/flows/predictive-insights-flow';
-
+// Import the specific flow functions and schemas from their files
 import {
+  chatFlow,
   ChatInputSchema,
+  type ChatInput,
+  type ChatOutput,
+} from '@/ai/flows/chat-flow';
+import {
+  generateInsights,
   GenerateInsightsInputSchema,
+  type GenerateInsightsInput,
+  type GenerateInsightsOutput,
+} from '@/ai/flows/generate-insights-flow';
+import {
+  predictiveInsights,
   PredictiveInsightsInputSchema,
-} from '@/lib/ai-types';
+  type PredictiveInsightsInput,
+  type PredictiveInsightsOutput,
+} from '@/ai/flows/predictive-insights-flow';
+
+// Define a map for flows to make routing cleaner and more scalable
+const flowMap: Record<
+  string,
+  {
+    schema: z.ZodType<any, any, any>;
+    flow: Flow<any, any, any>;
+  }
+> = {
+  chat: {
+    schema: ChatInputSchema,
+    flow: chatFlow,
+  },
+  generateInsights: {
+    schema: GenerateInsightsInputSchema,
+    flow: generateInsights,
+  },
+  predictFinancialFuture: {
+    schema: PredictiveInsightsInputSchema,
+    flow: predictiveInsights,
+  },
+};
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const {flow, payload} = body;
+    const {flow: flowName, payload} = body;
 
-    if (!flow || !payload) {
-      return NextResponse.json(
-        {error: "Os campos 'flow' e 'payload' são obrigatórios."},
-        {status: 400}
-      );
+    // Validate if the requested flow exists
+    if (!flowName || !flowMap[flowName]) {
+      return NextResponse.json({error: 'Flow desconhecido.'}, {status: 400});
     }
-    
+
     // Initialize Genkit with the API key from environment variables.
     // This is secure and works in both local dev (from .env) and production (from Secret Manager).
     const apiKey = process.env.GEMINI_API_KEY;
@@ -35,58 +65,34 @@ export async function POST(req: Request) {
         {status: 500}
       );
     }
-    
+
     genkit({
       plugins: [googleAI({apiKey})],
     });
 
-    let result;
+    const {schema, flow} = flowMap[flowName];
 
-    // Use a switch to route to the correct flow based on the 'flow' parameter
-    switch (flow) {
-      case 'chat': {
-        const chatInput = ChatInputSchema.safeParse(payload);
-        if (!chatInput.success) {
-          return NextResponse.json(
-            {error: "Payload inválido para 'chat'.", details: chatInput.error.format()},
-            {status: 400}
-          );
-        }
-        result = await chatFlow(chatInput.data);
-        break;
-      }
-      case 'generateInsights': {
-        const insightsInput = GenerateInsightsInputSchema.safeParse(payload);
-        if (!insightsInput.success) {
-          return NextResponse.json(
-            {error: "Payload inválido para 'generateInsights'.", details: insightsInput.error.format()},
-            {status: 400}
-          );
-        }
-        result = await generateInsights(insightsInput.data);
-        break;
-      }
-      case 'predictFinancialFuture': {
-        const predictiveInput = PredictiveInsightsInputSchema.safeParse(payload);
-        if (!predictiveInput.success) {
-          return NextResponse.json(
-            {error: "Payload inválido para 'predictFinancialFuture'.", details: predictiveInput.error.format()},
-            {status: 400}
-          );
-        }
-        result = await predictiveInsights(predictiveInput.data);
-        break;
-      }
-      default:
-        return NextResponse.json({error: 'Flow desconhecido.'}, {status: 400});
+    // Validate the payload against the flow's schema
+    const parsedPayload = schema.safeParse(payload);
+    if (!parsedPayload.success) {
+      return NextResponse.json(
+        {
+          error: `Payload inválido para '${flowName}'.`,
+          details: parsedPayload.error.format(),
+        },
+        {status: 400}
+      );
     }
+
+    // Run the flow with the validated data
+    const result = await flow(parsedPayload.data);
 
     return NextResponse.json({success: true, data: result});
   } catch (error: any) {
     console.error(`Erro na rota /api/ai:`, error);
-    return NextResponse.json(
-      {error: error.message || 'Erro interno ao processar a IA.'},
-      {status: 500}
-    );
+    // Provide a more generic error message to the client
+    const errorMessage =
+      error instanceof Error ? error.message : 'Erro interno ao processar a IA.';
+    return NextResponse.json({error: errorMessage}, {status: 500});
   }
 }
