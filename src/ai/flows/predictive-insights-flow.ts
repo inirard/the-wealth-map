@@ -7,11 +7,14 @@
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
-  PredictiveInsightsInputSchema,
+  PredictiveInsightsInputSchema as PredictiveInsightsInputSchemaBase,
   PredictiveInsightsOutputSchema,
   type PredictiveInsightsInput,
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
+
+export const PredictiveInsightsInputSchema = PredictiveInsightsInputSchemaBase;
+
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',

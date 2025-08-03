@@ -5,7 +5,9 @@
  */
 import { ai } from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
+import { GenerateInsightsInputSchema as GenerateInsightsInputSchemaBase, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
+
+export const GenerateInsightsInputSchema = GenerateInsightsInputSchemaBase;
 
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',

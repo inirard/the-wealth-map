@@ -7,20 +7,14 @@ import {z} from 'zod';
 import {
   chatFlow,
   ChatInputSchema,
-  type ChatInput,
-  type ChatOutput,
 } from '@/ai/flows/chat-flow';
 import {
   generateInsights,
   GenerateInsightsInputSchema,
-  type GenerateInsightsInput,
-  type GenerateInsightsOutput,
 } from '@/ai/flows/generate-insights-flow';
 import {
   predictiveInsights,
   PredictiveInsightsInputSchema,
-  type PredictiveInsightsInput,
-  type PredictiveInsightsOutput,
 } from '@/ai/flows/predictive-insights-flow';
 
 // Define a map for flows to make routing cleaner and more scalable

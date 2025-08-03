@@ -9,11 +9,13 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
-  ChatInputSchema,
+  ChatInputSchema as ChatInputSchemaBase,
   ChatOutputSchema,
   type ChatInput,
   type ChatOutput,
 } from '@/lib/ai-types';
+
+export const ChatInputSchema = ChatInputSchemaBase;
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
