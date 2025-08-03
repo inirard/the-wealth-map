@@ -12,27 +12,32 @@ interface AuthProviderProps {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
-  // We need to use a state that tells us when client-side hooks are ready
-  const [isClient, setIsClient] = useState(false);
-  const [licenseKey] = useLocalStorage<string | null>('license_key', null);
   const [isVerified, setIsVerified] = useState(false);
+  
+  // We need to call useLocalStorage at the top level to follow rules of hooks.
+  // The value will be updated once the client hydrates.
+  const [licenseKey] = useLocalStorage<string | null>('license_key', null);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    // Only run this logic on the client side
-    if (isClient) {
-      if (!licenseKey || !validKeys.includes(licenseKey)) {
-        router.replace('/activate');
-      } else {
-        setIsVerified(true);
-      }
+    // This effect will re-run on the client when `licenseKey` is updated from localStorage.
+    if (licenseKey === null) {
+      // If the key is still the initial value, we might be on the server or the client
+      // hasn't hydrated yet. We wait.
+      return;
     }
-  }, [isClient, licenseKey, router]);
+
+    if (validKeys.includes(licenseKey)) {
+      // If the key is valid, we allow rendering the children.
+      setIsVerified(true);
+    } else {
+      // If the key is invalid or not present, redirect.
+      router.replace('/activate');
+    }
+  }, [licenseKey, router]);
 
   if (!isVerified) {
+    // Show a loading state while we verify the key on the client.
+    // This prevents rendering the dashboard and then quickly redirecting.
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <div className="animate-pulse text-muted-foreground">A verificar acesso...</div>
