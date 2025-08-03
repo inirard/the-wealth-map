@@ -42,7 +42,7 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  history: z.string(), // Simplified to string
+  history: z.array(ChatMessageSchema),
   message: z.string(),
   goals: z.array(GoalSchema),
   transactions: z.array(TransactionSchema),
@@ -74,8 +74,8 @@ export type GenerateInsightsOutput = z.infer<typeof GenerateInsightsOutputSchema
 
 export const PredictiveInsightsInputSchema = z.object({
     language: z.enum(['pt', 'en', 'es', 'fr']),
-    goals: z.string(), // Simplified to string
-    transactions: z.string(), // Simplified to string
+    goals: z.array(GoalSchema),
+    transactions: z.array(TransactionSchema),
     currentDate: z.string().describe('The current date in ISO format.'),
 });
 export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;

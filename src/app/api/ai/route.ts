@@ -21,19 +21,11 @@ const flowMap: Record<
   {
     schema: z.ZodType<any, any, any>;
     flow: Flow<any, any, any>;
-    preprocessor?: (payload: any) => any;
   }
 > = {
   chat: {
     schema: ChatInputSchema,
     flow: chatFlow,
-    preprocessor: (payload) => {
-      // The history is now an array of objects, convert it to a simple string log.
-      const historyText = payload.history
-        .map((msg: {role: string; content: string}) => `${msg.role}: ${msg.content}`)
-        .join('\n');
-      return { ...payload, history: historyText };
-    }
   },
   generateInsights: {
     schema: GenerateInsightsInputSchema,
@@ -42,13 +34,6 @@ const flowMap: Record<
   predictFinancialFuture: {
     schema: PredictiveInsightsInputSchema,
     flow: predictiveInsights,
-    preprocessor: (payload) => {
-        return {
-            ...payload,
-            goals: payload.goals.length > 0 ? JSON.stringify(payload.goals) : "No goals set.",
-            transactions: payload.transactions.length > 0 ? JSON.stringify(payload.transactions) : "No transactions recorded.",
-        };
-    }
   },
 };
 
@@ -74,14 +59,9 @@ export async function POST(req: Request) {
       plugins: [googleAI({apiKey})],
     });
 
-    const {schema, flow, preprocessor} = flowMap[flowName];
+    const {schema, flow} = flowMap[flowName];
     
-    let processedPayload = payload;
-    if (preprocessor) {
-        processedPayload = preprocessor(payload);
-    }
-
-    const parsedPayload = schema.safeParse(processedPayload);
+    const parsedPayload = schema.safeParse(payload);
     if (!parsedPayload.success) {
       return NextResponse.json(
         {
