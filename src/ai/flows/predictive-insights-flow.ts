@@ -26,8 +26,8 @@ Your response MUST be in the user's specified language: {{language}}.
 The current date is {{currentDate}}.
 
 Analyze the user's financial data:
-- Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-- Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
+- Goals: {{goals}}
+- Transactions: {{transactions}}
 
 Based on the data, generate the following predictive insights:
 

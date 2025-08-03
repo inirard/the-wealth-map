@@ -52,9 +52,19 @@ export default function ProjectionsPage() {
                 body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
             });
 
+            if (!response.ok) {
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch(e) {
+                    errorData = { error: t('ai_error_description') };
+                }
+                throw new Error(errorData.error || t('ai_error_description'));
+            }
+
             const result = await response.json();
             
-            if (!response.ok || !result.success) {
+            if (!result.success) {
                  throw new Error(result.error || 'AI request failed');
             }
             

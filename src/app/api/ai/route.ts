@@ -1,9 +1,8 @@
 import {NextResponse} from 'next/server';
-import {genkit, Flow, type Generation} from 'genkit';
+import {genkit, Flow} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'zod';
 
-// Import the specific flow functions and schemas from their files
 import {
   chatFlow,
   ChatInputSchema,
@@ -17,17 +16,23 @@ import {
   PredictiveInsightsInputSchema,
 } from '@/ai/flows/predictive-insights-flow';
 
-// Define a map for flows to make routing cleaner and more scalable
 const flowMap: Record<
   string,
   {
     schema: z.ZodType<any, any, any>;
     flow: Flow<any, any, any>;
+    preprocessor?: (payload: any) => any;
   }
 > = {
   chat: {
     schema: ChatInputSchema,
     flow: chatFlow,
+    preprocessor: (payload) => {
+      const historyText = payload.history
+        .map((msg: {role: string; content: string}) => `${msg.role}: ${msg.content}`)
+        .join('\n');
+      return { ...payload, history: historyText };
+    }
   },
   generateInsights: {
     schema: GenerateInsightsInputSchema,
@@ -36,6 +41,13 @@ const flowMap: Record<
   predictFinancialFuture: {
     schema: PredictiveInsightsInputSchema,
     flow: predictiveInsights,
+    preprocessor: (payload) => {
+        return {
+            ...payload,
+            goals: payload.goals.length > 0 ? JSON.stringify(payload.goals) : "No goals set.",
+            transactions: payload.transactions.length > 0 ? JSON.stringify(payload.transactions) : "No transactions recorded.",
+        };
+    }
   },
 };
 
@@ -44,13 +56,10 @@ export async function POST(req: Request) {
     const body = await req.json();
     const {flow: flowName, payload} = body;
 
-    // Validate if the requested flow exists
     if (!flowName || !flowMap[flowName]) {
       return NextResponse.json({error: 'Flow desconhecido.'}, {status: 400});
     }
 
-    // Initialize Genkit with the API key from environment variables.
-    // This is secure and works in both local dev (from .env) and production (from Secret Manager).
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       console.error('GEMINI_API_KEY not found in environment variables.');
@@ -64,10 +73,14 @@ export async function POST(req: Request) {
       plugins: [googleAI({apiKey})],
     });
 
-    const {schema, flow} = flowMap[flowName];
+    const {schema, flow, preprocessor} = flowMap[flowName];
+    
+    let processedPayload = payload;
+    if (preprocessor) {
+        processedPayload = preprocessor(payload);
+    }
 
-    // Validate the payload against the flow's schema
-    const parsedPayload = schema.safeParse(payload);
+    const parsedPayload = schema.safeParse(processedPayload);
     if (!parsedPayload.success) {
       return NextResponse.json(
         {
@@ -78,13 +91,11 @@ export async function POST(req: Request) {
       );
     }
 
-    // Run the flow with the validated data
     const result = await flow(parsedPayload.data);
 
     return NextResponse.json({success: true, data: result});
   } catch (error: any) {
     console.error(`Erro na rota /api/ai:`, error);
-    // Provide a more generic error message to the client
     const errorMessage =
       error instanceof Error ? error.message : 'Erro interno ao processar a IA.';
     return NextResponse.json({error: errorMessage}, {status: 500});
