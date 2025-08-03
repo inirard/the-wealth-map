@@ -51,14 +51,19 @@ export default function Chatbot() {
         if (!input.trim() || isLoading) return;
 
         const userMessage: AIChatMessage = { role: 'user', content: input };
-        setMessages(prev => [...prev, userMessage]);
+        const newMessages = [...messages, userMessage];
+        setMessages(newMessages);
         setInput('');
         setIsLoading(true);
 
         try {
+            const formattedHistory = newMessages
+                .map(msg => (msg.role === 'model' ? `AI: ${msg.content}` : `User: ${msg.content}`))
+                .join('\n');
+            
             const payload = {
                 language,
-                history: messages,
+                formattedHistory,
                 message: input,
                 goals,
                 transactions,

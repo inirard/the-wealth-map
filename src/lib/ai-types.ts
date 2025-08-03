@@ -1,4 +1,3 @@
-
 import {z} from 'genkit';
 
 const GoalSchema = z.object({
@@ -43,7 +42,7 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  history: z.array(ChatMessageSchema),
+  formattedHistory: z.string().describe("The conversation history formatted as a single string."),
   message: z.string(),
   goals: z.array(GoalSchema),
   transactions: z.array(TransactionSchema),
