@@ -42,7 +42,7 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  formattedHistory: z.string().describe("The conversation history formatted as a single string."),
+  history: z.array(ChatMessageSchema).describe("The conversation history."),
   message: z.string(),
   goals: z.array(GoalSchema),
   transactions: z.array(TransactionSchema),

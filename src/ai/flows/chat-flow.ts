@@ -34,7 +34,13 @@ You have access to the user's financial data to provide personalized responses.
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
 Conversation History:
-{{{formattedHistory}}}
+{{#each history}}
+  {{#if (eq role "model")}}
+    AI: {{{content}}}
+  {{else}}
+    User: {{{content}}}
+  {{/if}}
+{{/each}}
 
 User's new message:
 {{{message}}}

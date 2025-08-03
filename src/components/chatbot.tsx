@@ -57,14 +57,9 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
-            const formattedHistory = newMessages
-                .slice(0, -1) // Exclude the last message (current user input) from history
-                .map(msg => (msg.role === 'model' ? `AI: ${msg.content}` : `User: ${msg.content}`))
-                .join('\n');
-            
             const payload = {
                 language,
-                formattedHistory,
+                history: newMessages.slice(0, -1), // Send history, excluding current message
                 message: input,
                 goals,
                 transactions,
@@ -78,9 +73,21 @@ export default function Chatbot() {
                 body: JSON.stringify({ flow: 'chat', payload }),
             });
             
+            // Check if the response is not ok (e.g., 500 server error)
+            if (!response.ok) {
+                // Try to get a specific error message from the server, otherwise use a generic one
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch (e) {
+                    errorData = { error: t('ai_error_description') };
+                }
+                throw new Error(errorData.error || t('ai_error_description'));
+            }
+
             const result = await response.json();
 
-            if (!response.ok || !result.success) {
+            if (!result.success) {
                  throw new Error(result.error || 'AI request failed');
             }
             
@@ -130,7 +137,7 @@ export default function Chatbot() {
                                         {msg.role === 'model' && <Bot className="h-6 w-6 text-primary flex-shrink-0" />}
                                         <div className={cn("rounded-2xl px-4 py-2 max-w-[80%] text-sm", 
                                             msg.role === 'model' ? 'bg-muted' : 'bg-primary text-primary-foreground')}>
-                                            <p>{msg.content}</p>
+                                            <p style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</p>
                                         </div>
                                          {msg.role === 'user' && <User className="h-6 w-6 text-foreground flex-shrink-0" />}
                                     </div>
