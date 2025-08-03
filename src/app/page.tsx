@@ -1,37 +1,25 @@
-
 "use client";
 
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLocalStorage } from '@/hooks/use-local-storage';
 
-export default function WelcomePage() {
+/**
+ * This is the root page of the application.
+ * Its sole purpose is to redirect the user to the correct starting point of the app flow,
+ * which is the activation page. The logic for authentication and further redirection
+ * is handled by the subsequent pages (`/activate`, `/welcome`, and AuthProvider).
+ */
+export default function RootPage() {
   const router = useRouter();
-  const [licenseKey] = useLocalStorage<string | null>('license_key', null);
-  const [username] = useLocalStorage<string | null>('username', null);
-  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    // This ensures the component has mounted on the client
-    // before we try to access localStorage values.
-    setIsClient(true);
-  }, []);
+    // Unconditionally redirect to the start of the activation flow.
+    // This simplifies the logic and prevents the app from getting stuck
+    // on this page trying to read from localStorage.
+    router.replace('/activate');
+  }, [router]);
 
-  useEffect(() => {
-    // Only run the redirect logic once we are on the client and the values are available.
-    if (isClient) {
-      if (licenseKey) {
-        if (username) {
-          router.replace('/dashboard');
-        } else {
-          router.replace('/welcome');
-        }
-      } else {
-        router.replace('/activate');
-      }
-    }
-  }, [isClient, licenseKey, username, router]);
-
+  // Render a simple loading state while the redirect is happening.
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="animate-pulse text-muted-foreground">A carregar...</div>
