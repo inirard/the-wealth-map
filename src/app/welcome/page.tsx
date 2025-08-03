@@ -15,17 +15,13 @@ export default function WelcomePage() {
   const [username, setUsername] = useLocalStorage('username', '');
   const [licenseKey] = useLocalStorage<string | null>('license_key', null);
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-
+  
   // This state prevents rendering the form while we check the prerequisites.
   const [status, setStatus] = useState<'checking' | 'ready'>('checking');
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
-    if (isClient) {
+    // This logic runs on the client side.
+    if (status === 'checking') {
       // If the user lands here without a valid license key, redirect to activation.
       if (!licenseKey || !validKeys.includes(licenseKey)) {
           router.replace('/activate');
@@ -41,7 +37,7 @@ export default function WelcomePage() {
       // Otherwise, we are ready to show the form.
       setStatus('ready');
     }
-  }, [isClient, licenseKey, username, router]);
+  }, [status, licenseKey, username, router]);
 
   const handleStart = (e: React.FormEvent) => {
     e.preventDefault();

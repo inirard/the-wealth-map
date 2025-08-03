@@ -39,43 +39,53 @@ export default function ProjectionsPage() {
         setAiPredictions(null);
         setAiError(false);
 
-        try {
-            const payload = {
-                language,
-                goals,
-                transactions,
-                currentDate: new Date().toISOString(),
-            };
-            
-            const response = await fetch('/api/ai', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
-            });
+        // DRASTIC MEASURE: Temporarily disable AI call
+        toast({
+            variant: "destructive",
+            title: t('ai_error_title'),
+            description: "This feature is temporarily unavailable. We are working on a fix."
+        });
+        setAiError(true);
+        setIsLoading(false);
+        return;
 
-            if (!response.ok) {
-                 throw new Error(`API Error: ${response.statusText}`);
-            }
-
-            const result = await response.json();
+        // try {
+        //     const payload = {
+        //         language,
+        //         goals,
+        //         transactions,
+        //         currentDate: new Date().toISOString(),
+        //     };
             
-            if (!result.success) {
-                throw new Error(result.error || 'AI request failed');
-            }
-            
-            setAiPredictions(result.data as PredictiveInsightsOutput);
+        //     const response = await fetch('/api/ai', {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
+        //     });
 
-        } catch (error) {
-            console.error("Error generating AI predictions:", error);
-            setAiError(true);
-            toast({
-                variant: "destructive",
-                title: t('ai_error_title'),
-                description: t('ai_error_description'),
-            });
-        } finally {
-            setIsLoading(false);
-        }
+        //     if (!response.ok) {
+        //          throw new Error(`API Error: ${response.statusText}`);
+        //     }
+
+        //     const result = await response.json();
+            
+        //     if (!result.success) {
+        //         throw new Error(result.error || 'AI request failed');
+        //     }
+            
+        //     setAiPredictions(result.data as PredictiveInsightsOutput);
+
+        // } catch (error) {
+        //     console.error("Error generating AI predictions:", error);
+        //     setAiError(true);
+        //     toast({
+        //         variant: "destructive",
+        //         title: t('ai_error_title'),
+        //         description: t('ai_error_description'),
+        //     });
+        // } finally {
+        //     setIsLoading(false);
+        // }
     };
     
     const handleDownloadPdf = () => {

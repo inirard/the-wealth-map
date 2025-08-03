@@ -21,18 +21,13 @@ export default function ActivatePage() {
   
   const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
   const [username] = useLocalStorage<string | null>('username', null);
-  const [isClient, setIsClient] = useState(false);
   
   // This state prevents rendering the form while we check for an existing key.
   const [status, setStatus] = useState<'checking' | 'ready'>('checking');
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  useEffect(() => {
     // This logic runs only on the client side.
-    if (isClient) {
+    if (status === 'checking') {
       // If a valid key already exists, skip the activation form and go to the next step.
       if (licenseKey && validKeys.includes(licenseKey)) {
         if (username) {
@@ -45,7 +40,7 @@ export default function ActivatePage() {
         setStatus('ready');
       }
     }
-  }, [isClient, licenseKey, username, router]);
+  }, [status, licenseKey, username, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +63,7 @@ export default function ActivatePage() {
     }, 500);
   };
   
-  // While the client is hydrating and checking for an existing key, show a loading state.
+  // While the client is checking for an existing key, show a loading state.
   if (status === 'checking') {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
