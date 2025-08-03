@@ -40,18 +40,16 @@ export default function ProjectionsPage() {
         setAiError(false);
 
         try {
-            // AI functionality is temporarily disabled. We will simulate an error to show the user a message.
-            const simulatedError = new Error(t('ai_error_description'));
-            console.error("Error generating AI predictions:", simulatedError);
+            // AI functionality is temporarily disabled. We will show the user a message.
             setAiError(true);
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
-                description: simulatedError.message || t('ai_error_description'),
+                description: t('ai_error_description'),
             });
         } catch (error: any) {
-            // This catch block will handle any unexpected errors, though the above code simulates one.
-            console.error("Error generating AI predictions:", error);
+            // This catch block will handle any unexpected errors
+            console.error("An unexpected error occurred:", error);
             setAiError(true);
             toast({
                 variant: "destructive",
