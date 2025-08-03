@@ -24,9 +24,11 @@ export default function ActivatePage() {
   useEffect(() => {
     // This effect runs once on the client to confirm hydration
     // and then checks if the user is already activated.
-    if (!isClient) {
-      setIsClient(true);
-      
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (isClient) {
       const storedKey = localStorage.getItem('license_key');
       const storedUsername = localStorage.getItem('username');
 
@@ -40,6 +42,7 @@ export default function ActivatePage() {
       // If no valid key, we stay on this page to show the form.
     }
   }, [isClient, router]);
+
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
