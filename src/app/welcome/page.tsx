@@ -10,7 +10,6 @@ import { Sparkles } from "lucide-react";
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { validKeys } from '@/lib/keys';
 
-// The AuthProvider is removed from here as it should only protect the dashboard routes.
 export default function WelcomePage() {
   const [name, setName] = useState('');
   const [, setUsername] = useLocalStorage('username', '');
@@ -20,11 +19,15 @@ export default function WelcomePage() {
 
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  useEffect(() => {
     // If the user lands here without a valid license key, redirect to activation.
-    if (!licenseKey || !validKeys.includes(licenseKey)) {
+    // This runs after the client has hydrated and licenseKey is read from localStorage.
+    if (isClient && (!licenseKey || !validKeys.includes(licenseKey))) {
         router.replace('/activate');
     }
-  }, [licenseKey, router]);
+  }, [isClient, licenseKey, router]);
 
   const handleStart = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,7 +37,8 @@ export default function WelcomePage() {
     }
   };
 
-  if (!isClient || !licenseKey) {
+  // Show a loading state until we can verify the key on the client.
+  if (!isClient || !licenseKey || !validKeys.includes(licenseKey)) {
      return (
         <div className="flex min-h-screen flex-col items-center justify-center bg-background">
             <div className="animate-pulse text-muted-foreground">A verificar acesso...</div>
@@ -73,9 +77,9 @@ export default function WelcomePage() {
                 placeholder="Enter your name"
                 className="h-12 text-center text-lg"
                 required
-                disabled={!isClient}
+                autoFocus
               />
-              <Button type="submit" size="lg" className="w-full" disabled={!isClient || !name.trim()}>
+              <Button type="submit" size="lg" className="w-full" disabled={!name.trim()}>
                 Start Your Journey
               </Button>
             </form>

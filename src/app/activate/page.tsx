@@ -24,16 +24,19 @@ export default function ActivatePage() {
 
   useEffect(() => {
     setIsClient(true);
-    // If the user already has a valid key, redirect them appropriately.
-    // This makes this page the central entry logic.
-    if (licenseKey && validKeys.includes(licenseKey)) {
+  }, []);
+
+  useEffect(() => {
+    // This effect now acts as the main entry logic.
+    // If the user lands here but already has a valid key, redirect them.
+    if (isClient && licenseKey && validKeys.includes(licenseKey)) {
       if (username) {
         router.replace('/dashboard');
       } else {
         router.replace('/welcome');
       }
     }
-  }, [licenseKey, username, router]);
+  }, [isClient, licenseKey, username, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,7 +60,7 @@ export default function ActivatePage() {
     }, 500);
   };
   
-  // While checking for existing key, show a loading state
+  // While checking for existing key on the client, or if we are redirecting, show a loading state.
   if (!isClient || (licenseKey && validKeys.includes(licenseKey))) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
@@ -66,6 +69,7 @@ export default function ActivatePage() {
     );
   }
 
+  // Only show the activation form if the user is on the client AND has no valid key.
   return (
     <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-background p-4">
        <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-accent/10"></div>

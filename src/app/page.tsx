@@ -1,45 +1,22 @@
 
 "use client";
 
-import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useLocalStorage } from '@/hooks/use-local-storage';
-import { validKeys } from '@/lib/keys';
+import { useEffect } from 'react';
 
-export default function RootPage() {
+// This is a server component by default in App Router, but we need client-side logic for navigation.
+// However, to keep it simple and robust, we'll use a simple client component to redirect.
+
+export default function RootRedirectPage() {
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
-
-  // We call useLocalStorage at the top level to follow the rules of hooks.
-  const [licenseKey] = useLocalStorage<string | null>('license_key', null);
-  const [username] = useLocalStorage<string | null>('username', '');
-
-  // This effect runs once on the client to confirm hydration.
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   useEffect(() => {
-    // This logic runs only on the client side, and only after we are sure
-    // that a verification/redirection hasn't already started.
-    if (isClient && !isVerified) {
-      setIsVerified(true); // Mark as verified to prevent re-running
+    // Redirect immediately to the activation page, which will handle all further logic.
+    // This avoids any complex state management or localStorage races on the root page.
+    router.replace('/activate');
+  }, [router]);
 
-      if (licenseKey && validKeys.includes(licenseKey)) {
-        if (username) {
-          router.replace('/dashboard');
-        } else {
-          router.replace('/welcome');
-        }
-      } else {
-        router.replace('/activate');
-      }
-    }
-  }, [isClient, isVerified, licenseKey, username, router]);
-  
-  // Render a simple loading state to provide feedback while the redirect logic
-  // is processing on the client. This screen will be shown until the redirect is complete.
+  // Render a loading state while the redirect happens.
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background">
       <div className="animate-pulse text-muted-foreground">A carregar...</div>
