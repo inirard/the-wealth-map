@@ -153,7 +153,7 @@ export default function ReflectionPage() {
                             <TooltipTrigger asChild>
                                  <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="outline" size="icon">
                                     <Download className="h-5 w-5" />
-                                </Button>
+                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
                                <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>
