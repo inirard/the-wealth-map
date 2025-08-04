@@ -2,17 +2,18 @@
 /**
  * @fileOverview An AI flow to generate financial predictions based on user data.
  * - predictiveInsights - A function that handles the financial prediction process.
+ * - PredictiveInsightsInputSchema - The input schema for the predictiveInsights flow.
  */
 
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
   PredictiveInsightsOutputSchema,
-  PredictiveInsightsInputSchema,
+  PredictiveInsightsInputSchema as PredictiveInsightsInputSchemaFromTypes,
 } from '@/lib/ai-types';
 
+export const PredictiveInsightsInputSchema = PredictiveInsightsInputSchemaFromTypes;
 export type {PredictiveInsightsInput} from '@/lib/ai-types';
-
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
@@ -39,7 +40,8 @@ Your entire output must be a valid JSON object matching the output schema.
 `,
 });
 
-export const predictiveInsights = ai.defineFlow({
+export const predictiveInsights = ai.defineFlow(
+  {
     name: 'predictiveInsightsFlow',
     inputSchema: PredictiveInsightsInputSchema,
     outputSchema: PredictiveInsightsOutputSchema,

@@ -3,10 +3,7 @@ import {genkit, Flow} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'zod';
 
-import {
-  chatFlow,
-  ChatInputSchema,
-} from '@/ai/flows/chat-flow';
+import {chatFlow, ChatInputSchema} from '@/ai/flows/chat-flow';
 import {
   generateInsights,
   GenerateInsightsInputSchema,
@@ -16,6 +13,7 @@ import {
   PredictiveInsightsInputSchema,
 } from '@/ai/flows/predictive-insights-flow';
 
+// Central map to associate flow names with their functions and validation schemas
 const flowMap: Record<
   string,
   {
@@ -42,43 +40,52 @@ export async function POST(req: Request) {
     const body = await req.json();
     const {flow: flowName, payload} = body;
 
+    // Check if the requested flow exists in our map
     if (!flowName || !flowMap[flowName]) {
-      return NextResponse.json({error: 'Unknown flow.'}, {status: 400});
+      return NextResponse.json({error: 'Unknown or invalid flow specified.'}, {status: 400});
     }
-
+    
+    // Securely get API key from environment variables
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      console.error('GEMINI_API_KEY not found in environment variables.');
+      console.error('FATAL: GEMINI_API_KEY is not configured in the environment.');
       return NextResponse.json(
-        {error: 'The Gemini API key was not found in the environment.'},
+        {error: 'The AI service is not configured on the server. Please contact support.'},
         {status: 500}
       );
     }
-
+    
+    // Initialize Genkit with the API key for every request
     genkit({
       plugins: [googleAI({apiKey})],
     });
-
+    
     const {schema, flow} = flowMap[flowName];
     
+    // Validate the incoming payload against the specific Zod schema for the flow
     const parsedPayload = schema.safeParse(payload);
     if (!parsedPayload.success) {
       return NextResponse.json(
         {
-          error: `Invalid payload for '${flowName}'.`,
+          error: `Invalid data provided for the '${flowName}' flow.`,
           details: parsedPayload.error.format(),
         },
         {status: 400}
       );
     }
-
+    
+    // Execute the flow with the validated data
     const result = await flow(parsedPayload.data);
-
+    
+    // Return the successful result
     return NextResponse.json({success: true, data: result});
+
   } catch (error: any) {
-    console.error(`Error in /api/ai route:`, error);
-    const errorMessage =
-      error instanceof Error ? error.message : 'An internal error occurred while processing the AI request.';
-    return NextResponse.json({error: errorMessage}, {status: 500});
+    console.error(`Error processing /api/ai for flow:`, error);
+    const errorMessage = error instanceof Error ? error.message : 'An internal server error occurred.';
+    return NextResponse.json(
+      {error: errorMessage},
+      {status: 500}
+    );
   }
 }
