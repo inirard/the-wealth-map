@@ -12,7 +12,6 @@ import {
 } from '@/lib/ai-types';
 
 export const GenerateInsightsInputSchema = GenerateInsightsInputSchemaFromTypes;
-export type {GenerateInsightsInput} from '@/lib/ai-types';
 
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
@@ -24,11 +23,11 @@ const generateInsightsPrompt = ai.definePrompt({
     Your task is to provide a short, personalized, and encouraging analysis for the user based on their financial data.
     The response must be in the specified language: {{language}}.
 
-    Here is the user's data:
-    - Goals: {{{goals}}}
-    - Transactions: {{{transactions}}}
-    - Wealth Wheel Assessment: {{{wheelData}}}
-    - Personal Reflections: {{{reflections}}}
+    Here is the user's data (as JSON strings):
+    - Goals: {{goals}}
+    - Transactions: {{transactions}}
+    - Wealth Wheel Assessment: {{wheelData}}
+    - Personal Reflections: {{reflections}}
 
     Based on this data, please generate a single paragraph of analysis that does the following:
     1.  Acknowledge a specific positive point from their reflections or a goal they are progressing on.

@@ -13,7 +13,6 @@ import {
 } from '@/lib/ai-types';
 
 export const PredictiveInsightsInputSchema = PredictiveInsightsInputSchemaFromTypes;
-export type {PredictiveInsightsInput} from '@/lib/ai-types';
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
@@ -24,9 +23,9 @@ const predictiveInsightsPrompt = ai.definePrompt({
 Your response MUST be in the user's specified language: {{language}}.
 The current date is {{currentDate}}.
 
-Analyze the user's financial data:
-- Goals: {{{goals}}}
-- Transactions: {{{transactions}}}
+Analyze the user's financial data (as JSON strings):
+- Goals: {{goals}}
+- Transactions: {{transactions}}
 
 Based on the data, generate the following predictive insights:
 

@@ -29,6 +29,7 @@ export default function Chatbot() {
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
     const [reflections] = useLocalStorage<Reflection[]>('reflections', []);
+    const [licenseKey] = useLocalStorage<string>('license_key', '');
     
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
@@ -58,22 +59,24 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
-            const historyText = newMessages.map(msg => `${msg.role === 'user' ? 'User' : 'AI'}: ${msg.content}`).join('\n');
-            
             const payload = {
                 language,
-                history: historyText,
+                history: newMessages.slice(0, -1), // Send history without current message
                 message: input,
-                goals: JSON.stringify(goals),
-                transactions: JSON.stringify(transactions),
-                wheelData: JSON.stringify(wheelData),
-                reflections: JSON.stringify(reflections),
+                goals,
+                transactions,
+                wheelData,
+                reflections,
             };
 
             const response = await fetch('/api/ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ flow: 'chat', payload }),
+                body: JSON.stringify({ 
+                    flow: 'chat', 
+                    payload,
+                    licenseKey 
+                }),
             });
             
             const result = await response.json();
@@ -88,9 +91,7 @@ export default function Chatbot() {
             setMessages(prev => [...prev, modelMessage]);
         } catch (error: any) {
             console.error("Error in Chatbot handleSubmit:", error);
-            const errorMessage = error.message.includes('DOCTYPE') 
-                ? t('ai_error_description') 
-                : (error.message || 'An unknown error occurred.');
+            const errorMessage = error.message.includes('DOCTYPE') ? t('ai_error_description') : error.message;
             
             toast({
                 variant: "destructive",

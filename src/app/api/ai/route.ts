@@ -35,10 +35,31 @@ const flowMap: Record<
   },
 };
 
+// Helper function to convert data arrays to JSON strings
+function preprocessPayload(payload: any) {
+  const newPayload = {...payload};
+  for (const key of ['goals', 'transactions', 'wheelData', 'reflections']) {
+    if (Array.isArray(newPayload[key])) {
+      newPayload[key] = newPayload[key].length > 0 ? JSON.stringify(newPayload[key]) : 'No data provided.';
+    }
+  }
+   if (Array.isArray(newPayload.history)) {
+     newPayload.history = newPayload.history.map((msg: any) => `${msg.role === 'user' ? 'User' : 'AI'}: ${msg.content}`).join('\n') || 'No history.';
+  }
+  return newPayload;
+}
+
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const {flow: flowName, payload} = body;
+    const {flow: flowName, payload, licenseKey} = body;
+    
+    // Server-side rate limiting check (placeholder)
+    if (!licenseKey) {
+        return NextResponse.json({error: 'License key is required.'}, {status: 401});
+    }
+    // TODO: Implement persistent rate limiting logic here (e.g., using a database or Redis)
 
     // Check if the requested flow exists in our map
     if (!flowName || !flowMap[flowName]) {
@@ -62,8 +83,11 @@ export async function POST(req: Request) {
     
     const {schema, flow} = flowMap[flowName];
     
+    // Preprocess payload to convert arrays to JSON strings
+    const processedPayload = preprocessPayload(payload);
+    
     // Validate the incoming payload against the specific Zod schema for the flow
-    const parsedPayload = schema.safeParse(payload);
+    const parsedPayload = schema.safeParse(processedPayload);
     if (!parsedPayload.success) {
       return NextResponse.json(
         {
