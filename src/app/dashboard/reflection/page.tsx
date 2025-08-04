@@ -103,7 +103,7 @@ export default function ReflectionPage() {
             const result = await response.json();
             
             if (!response.ok || !result.success) {
-                throw new Error(result.error || t('ai_error_description'));
+                throw new Error(result.error || 'AI request failed');
             }
             
             setAiInsight(result.data as GenerateInsightsOutput);

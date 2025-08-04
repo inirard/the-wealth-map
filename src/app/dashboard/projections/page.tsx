@@ -54,7 +54,7 @@ export default function ProjectionsPage() {
                 body: JSON.stringify({ 
                     flow: 'predictFinancialFuture', 
                     payload,
-                    licenseKey 
+                    licenseKey
                 }),
             });
 
@@ -280,5 +280,3 @@ export default function ProjectionsPage() {
         </div>
     );
 }
-
-    
