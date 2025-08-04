@@ -1,16 +1,16 @@
 import {z} from 'genkit';
 
-const GoalSchema = z.object({
+export const GoalSchema = z.object({
   id: z.string(),
   name: z.string(),
   targetAmount: z.number(),
   currentAmount: z.number(),
   targetDate: z.string(),
-  importance: z.string().optional(),
+  importance: z.string(),
 });
 export type Goal = z.infer<typeof GoalSchema>;
 
-const TransactionSchema = z.object({
+export const TransactionSchema = z.object({
   id: z.string(),
   description: z.string(),
   amount: z.number(),
@@ -19,7 +19,7 @@ const TransactionSchema = z.object({
 });
 export type Transaction = z.infer<typeof TransactionSchema>;
 
-const WealthWheelDataSchema = z.object({
+export const WealthWheelDataSchema = z.object({
   id: z.string(),
   label: z.string(),
   value: z.number(),
@@ -27,7 +27,7 @@ const WealthWheelDataSchema = z.object({
 });
 export type WealthWheelData = z.infer<typeof WealthWheelDataSchema>;
 
-const ReflectionSchema = z.object({
+export const ReflectionSchema = z.object({
     id: z.string(),
     prompt: z.string(),
     content: z.string(),

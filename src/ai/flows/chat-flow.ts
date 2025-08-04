@@ -1,4 +1,3 @@
-
 'use server';
 
 /**
@@ -16,12 +15,13 @@ import {
   TransactionSchema,
   WealthWheelDataSchema,
   ReflectionSchema,
+  ChatMessageSchema,
 } from '@/lib/ai-types';
 
 // The input schema now expects a simple string for the history.
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  history: z.string().describe("The conversation history, formatted as a string with each message on a new line, prefixed with 'User:' or 'AI:'."),
+  history: z.array(ChatMessageSchema),
   message: z.string(),
   goals: z.array(GoalSchema),
   transactions: z.array(TransactionSchema),
@@ -34,7 +34,7 @@ export type ChatInput = z.infer<typeof ChatInputSchema>;
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: ChatInputSchema},
+  input: {schema: z.any()}, // Use a more flexible schema for the prompt itself
   output: {schema: ChatOutputSchema},
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
 Your answers MUST be in the user's specified language: {{language}}.
@@ -62,7 +62,17 @@ export const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async (input: ChatInput): Promise<ChatOutput> => {
-    const {output} = await chatPrompt(input);
+     // Pre-format the history into a simple string to avoid complex logic in the AI prompt.
+    const historyAsString = input.history
+      .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
+      .join('\n');
+
+    const promptInput = {
+      ...input,
+      history: historyAsString,
+    };
+
+    const {output} = await chatPrompt(promptInput);
     return output!;
   }
 );

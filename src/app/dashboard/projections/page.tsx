@@ -63,7 +63,7 @@ export default function ProjectionsPage() {
 
         } catch (error: any) {
             console.error("Error generating AI predictions:", error);
-            const errorMessage = error.message || t('ai_error_description');
+            const errorMessage = error.message.includes('DOCTYPE') ? t('ai_error_description') : error.message;
             setAiError(errorMessage);
             toast({
                 variant: "destructive",

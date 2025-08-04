@@ -58,15 +58,9 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
-            // Pre-format the history into a simple string to avoid complex logic in the AI prompt.
-            const historyAsString = newMessages
-                .slice(0, -1) // Exclude the current user message
-                .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
-                .join('\n');
-
             const payload = {
                 language,
-                history: historyAsString, // Send the pre-formatted string
+                history: newMessages.slice(0, -1), // Send history without current message
                 message: input,
                 goals,
                 transactions,
@@ -83,8 +77,7 @@ export default function Chatbot() {
             const result = await response.json();
 
             if (!response.ok || !result.success) {
-                 // Check for specific error message in result, otherwise use a generic one.
-                const errorDetail = result.error || (result.details ? JSON.stringify(result.details) : 'AI request failed');
+                const errorDetail = result.error || 'AI request failed';
                 throw new Error(errorDetail);
             }
             
@@ -94,14 +87,15 @@ export default function Chatbot() {
         } catch (error: any) {
             console.error("Error in Chatbot handleSubmit:", error);
             const errorMessage = error.message.includes('DOCTYPE') ? t('ai_error_description') : error.message;
+            
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
                 description: errorMessage,
             });
-            // Add an error message from the bot to the chat window for visibility
-            const modelErrorMessage: AIChatMessage = { role: 'model', content: errorMessage };
-            setMessages(prev => [...prev, modelErrorMessage]);
+
+            // Revert optimistic update on error
+            setMessages(prev => prev.slice(0, -1));
         } finally {
             setIsLoading(false);
         }

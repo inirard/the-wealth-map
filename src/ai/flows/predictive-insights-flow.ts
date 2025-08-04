@@ -15,13 +15,8 @@ import {
 } from '@/lib/ai-types';
 
 
-const PredictiveInsightsFlowInputSchema = z.object({
-    language: z.enum(['pt', 'en', 'es', 'fr']),
-    goals: z.string(), // Expecting a JSON string now
-    transactions: z.string(), // Expecting a JSON string now
-    currentDate: z.string().describe('The current date in ISO format.'),
-});
-
+// This is the public-facing schema for the flow.
+// It matches what the frontend sends.
 export const PredictiveInsightsInputSchema = z.object({
     language: z.enum(['pt', 'en', 'es', 'fr']),
     goals: z.array(GoalSchema),
@@ -30,11 +25,19 @@ export const PredictiveInsightsInputSchema = z.object({
 });
 export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;
 
+// This is the internal schema for the prompt itself, which expects JSON strings.
+const PredictivePromptInputSchema = z.object({
+    language: z.enum(['pt', 'en', 'es', 'fr']),
+    goals: z.string(), // Expecting a JSON string now
+    transactions: z.string(), // Expecting a JSON string now
+    currentDate: z.string().describe('The current date in ISO format.'),
+});
+
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: PredictiveInsightsFlowInputSchema},
+  input: {schema: PredictivePromptInputSchema},
   output: {schema: PredictiveInsightsOutputSchema},
   prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
 Your response MUST be in the user's specified language: {{language}}.
@@ -56,29 +59,15 @@ Your entire output must be a valid JSON object matching the output schema.
 `,
 });
 
-// This flow is now internal and expects stringified data
-const predictiveInsightsFlow = ai.defineFlow(
-  {
-    name: 'predictiveInsightsFlow',
-    inputSchema: PredictiveInsightsFlowInputSchema,
-    outputSchema: PredictiveInsightsOutputSchema,
-  },
-  async (input) => {
-    const {output} = await predictiveInsightsPrompt(input);
-    return output!;
-  }
-);
-
-
-// This is the exported function that the API route will call.
-// It handles the conversion from object arrays to JSON strings.
 export async function predictiveInsights(
   input: PredictiveInsightsInput
 ): Promise<PredictiveInsightsOutput> {
-   const flowInput = {
+   // Convert the arrays into JSON strings before calling the prompt.
+   const promptInput = {
     ...input,
     goals: input.goals.length > 0 ? JSON.stringify(input.goals) : "No goals set.",
     transactions: input.transactions.length > 0 ? JSON.stringify(input.transactions) : "No transactions recorded.",
   };
-  return await predictiveInsightsFlow(flowInput);
+  const {output} = await predictiveInsightsPrompt(promptInput);
+  return output!;
 }

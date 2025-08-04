@@ -104,7 +104,7 @@ export default function ReflectionPage() {
             setAiInsight(result.data as GenerateInsightsOutput);
         } catch (error: any) {
             console.error("Error generating AI insights:", error);
-            const errorMessage = error.message || t('ai_error_description');
+            const errorMessage = error.message.includes('DOCTYPE') ? t('ai_error_description') : error.message;
             setAiError(errorMessage);
             toast({
                 variant: "destructive",
