@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -5,11 +6,12 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { KeyRound, CircleDollarSign } from "lucide-react";
+import { KeyRound } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { useLocalStorage } from '@/hooks/use-local-storage';
 import { validKeys } from '@/lib/keys';
 import { useToast } from "@/hooks/use-toast";
+import { WealthMapIcon } from '@/components/icons/WealthMapIcon';
 
 export default function ActivatePage() {
   const [key, setKey] = useState('');
@@ -77,7 +79,7 @@ export default function ActivatePage() {
 
       <main className="relative z-10 flex w-full max-w-md flex-col items-center justify-center text-center">
          <Link href="/" className="flex items-center gap-2 text-primary mb-4">
-            <CircleDollarSign className="h-8 w-8" />
+            <WealthMapIcon />
             <span className="font-semibold text-2xl">The Wealth Map</span>
           </Link>
         <Card className="w-full">

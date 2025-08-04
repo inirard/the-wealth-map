@@ -5,7 +5,6 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
-    CircleDollarSign, 
     LayoutDashboard, 
     Target, 
     Donut, 
@@ -56,6 +55,7 @@ import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { WealthMapIcon } from '../icons/WealthMapIcon';
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -123,7 +123,7 @@ export default function AppSidebar() {
       <Sidebar>
         <SidebarHeader>
           <Link href="/dashboard" className="flex items-center gap-2">
-            <CircleDollarSign className="h-8 w-8 text-primary" />
+            <WealthMapIcon />
             <span className="text-xl font-semibold text-primary group-data-[collapsible=icon]:hidden">Wealth Map</span>
           </Link>
         </SidebarHeader>

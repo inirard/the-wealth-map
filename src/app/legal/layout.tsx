@@ -1,8 +1,9 @@
 
-import { CircleDollarSign, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
+import { WealthMapIcon } from '@/components/icons/WealthMapIcon';
 
 export const metadata: Metadata = {
   title: 'Legal - The Wealth Map',
@@ -18,7 +19,7 @@ export default function LegalLayout({
       <header className="p-4 border-b">
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="flex items-center gap-2 text-primary">
-            <CircleDollarSign className="h-7 w-7" />
+            <WealthMapIcon className="h-7 w-7" />
             <span className="font-semibold text-lg">The Wealth Map</span>
           </Link>
           <Button asChild variant="outline">
