@@ -1,51 +1,32 @@
 'use server';
 /**
  * @fileOverview An AI flow to generate financial predictions based on user data.
- * - predictiveInsightsFlow - A function that handles the financial prediction process.
+ * - predictiveInsights - A function that handles the financial prediction process.
  */
 
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import {z} from 'genkit';
 import {
+  PredictiveInsightsInputSchema,
   PredictiveInsightsOutputSchema,
+  type PredictiveInsightsInput,
   type PredictiveInsightsOutput,
-  GoalSchema,
-  TransactionSchema
 } from '@/lib/ai-types';
 
-
-// This is the public-facing schema for the flow.
-// It matches what the frontend sends.
-export const PredictiveInsightsInputSchema = z.object({
-    language: z.enum(['pt', 'en', 'es', 'fr']),
-    goals: z.array(GoalSchema),
-    transactions: z.array(TransactionSchema),
-    currentDate: z.string().describe('The current date in ISO format.'),
-});
-export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;
-
-// This is the internal schema for the prompt itself, which expects JSON strings.
-const PredictivePromptInputSchema = z.object({
-    language: z.enum(['pt', 'en', 'es', 'fr']),
-    goals: z.string(), // Expecting a JSON string now
-    transactions: z.string(), // Expecting a JSON string now
-    currentDate: z.string().describe('The current date in ISO format.'),
-});
-
+export { PredictiveInsightsInputSchema };
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: PredictivePromptInputSchema},
+  input: {schema: PredictiveInsightsInputSchema},
   output: {schema: PredictiveInsightsOutputSchema},
   prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
 Your response MUST be in the user's specified language: {{language}}.
 The current date is {{currentDate}}.
 
-Analyze the user's financial data, provided as JSON strings:
-- Goals: {{goals}}
-- Transactions: {{transactions}}
+Analyze the user's financial data:
+- Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
+- Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
 
 Based on the data, generate the following predictive insights:
 
@@ -59,15 +40,13 @@ Your entire output must be a valid JSON object matching the output schema.
 `,
 });
 
-export async function predictiveInsights(
-  input: PredictiveInsightsInput
-): Promise<PredictiveInsightsOutput> {
-   // Convert the arrays into JSON strings before calling the prompt.
-   const promptInput = {
-    ...input,
-    goals: input.goals.length > 0 ? JSON.stringify(input.goals) : "No goals set.",
-    transactions: input.transactions.length > 0 ? JSON.stringify(input.transactions) : "No transactions recorded.",
-  };
-  const {output} = await predictiveInsightsPrompt(promptInput);
-  return output!;
-}
+export const predictiveInsights = ai.defineFlow({
+    name: 'predictiveInsightsFlow',
+    inputSchema: PredictiveInsightsInputSchema,
+    outputSchema: PredictiveInsightsOutputSchema,
+  },
+  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
+    const {output} = await predictiveInsightsPrompt(input);
+    return output!;
+  }
+);

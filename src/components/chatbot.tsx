@@ -60,7 +60,7 @@ export default function Chatbot() {
         try {
             const payload = {
                 language,
-                history: newMessages.slice(0, -1), // Send history without current message
+                history: newMessages, // Send the full history including the new user message
                 message: input,
                 goals,
                 transactions,
@@ -86,7 +86,9 @@ export default function Chatbot() {
             setMessages(prev => [...prev, modelMessage]);
         } catch (error: any) {
             console.error("Error in Chatbot handleSubmit:", error);
-            const errorMessage = error.message.includes('DOCTYPE') ? t('ai_error_description') : error.message;
+            const errorMessage = error.message.includes('DOCTYPE') 
+                ? t('ai_error_description') 
+                : (error.message || 'An unknown error occurred.');
             
             toast({
                 variant: "destructive",

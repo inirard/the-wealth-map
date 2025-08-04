@@ -18,7 +18,6 @@ import {
   ChatMessageSchema,
 } from '@/lib/ai-types';
 
-// The input schema now expects a simple string for the history.
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
   history: z.array(ChatMessageSchema),
@@ -34,7 +33,7 @@ export type ChatInput = z.infer<typeof ChatInputSchema>;
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: z.any()}, // Use a more flexible schema for the prompt itself
+  input: {schema: z.any()},
   output: {schema: ChatOutputSchema},
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
 Your answers MUST be in the user's specified language: {{language}}.
@@ -48,7 +47,13 @@ You have access to the user's financial data to provide personalized responses.
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
 Conversation History:
-{{history}}
+{{#each history}}
+  {{#if (eq this.role "model")}}
+    AI: {{{this.content}}}
+  {{else}}
+    User: {{{this.content}}}
+  {{/if}}
+{{/each}}
 
 User's new message:
 {{{message}}}
@@ -62,16 +67,14 @@ export const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async (input: ChatInput): Promise<ChatOutput> => {
-     // Pre-format the history into a simple string to avoid complex logic in the AI prompt.
-    const historyAsString = input.history
-      .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
-      .join('\n');
+    // The history object now includes the latest user message.
+    const fullHistory = [...input.history];
 
     const promptInput = {
       ...input,
-      history: historyAsString,
+      history: fullHistory,
     };
-
+    
     const {output} = await chatPrompt(promptInput);
     return output!;
   }
