@@ -43,8 +43,8 @@ export default function ProjectionsPage() {
         try {
             const payload = {
                 language,
-                goals: goals,
-                transactions: transactions,
+                goals,
+                transactions,
                 currentDate: new Date().toISOString(),
             };
             
@@ -54,14 +54,14 @@ export default function ProjectionsPage() {
                 body: JSON.stringify({ 
                     flow: 'predictFinancialFuture', 
                     payload,
-                    licenseKey
+                    licenseKey 
                 }),
             });
 
             const result = await response.json();
             
             if (!response.ok || !result.success) {
-                 throw new Error(result.error || t('ai_error_description'));
+                 throw new Error(result.error || 'AI request failed');
             }
             
             setAiPredictions(result.data as PredictiveInsightsOutput);
@@ -280,3 +280,5 @@ export default function ProjectionsPage() {
         </div>
     );
 }
+
+    
