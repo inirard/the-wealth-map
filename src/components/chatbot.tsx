@@ -59,14 +59,19 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
+            const historyAsString = newMessages
+              .slice(0, -1) // Exclude the current user message
+              .map((msg: AIChatMessage) => `${msg.role === 'user' ? 'User' : 'AI'}: ${msg.content}`)
+              .join('\n') || 'No history.';
+
             const payload = {
                 language,
-                history: newMessages.slice(0, -1), // Send history without current message
+                history: historyAsString,
                 message: input,
-                goals,
-                transactions,
-                wheelData,
-                reflections,
+                goals: goals.length > 0 ? JSON.stringify(goals) : 'No data provided.',
+                transactions: transactions.length > 0 ? JSON.stringify(transactions) : 'No data provided.',
+                wheelData: wheelData.length > 0 ? JSON.stringify(wheelData) : 'No data provided.',
+                reflections: reflections.length > 0 ? JSON.stringify(reflections) : 'No data provided.',
             };
 
             const response = await fetch('/api/ai', {

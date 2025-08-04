@@ -14,23 +14,6 @@ import {
 } from '@/lib/ai-types';
 
 
-// Helper function to convert data arrays to JSON strings and format history
-function preprocessPayload(payload: any) {
-  const newPayload = {...payload};
-  // Convert arrays of objects to JSON strings
-  for (const key of ['goals', 'transactions', 'wheelData', 'reflections']) {
-    if (Array.isArray(newPayload[key])) {
-      newPayload[key] = newPayload[key].length > 0 ? JSON.stringify(newPayload[key]) : 'No data provided.';
-    }
-  }
-   // Convert chat history array to a simple string format
-   if (Array.isArray(newPayload.history)) {
-     newPayload.history = newPayload.history.map((msg: any) => `${msg.role === 'user' ? 'User' : 'AI'}: ${msg.content}`).join('\n') || 'No history.';
-  }
-  return newPayload;
-}
-
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -67,11 +50,9 @@ export async function POST(req: Request) {
       plugins: [googleAI({apiKey})],
     });
     
-    // Preprocess payload to convert arrays to JSON strings
-    const processedPayload = preprocessPayload(payload);
-    
-    // Validate the processed payload
-    const parsedPayload = selectedFlow.schema.safeParse(processedPayload);
+    // The payload is already pre-processed on the client-side.
+    // We just validate it here.
+    const parsedPayload = selectedFlow.schema.safeParse(payload);
     if (!parsedPayload.success) {
       return NextResponse.json(
         {

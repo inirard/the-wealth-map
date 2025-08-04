@@ -43,8 +43,8 @@ export default function ProjectionsPage() {
         try {
             const payload = {
                 language,
-                goals,
-                transactions,
+                goals: goals.length > 0 ? JSON.stringify(goals) : 'No data provided.',
+                transactions: transactions.length > 0 ? JSON.stringify(transactions) : 'No data provided.',
                 currentDate: new Date().toISOString(),
             };
             
