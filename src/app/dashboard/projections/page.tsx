@@ -23,6 +23,7 @@ export default function ProjectionsPage() {
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [username] = useLocalStorage<string>('username', 'User');
+    const [licenseKey] = useLocalStorage<string>('license_key', '');
     
     const [aiPredictions, setAiPredictions] = useLocalStorage<PredictiveInsightsOutput | null>('aiProjections', null);
     const [isLoading, setIsLoading] = useState(false);
@@ -42,21 +43,25 @@ export default function ProjectionsPage() {
         try {
             const payload = {
                 language,
-                goals: JSON.stringify(goals),
-                transactions: JSON.stringify(transactions),
+                goals: goals,
+                transactions: transactions,
                 currentDate: new Date().toISOString(),
             };
             
             const response = await fetch('/api/ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
+                body: JSON.stringify({ 
+                    flow: 'predictFinancialFuture', 
+                    payload,
+                    licenseKey
+                }),
             });
 
             const result = await response.json();
             
             if (!response.ok || !result.success) {
-                 throw new Error(result.error || 'AI request failed');
+                 throw new Error(result.error || t('ai_error_description'));
             }
             
             setAiPredictions(result.data as PredictiveInsightsOutput);

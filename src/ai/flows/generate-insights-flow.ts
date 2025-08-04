@@ -2,16 +2,13 @@
 /**
  * @fileOverview An AI flow to generate financial insights based on user data.
  * - generateInsights - A function that handles the financial analysis process.
- * - GenerateInsightsInputSchema - The input schema for the generateInsights flow.
  */
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
+  GenerateInsightsInputSchema,
   GenerateInsightsOutputSchema,
-  GenerateInsightsInputSchema as GenerateInsightsInputSchemaFromTypes,
 } from '@/lib/ai-types';
-
-export const GenerateInsightsInputSchema = GenerateInsightsInputSchemaFromTypes;
 
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',

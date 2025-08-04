@@ -43,7 +43,7 @@ export const ChatMessageSchema = z.object({
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 // Input schemas for the AI flows.
-// These expect strings because the API route will preprocess the arrays into JSON strings.
+// The API route will preprocess arrays into JSON strings, so the flows expect strings.
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
   history: z.string().describe("The conversation history as a formatted string."),
@@ -53,6 +53,8 @@ export const ChatInputSchema = z.object({
   wheelData: z.string().describe("A JSON string of the user's Wealth Wheel assessment."),
   reflections: z.string().describe("A JSON string of the user's personal reflections."),
 });
+export type ChatInput = z.infer<typeof ChatInputSchema>;
+
 
 export const GenerateInsightsInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
@@ -61,6 +63,8 @@ export const GenerateInsightsInputSchema = z.object({
   wheelData: z.string().describe("A JSON string of the user's Wealth Wheel assessment."),
   reflections: z.string().describe("A JSON string of the user's personal reflections."),
 });
+export type GenerateInsightsInput = z.infer<typeof GenerateInsightsInputSchema>;
+
 
 export const PredictiveInsightsInputSchema = z.object({
     language: z.enum(['pt', 'en', 'es', 'fr']),
@@ -68,6 +72,7 @@ export const PredictiveInsightsInputSchema = z.object({
     transactions: z.string().describe("A JSON string of the user's transactions."),
     currentDate: z.string().describe('The current date in ISO format.'),
 });
+export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;
 
 
 // Output Schemas

@@ -3,17 +3,14 @@
 /**
  * @fileOverview A chat flow for interacting with the AI financial coach.
  * - chatFlow - A function that handles the chat interaction.
- * - ChatInputSchema - The input schema for the chatFlow.
  */
 
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
+  ChatInputSchema,
   ChatOutputSchema,
-  ChatInputSchema as ChatInputSchemaFromTypes,
 } from '@/lib/ai-types';
-
-export const ChatInputSchema = ChatInputSchemaFromTypes;
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
@@ -31,7 +28,7 @@ You have access to the user's financial data (as JSON strings) to provide person
 
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
-Conversation History:
+Conversation History (a formatted string):
 {{history}}
 
 User's new message:

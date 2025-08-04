@@ -45,6 +45,7 @@ export default function ReflectionPage() {
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
     const [username] = useLocalStorage<string>('username', 'User');
+    const [licenseKey] = useLocalStorage<string>('license_key', '');
     const [aiInsight, setAiInsight] = useLocalStorage<GenerateInsightsOutput | null>('aiInsight', null);
     const [isLoading, setIsLoading] = useState(false);
     const [aiError, setAiError] = useState<string | null>(null);
@@ -83,22 +84,26 @@ export default function ReflectionPage() {
         try {
             const payload = {
                 language,
-                goals: JSON.stringify(goals),
-                transactions: JSON.stringify(transactions),
-                wheelData: JSON.stringify(wheelData),
-                reflections: JSON.stringify(reflections),
+                goals,
+                transactions,
+                wheelData,
+                reflections,
             };
 
             const response = await fetch('/api/ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ flow: 'generateInsights', payload }),
+                body: JSON.stringify({ 
+                    flow: 'generateInsights', 
+                    payload,
+                    licenseKey
+                }),
             });
             
             const result = await response.json();
             
             if (!response.ok || !result.success) {
-                throw new Error(result.error || 'AI request failed');
+                throw new Error(result.error || t('ai_error_description'));
             }
             
             setAiInsight(result.data as GenerateInsightsOutput);
