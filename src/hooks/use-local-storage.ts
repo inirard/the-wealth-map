@@ -15,6 +15,7 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T
     }
     try {
       const item = window.localStorage.getItem(key);
+      // Ensure item is not null and not an empty string before parsing
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       console.warn(`Error reading localStorage key “${key}”:`, error);
@@ -51,7 +52,10 @@ export function useLocalStorage<T>(key: string, initialValue: T): [T, SetValue<T
       // Also handle the native 'storage' event
       else if (event instanceof StorageEvent && event.key === key && event.newValue) {
         try {
-          setStoredValue(JSON.parse(event.newValue));
+          // Ensure newValue is not an empty string before parsing
+          if (event.newValue) {
+            setStoredValue(JSON.parse(event.newValue));
+          }
         } catch (error) {
            console.warn(`Error parsing storage event value for key “${key}”:`, error);
         }

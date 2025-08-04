@@ -21,16 +21,6 @@ import {
     MoreHorizontal
 } from 'lucide-react';
 import {
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarSeparator,
-} from '@/components/ui/sidebar';
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -51,11 +41,12 @@ import {
   DropdownMenuPortal
 } from "@/components/ui/dropdown-menu";
 import DataManagement from '@/components/data-management';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarSeparator } from '@/components/ui/sidebar';
 import { useSidebar } from '@/components/ui/sidebar';
 import { useI18n } from '@/hooks/use-i18n';
 import type { Language } from '@/lib/types';
 import { cn } from '@/lib/utils';
-import { WealthMapIcon } from '../icons/WealthMapIcon';
+import { WealthMapIcon } from '@/components/icons/WealthMapIcon';
 
 export default function AppSidebar() {
   const pathname = usePathname();
