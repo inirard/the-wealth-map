@@ -43,8 +43,8 @@ export default function ProjectionsPage() {
         try {
             const payload = {
                 language,
-                goals,
-                transactions,
+                goals: JSON.stringify(goals),
+                transactions: JSON.stringify(transactions),
                 currentDate: new Date().toISOString(),
             };
             

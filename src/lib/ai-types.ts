@@ -46,30 +46,30 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 // These schemas match what the frontend sends.
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  history: z.array(ChatMessageSchema),
+  history: z.string().describe("The conversation history as a formatted string."),
   message: z.string(),
-  goals: z.array(GoalSchema),
-  transactions: z.array(TransactionSchema),
-  wheelData: z.array(WealthWheelDataSchema),
-  reflections: z.array(ReflectionSchema),
+  goals: z.string().describe("A JSON string of the user's goals."),
+  transactions: z.string().describe("A JSON string of the user's transactions."),
+  wheelData: z.string().describe("A JSON string of the user's wealth wheel data."),
+  reflections: z.string().describe("A JSON string of the user's reflections."),
 });
 export type ChatInput = z.infer<typeof ChatInputSchema>;
 
 
 export const GenerateInsightsInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  goals: z.array(GoalSchema),
-  transactions: z.array(TransactionSchema),
-  wheelData: z.array(WealthWheelDataSchema),
-  reflections: z.array(ReflectionSchema),
+  goals: z.string().describe("A JSON string of the user's goals."),
+  transactions: z.string().describe("A JSON string of the user's transactions."),
+  wheelData: z.string().describe("A JSON string of the user's wealth wheel data."),
+  reflections: z.string().describe("A JSON string of the user's reflections."),
 });
 export type GenerateInsightsInput = z.infer<typeof GenerateInsightsInputSchema>;
 
 
 export const PredictiveInsightsInputSchema = z.object({
     language: z.enum(['pt', 'en', 'es', 'fr']),
-    goals: z.array(GoalSchema),
-    transactions: z.array(TransactionSchema),
+    goals: z.string().describe("A JSON string of the user's goals."),
+    transactions: z.string().describe("A JSON string of the user's transactions."),
     currentDate: z.string().describe('The current date in ISO format.'),
 });
 export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;

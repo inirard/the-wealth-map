@@ -5,7 +5,6 @@
  */
 import { ai } from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import {z} from 'genkit';
 import {
   GenerateInsightsInputSchema,
   GenerateInsightsOutputSchema,
@@ -13,18 +12,10 @@ import {
   type GenerateInsightsOutput,
 } from '@/lib/ai-types';
 
-const PromptInputSchema = z.object({
-  language: z.string(),
-  goals: z.string(),
-  transactions: z.string(),
-  wheelData: z.string(),
-  reflections: z.string(),
-});
-
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: { schema: PromptInputSchema },
+  input: { schema: GenerateInsightsInputSchema },
   output: { schema: GenerateInsightsOutputSchema },
   prompt: `
     You are a friendly and positive financial coach for the "The Wealth Map" app.
@@ -55,28 +46,9 @@ export const generateInsights = ai.defineFlow(
     outputSchema: GenerateInsightsOutputSchema,
   },
   async (input: GenerateInsightsInput): Promise<GenerateInsightsOutput> => {
-    // Pre-process the structured data into JSON strings for the prompt.
-    const promptInput = {
-      language: input.language,
-      goals:
-        input.goals.length > 0
-          ? JSON.stringify(input.goals)
-          : 'No goals set.',
-      transactions:
-        input.transactions.length > 0
-          ? JSON.stringify(input.transactions)
-          : 'No transactions recorded.',
-      wheelData:
-        input.wheelData.length > 0
-          ? JSON.stringify(input.wheelData)
-          : 'Not completed.',
-      reflections:
-        input.reflections.length > 0
-          ? JSON.stringify(input.reflections)
-          : 'No reflections written.',
-    };
-
-    const {output} = await generateInsightsPrompt(promptInput);
+    // The input is already formatted as strings by the frontend.
+    // We can pass it directly to the prompt.
+    const {output} = await generateInsightsPrompt(input);
     return output!;
   }
 );

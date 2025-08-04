@@ -7,7 +7,6 @@
 
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import {z} from 'genkit';
 import {
   ChatInputSchema,
   ChatOutputSchema,
@@ -15,20 +14,10 @@ import {
   type ChatOutput,
 } from '@/lib/ai-types';
 
-const PromptInputSchema = z.object({
-  language: z.string(),
-  message: z.string(),
-  history: z.string(),
-  goals: z.string(),
-  transactions: z.string(),
-  wheelData: z.string(),
-  reflections: z.string(),
-});
-
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: PromptInputSchema},
+  input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
 Your answers MUST be in the user's specified language: {{language}}.
@@ -56,35 +45,9 @@ export const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async (input: ChatInput): Promise<ChatOutput> => {
-    // Pre-process the structured data into strings for the prompt.
-    const promptInput = {
-      language: input.language,
-      message: input.message,
-      history:
-        input.history.length > 0
-          ? input.history
-              .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
-              .join('\n')
-          : 'No history.',
-      goals:
-        input.goals.length > 0
-          ? JSON.stringify(input.goals)
-          : 'No goals set.',
-      transactions:
-        input.transactions.length > 0
-          ? JSON.stringify(input.transactions)
-          : 'No transactions recorded.',
-      wheelData:
-        input.wheelData.length > 0
-          ? JSON.stringify(input.wheelData)
-          : 'Not completed.',
-      reflections:
-        input.reflections.length > 0
-          ? JSON.stringify(input.reflections)
-          : 'No reflections written.',
-    };
-
-    const {output} = await chatPrompt(promptInput);
+    // The input is already formatted as strings by the frontend.
+    // We can pass it directly to the prompt.
+    const {output} = await chatPrompt(input);
     return output!;
   }
 );

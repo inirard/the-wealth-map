@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -83,10 +84,10 @@ export default function ReflectionPage() {
         try {
             const payload = {
                 language,
-                goals,
-                transactions,
-                wheelData,
-                reflections,
+                goals: JSON.stringify(goals),
+                transactions: JSON.stringify(transactions),
+                wheelData: JSON.stringify(wheelData),
+                reflections: JSON.stringify(reflections),
             };
 
             const response = await fetch('/api/ai', {
@@ -152,7 +153,7 @@ export default function ReflectionPage() {
                             <TooltipTrigger asChild>
                                  <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="outline" size="icon">
                                     <Download className="h-5 w-5" />
-                                </Button>
+                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
                                <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>

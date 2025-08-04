@@ -61,12 +61,15 @@ export default function Chatbot() {
         try {
             const payload = {
                 language,
-                history: newMessages.slice(0, -1), // Send history without current message
+                history: newMessages
+                  .slice(0, -1)
+                  .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
+                  .join('\n'),
                 message: input,
-                goals,
-                transactions,
-                wheelData,
-                reflections,
+                goals: JSON.stringify(goals),
+                transactions: JSON.stringify(transactions),
+                wheelData: JSON.stringify(wheelData),
+                reflections: JSON.stringify(reflections),
             };
 
             const response = await fetch('/api/ai', {
