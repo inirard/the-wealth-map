@@ -7,13 +7,19 @@
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
-  PredictiveInsightsInputSchema,
   PredictiveInsightsOutputSchema,
-  type PredictiveInsightsInput,
-  type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
+import {z} from 'genkit';
 
-export { PredictiveInsightsInputSchema };
+
+export const PredictiveInsightsInputSchema = z.object({
+    language: z.enum(['pt', 'en', 'es', 'fr']),
+    goals: z.string().describe("A JSON string of the user's goals."),
+    transactions: z.string().describe("A JSON string of the user's transactions."),
+    currentDate: z.string().describe('The current date in ISO format.'),
+});
+export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;
+
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
@@ -25,16 +31,16 @@ Your response MUST be in the user's specified language: {{language}}.
 The current date is {{currentDate}}.
 
 Analyze the user's financial data:
-- Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-- Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
+- Goals: {{{goals}}}
+- Transactions: {{{transactions}}}
 
 Based on the data, generate the following predictive insights:
 
 1.  **futureBalancePrediction**: A realistic prediction of the user's net balance change over the next 30 days.
-2.  **goalProjections**: For each goal, provide a projection on when they might achieve it based on their current savings rate.
-3.  **spendingAnalysis**: Identify the top spending category and suggest one specific, actionable way to reduce it.
-4.  **proactiveAlerts**: Generate one or two automated-style alerts, such as "High spending on 'Eating Out' detected this month" or "You are on track to meet your 'Vacation' goal."
-5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner."
+2.  **goalProjections**: For each goal, provide a projection on when they might achieve it based on their current savings rate. If there are no goals, this array should be empty.
+3.  **spendingAnalysis**: Identify the top spending category and suggest one specific, actionable way to reduce it. If there are no transactions, state that you cannot analyze spending without data.
+4.  **proactiveAlerts**: Generate one or two automated-style alerts, such as "High spending on 'Eating Out' detected this month" or "You are on track to meet your 'Vacation' goal." If there is not enough data, this array can be empty.
+5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner." If there is not enough data, provide a generic motivational scenario.
 
 Your entire output must be a valid JSON object matching the output schema.
 `,

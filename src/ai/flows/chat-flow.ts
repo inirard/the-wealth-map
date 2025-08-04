@@ -10,22 +10,17 @@ import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
 
 import {
-  ChatOutputSchema,
-  GoalSchema,
-  TransactionSchema,
-  WealthWheelDataSchema,
-  ReflectionSchema,
-  ChatMessageSchema,
+  ChatOutputSchema
 } from '@/lib/ai-types';
 
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  history: z.array(ChatMessageSchema),
+  history: z.string().describe("The conversation history as a string."),
   message: z.string(),
-  goals: z.array(GoalSchema),
-  transactions: z.array(TransactionSchema),
-  wheelData: z.array(WealthWheelDataSchema),
-  reflections: z.array(ReflectionSchema),
+  goals: z.string().describe("A JSON string of the user's goals."),
+  transactions: z.string().describe("A JSON string of the user's transactions."),
+  wheelData: z.string().describe("A JSON string of the user's Wealth Wheel assessment."),
+  reflections: z.string().describe("A JSON string of the user's personal reflections."),
 });
 export type ChatInput = z.infer<typeof ChatInputSchema>;
 
@@ -39,21 +34,15 @@ const chatPrompt = ai.definePrompt({
 Your answers MUST be in the user's specified language: {{language}}.
 
 You have access to the user's financial data to provide personalized responses.
-- User's financial goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-- User's recent transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
-- User's Wealth Wheel assessment: {{#if wheelData.length}}{{json wheelData}}{{else}}Not completed.{{/if}}
-- User's personal reflections: {{#if reflections.length}}{{json reflections}}{{else}}No reflections written.{{/if}}
+- User's financial goals: {{{goals}}}
+- User's recent transactions: {{{transactions}}}
+- User's Wealth Wheel assessment: {{{wheelData}}}
+- User's personal reflections: {{{reflections}}}
 
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
 Conversation History:
-{{#each history}}
-  {{#if (eq this.role "model")}}
-    AI: {{{this.content}}}
-  {{else}}
-    User: {{{this.content}}}
-  {{/if}}
-{{/each}}
+{{{history}}}
 
 User's new message:
 {{{message}}}
@@ -67,15 +56,7 @@ export const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async (input: ChatInput): Promise<ChatOutput> => {
-    // The history object now includes the latest user message.
-    const fullHistory = [...input.history];
-
-    const promptInput = {
-      ...input,
-      history: fullHistory,
-    };
-    
-    const {output} = await chatPrompt(promptInput);
+    const {output} = await chatPrompt(input);
     return output!;
   }
 );

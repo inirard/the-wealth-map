@@ -5,9 +5,17 @@
  */
 import { ai } from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
+import { GenerateInsightsOutputSchema } from '@/lib/ai-types';
+import {z} from 'genkit';
 
-export { GenerateInsightsInputSchema };
+export const GenerateInsightsInputSchema = z.object({
+  language: z.enum(['pt', 'en', 'es', 'fr']),
+  goals: z.string().describe("A JSON string of the user's goals."),
+  transactions: z.string().describe("A JSON string of the user's transactions."),
+  wheelData: z.string().describe("A JSON string of the user's Wealth Wheel assessment."),
+  reflections: z.string().describe("A JSON string of the user's personal reflections."),
+});
+export type GenerateInsightsInput = z.infer<typeof GenerateInsightsInputSchema>;
 
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
@@ -20,10 +28,10 @@ const generateInsightsPrompt = ai.definePrompt({
     The response must be in the specified language: {{language}}.
 
     Here is the user's data:
-    - Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-    - Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
-    - Wealth Wheel Assessment: {{#if wheelData.length}}{{json wheelData}}{{else}}Not completed.{{/if}}
-    - Personal Reflections: {{#if reflections.length}}{{json reflections}}{{else}}No reflections written.{{/if}}
+    - Goals: {{{goals}}}
+    - Transactions: {{{transactions}}}
+    - Wealth Wheel Assessment: {{{wheelData}}}
+    - Personal Reflections: {{{reflections}}}
 
     Based on this data, please generate a single paragraph of analysis that does the following:
     1.  Acknowledge a specific positive point from their reflections or a goal they are progressing on.

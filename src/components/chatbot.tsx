@@ -58,14 +58,16 @@ export default function Chatbot() {
         setIsLoading(true);
 
         try {
+            const historyText = newMessages.map(msg => `${msg.role === 'user' ? 'User' : 'AI'}: ${msg.content}`).join('\n');
+            
             const payload = {
                 language,
-                history: newMessages, // Send the full history including the new user message
+                history: historyText,
                 message: input,
-                goals,
-                transactions,
-                wheelData,
-                reflections,
+                goals: JSON.stringify(goals),
+                transactions: JSON.stringify(transactions),
+                wheelData: JSON.stringify(wheelData),
+                reflections: JSON.stringify(reflections),
             };
 
             const response = await fetch('/api/ai', {

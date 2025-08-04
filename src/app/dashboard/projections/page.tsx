@@ -42,8 +42,8 @@ export default function ProjectionsPage() {
         try {
             const payload = {
                 language,
-                goals,
-                transactions,
+                goals: JSON.stringify(goals),
+                transactions: JSON.stringify(transactions),
                 currentDate: new Date().toISOString(),
             };
             
@@ -176,21 +176,23 @@ export default function ProjectionsPage() {
                         </CardHeader>
                         <CardContent><p className="text-muted-foreground">{aiPredictions.whatIfScenario}</p></CardContent>
                     </Card>
-                    <Card className="md:col-span-2">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-3">
-                                 <div className="p-3 rounded-full bg-primary/10">
-                                    <Target className="text-primary"/>
-                                </div>
-                                {t('goal_projections')}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
-                                {aiPredictions.goalProjections.map((p, i) => <li key={i}><b>{p.goalName}:</b> {p.projection}</li>)}
-                            </ul>
-                        </CardContent>
-                     </Card>
+                    {aiPredictions.goalProjections.length > 0 && (
+                        <Card className="md:col-span-2">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-3">
+                                     <div className="p-3 rounded-full bg-primary/10">
+                                        <Target className="text-primary"/>
+                                    </div>
+                                    {t('goal_projections')}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+                                    {aiPredictions.goalProjections.map((p, i) => <li key={i}><b>{p.goalName}:</b> {p.projection}</li>)}
+                                </ul>
+                            </CardContent>
+                         </Card>
+                    )}
                 </div>
             )
         }

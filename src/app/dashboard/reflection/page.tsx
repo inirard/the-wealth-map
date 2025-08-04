@@ -83,10 +83,10 @@ export default function ReflectionPage() {
         try {
             const payload = {
                 language,
-                goals,
-                transactions,
-                wheelData,
-                reflections,
+                goals: JSON.stringify(goals),
+                transactions: JSON.stringify(transactions),
+                wheelData: JSON.stringify(wheelData),
+                reflections: JSON.stringify(reflections),
             };
 
             const response = await fetch('/api/ai', {
