@@ -7,15 +7,19 @@
 
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
+import {z} from 'genkit';
 import {
   ChatInputSchema,
   ChatOutputSchema,
+  type ChatInput,
+  type ChatOutput,
 } from '@/lib/ai-types';
+
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: ChatInputSchema},
+  input: {schema: z.any()}, // Input is pre-processed, so we use z.any() here.
   output: {schema: ChatOutputSchema},
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
 Your answers MUST be in the user's specified language: {{language}}.
@@ -42,8 +46,34 @@ export const chatFlow = ai.defineFlow(
     inputSchema: ChatInputSchema,
     outputSchema: ChatOutputSchema,
   },
-  async (input) => {
-    const {output} = await chatPrompt(input);
+  async (input: ChatInput): Promise<ChatOutput> => {
+    // Pre-process the structured data into JSON strings for the prompt.
+    const promptInput = {
+      language: input.language,
+      message: input.message,
+      history:
+        input.history
+          .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
+          .join('\n') || 'No history.',
+      goals:
+        input.goals.length > 0
+          ? JSON.stringify(input.goals)
+          : 'No goals set.',
+      transactions:
+        input.transactions.length > 0
+          ? JSON.stringify(input.transactions)
+          : 'No transactions recorded.',
+      wheelData:
+        input.wheelData.length > 0
+          ? JSON.stringify(input.wheelData)
+          : 'Not completed.',
+      reflections:
+        input.reflections.length > 0
+          ? JSON.stringify(input.reflections)
+          : 'No reflections written.',
+    };
+
+    const {output} = await chatPrompt(promptInput);
     return output!;
   }
 );

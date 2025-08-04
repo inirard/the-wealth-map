@@ -6,15 +6,18 @@
 
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
+import {z} from 'genkit';
 import {
   PredictiveInsightsInputSchema,
   PredictiveInsightsOutputSchema,
+  type PredictiveInsightsInput,
+  type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: PredictiveInsightsInputSchema},
+  input: {schema: z.any()}, // Input is pre-processed, so we use z.any() here.
   output: {schema: PredictiveInsightsOutputSchema},
   prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
 Your response MUST be in the user's specified language: {{language}}.
@@ -42,8 +45,22 @@ export const predictiveInsights = ai.defineFlow(
     inputSchema: PredictiveInsightsInputSchema,
     outputSchema: PredictiveInsightsOutputSchema,
   },
-  async (input) => {
-    const {output} = await predictiveInsightsPrompt(input);
+  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
+    // Pre-process the structured data into JSON strings for the prompt.
+    const promptInput = {
+      language: input.language,
+      currentDate: input.currentDate,
+      goals:
+        input.goals.length > 0
+          ? JSON.stringify(input.goals)
+          : 'No goals set.',
+      transactions:
+        input.transactions.length > 0
+          ? JSON.stringify(input.transactions)
+          : 'No transactions recorded.',
+    };
+
+    const {output} = await predictiveInsightsPrompt(promptInput);
     return output!;
   }
 );

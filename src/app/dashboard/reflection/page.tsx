@@ -84,10 +84,10 @@ export default function ReflectionPage() {
         try {
             const payload = {
                 language,
-                goals: goals.length > 0 ? JSON.stringify(goals) : 'No data provided.',
-                transactions: transactions.length > 0 ? JSON.stringify(transactions) : 'No data provided.',
-                wheelData: wheelData.length > 0 ? JSON.stringify(wheelData) : 'No data provided.',
-                reflections: reflections.length > 0 ? JSON.stringify(reflections) : 'No data provided.',
+                goals,
+                transactions,
+                wheelData,
+                reflections,
             };
 
             const response = await fetch('/api/ai', {

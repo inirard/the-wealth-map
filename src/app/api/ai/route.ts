@@ -50,8 +50,6 @@ export async function POST(req: Request) {
       plugins: [googleAI({apiKey})],
     });
     
-    // The payload is already pre-processed on the client-side.
-    // We just validate it here.
     const parsedPayload = selectedFlow.schema.safeParse(payload);
     if (!parsedPayload.success) {
       return NextResponse.json(

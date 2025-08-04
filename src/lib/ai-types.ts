@@ -42,34 +42,35 @@ export const ChatMessageSchema = z.object({
 });
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
+
 // Input schemas for the AI flows.
-// The API route will preprocess arrays into JSON strings, so the flows expect strings.
+// These schemas expect arrays of objects, which will be processed within the flow.
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  history: z.string().describe("The conversation history as a formatted string."),
+  history: z.array(ChatMessageSchema),
   message: z.string(),
-  goals: z.string().describe("A JSON string of the user's goals."),
-  transactions: z.string().describe("A JSON string of the user's transactions."),
-  wheelData: z.string().describe("A JSON string of the user's Wealth Wheel assessment."),
-  reflections: z.string().describe("A JSON string of the user's personal reflections."),
+  goals: z.array(GoalSchema),
+  transactions: z.array(TransactionSchema),
+  wheelData: z.array(WealthWheelDataSchema),
+  reflections: z.array(ReflectionSchema),
 });
 export type ChatInput = z.infer<typeof ChatInputSchema>;
 
 
 export const GenerateInsightsInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
-  goals: z.string().describe("A JSON string of the user's goals."),
-  transactions: z.string().describe("A JSON string of the user's transactions."),
-  wheelData: z.string().describe("A JSON string of the user's Wealth Wheel assessment."),
-  reflections: z.string().describe("A JSON string of the user's personal reflections."),
+  goals: z.array(GoalSchema),
+  transactions: z.array(TransactionSchema),
+  wheelData: z.array(WealthWheelDataSchema),
+  reflections: z.array(ReflectionSchema),
 });
 export type GenerateInsightsInput = z.infer<typeof GenerateInsightsInputSchema>;
 
 
 export const PredictiveInsightsInputSchema = z.object({
     language: z.enum(['pt', 'en', 'es', 'fr']),
-    goals: z.string().describe("A JSON string of the user's goals."),
-    transactions: z.string().describe("A JSON string of the user's transactions."),
+    goals: z.array(GoalSchema),
+    transactions: z.array(TransactionSchema),
     currentDate: z.string().describe('The current date in ISO format.'),
 });
 export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;
