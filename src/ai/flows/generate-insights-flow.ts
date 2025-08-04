@@ -5,17 +5,9 @@
  */
 import { ai } from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import { GenerateInsightsOutputSchema } from '@/lib/ai-types';
-import {z} from 'genkit';
+import { GenerateInsightsOutputSchema, GenerateInsightsInputSchema } from '@/lib/ai-types';
 
-export const GenerateInsightsInputSchema = z.object({
-  language: z.enum(['pt', 'en', 'es', 'fr']),
-  goals: z.string().describe("A JSON string of the user's goals."),
-  transactions: z.string().describe("A JSON string of the user's transactions."),
-  wheelData: z.string().describe("A JSON string of the user's Wealth Wheel assessment."),
-  reflections: z.string().describe("A JSON string of the user's personal reflections."),
-});
-export type GenerateInsightsInput = z.infer<typeof GenerateInsightsInputSchema>;
+export type {GenerateInsightsInput} from '@/lib/ai-types';
 
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
@@ -50,7 +42,7 @@ export const generateInsights = ai.defineFlow(
     inputSchema: GenerateInsightsInputSchema,
     outputSchema: GenerateInsightsOutputSchema,
   },
-  async (input: GenerateInsightsInput): Promise<GenerateInsightsOutput> => {
+  async (input) => {
     const { output } = await generateInsightsPrompt(input);
     return output!;
   }

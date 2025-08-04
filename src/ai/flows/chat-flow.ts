@@ -10,19 +10,10 @@ import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
 
 import {
-  ChatOutputSchema
+  ChatOutputSchema,
+  ChatInputSchema,
 } from '@/lib/ai-types';
-
-export const ChatInputSchema = z.object({
-  language: z.enum(['pt', 'en', 'es', 'fr']),
-  history: z.string().describe("The conversation history as a string."),
-  message: z.string(),
-  goals: z.string().describe("A JSON string of the user's goals."),
-  transactions: z.string().describe("A JSON string of the user's transactions."),
-  wheelData: z.string().describe("A JSON string of the user's Wealth Wheel assessment."),
-  reflections: z.string().describe("A JSON string of the user's personal reflections."),
-});
-export type ChatInput = z.infer<typeof ChatInputSchema>;
+export type {ChatInput} from '@/lib/ai-types';
 
 
 const chatPrompt = ai.definePrompt({
@@ -55,7 +46,7 @@ export const chatFlow = ai.defineFlow(
     inputSchema: ChatInputSchema,
     outputSchema: ChatOutputSchema,
   },
-  async (input: ChatInput): Promise<ChatOutput> => {
+  async (input) => {
     const {output} = await chatPrompt(input);
     return output!;
   }

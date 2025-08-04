@@ -8,17 +8,10 @@ import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
   PredictiveInsightsOutputSchema,
+  PredictiveInsightsInputSchema,
 } from '@/lib/ai-types';
-import {z} from 'genkit';
 
-
-export const PredictiveInsightsInputSchema = z.object({
-    language: z.enum(['pt', 'en', 'es', 'fr']),
-    goals: z.string().describe("A JSON string of the user's goals."),
-    transactions: z.string().describe("A JSON string of the user's transactions."),
-    currentDate: z.string().describe('The current date in ISO format.'),
-});
-export type PredictiveInsightsInput = z.infer<typeof PredictiveInsightsInputSchema>;
+export type {PredictiveInsightsInput} from '@/lib/ai-types';
 
 
 const predictiveInsightsPrompt = ai.definePrompt({
@@ -51,7 +44,7 @@ export const predictiveInsights = ai.defineFlow({
     inputSchema: PredictiveInsightsInputSchema,
     outputSchema: PredictiveInsightsOutputSchema,
   },
-  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
+  async (input) => {
     const {output} = await predictiveInsightsPrompt(input);
     return output!;
   }
