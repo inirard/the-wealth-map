@@ -24,8 +24,8 @@ Your response MUST be in the user's specified language: {{language}}.
 The current date is {{currentDate}}.
 
 Analyze the user's financial data, provided as JSON strings:
-- Goals: {{{goals}}}
-- Transactions: {{{transactions}}}
+- Goals: {{goals}}
+- Transactions: {{transactions}}
 
 Based on the data, generate the following predictive insights:
 

@@ -34,7 +34,7 @@ Conversation History:
 {{history}}
 
 User's new message:
-{{{message}}}
+{{message}}
 `,
 });
 
