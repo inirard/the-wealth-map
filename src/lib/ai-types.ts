@@ -1,7 +1,6 @@
-import {z} from 'genkit';
+import {z} from 'zod';
 
 // These are the base schemas from localStorage.
-// The frontend will send these as arrays of objects.
 export const GoalSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -44,7 +43,7 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 
 // Input schemas for the AI flows.
-// These schemas expect arrays of objects, which will be processed within the flow.
+// These schemas match what the frontend sends.
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
   history: z.array(ChatMessageSchema),

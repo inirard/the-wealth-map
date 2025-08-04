@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview An AI flow to generate financial predictions based on user data.
@@ -15,18 +14,25 @@ import {
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
+const PromptInputSchema = z.object({
+  language: z.string(),
+  goals: z.string(),
+  transactions: z.string(),
+  currentDate: z.string(),
+});
+
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: z.any()}, // Input is pre-processed, so we use z.any() here.
+  input: {schema: PromptInputSchema},
   output: {schema: PredictiveInsightsOutputSchema},
   prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
 Your response MUST be in the user's specified language: {{language}}.
 The current date is {{currentDate}}.
 
-Analyze the user's financial data (as JSON strings):
-- Goals: {{goals}}
-- Transactions: {{transactions}}
+Analyze the user's financial data, provided as JSON strings:
+- Goals: {{{goals}}}
+- Transactions: {{{transactions}}}
 
 Based on the data, generate the following predictive insights:
 
@@ -47,7 +53,7 @@ export const predictiveInsights = ai.defineFlow(
     outputSchema: PredictiveInsightsOutputSchema,
   },
   async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
-    // Pre-process the structured data into JSON strings for the prompt.
+    // Convert the arrays into JSON strings before calling the prompt.
     const promptInput = {
       language: input.language,
       currentDate: input.currentDate,

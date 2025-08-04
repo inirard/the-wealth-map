@@ -1,4 +1,3 @@
-
 'use server';
 
 /**
@@ -16,11 +15,20 @@ import {
   type ChatOutput,
 } from '@/lib/ai-types';
 
+const PromptInputSchema = z.object({
+  language: z.string(),
+  message: z.string(),
+  history: z.string(),
+  goals: z.string(),
+  transactions: z.string(),
+  wheelData: z.string(),
+  reflections: z.string(),
+});
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: z.any()}, // Input is pre-processed, so we use z.any() here.
+  input: {schema: PromptInputSchema},
   output: {schema: ChatOutputSchema},
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
 Your answers MUST be in the user's specified language: {{language}}.
@@ -33,7 +41,7 @@ You have access to the user's financial data (as JSON strings) to provide person
 
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
-Conversation History (a formatted string):
+Conversation History:
 {{history}}
 
 User's new message:
@@ -48,14 +56,16 @@ export const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async (input: ChatInput): Promise<ChatOutput> => {
-    // Pre-process the structured data into JSON strings for the prompt.
+    // Pre-process the structured data into strings for the prompt.
     const promptInput = {
       language: input.language,
       message: input.message,
       history:
-        input.history
-          .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
-          .join('\n') || 'No history.',
+        input.history.length > 0
+          ? input.history
+              .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
+              .join('\n')
+          : 'No history.',
       goals:
         input.goals.length > 0
           ? JSON.stringify(input.goals)

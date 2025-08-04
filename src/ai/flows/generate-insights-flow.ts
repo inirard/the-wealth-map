@@ -1,10 +1,9 @@
-
 'use server';
 /**
  * @fileOverview An AI flow to generate financial insights based on user data.
  * - generateInsights - A function that handles the financial analysis process.
  */
-import {ai} from '@/ai/genkit';
+import { ai } from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
 import {
@@ -14,11 +13,19 @@ import {
   type GenerateInsightsOutput,
 } from '@/lib/ai-types';
 
+const PromptInputSchema = z.object({
+  language: z.string(),
+  goals: z.string(),
+  transactions: z.string(),
+  wheelData: z.string(),
+  reflections: z.string(),
+});
+
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
   model: googleAI.model('gemini-1.5-flash-latest'),
-  input: {schema: z.any()}, // Input is pre-processed, so we use z.any() here.
-  output: {schema: GenerateInsightsOutputSchema},
+  input: { schema: PromptInputSchema },
+  output: { schema: GenerateInsightsOutputSchema },
   prompt: `
     You are a friendly and positive financial coach for the "The Wealth Map" app.
     Your task is to provide a short, personalized, and encouraging analysis for the user based on their financial data.
