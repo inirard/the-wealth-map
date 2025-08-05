@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
@@ -81,18 +82,21 @@ export default function Chatbot() {
         }),
       });
 
-      let result;
-      try {
-        result = await response.json();
-      } catch {
-        throw new Error(`Erro ao ler resposta da API: ${response.status} ${response.statusText}`);
-      }
+      const result = await response.json();
       
       if (!response.ok || !result.success) {
-        const errorMessage = result.error.includes('overloaded')
+        const errorMessage = result.details?.includes('overloaded') || result.error?.includes('overloaded')
            ? t('ai_error_description')
-           : result.error || 'AI request failed';
-        throw new Error(errorMessage);
+           : result.error || t('ai_coach_error_message');
+
+        toast({
+          variant: "destructive",
+          title: t('ai_error_title'),
+          description: errorMessage,
+        });
+        setMessages(prev => prev.slice(0, -1)); // reverte última mensagem
+        setIsLoading(false);
+        return;
       }
 
       const chatOutput = result.data as ChatOutput;
@@ -101,11 +105,10 @@ export default function Chatbot() {
 
     } catch (error: any) {
       console.error("Erro no Chatbot:", error);
-      const friendlyErrorMessage = error.message || t('ai_coach_error_message');
       toast({
         variant: "destructive",
         title: t('ai_error_title'),
-        description: friendlyErrorMessage,
+        description: t('ai_coach_error_message'),
       });
       setMessages(prev => prev.slice(0, -1)); // reverte última mensagem
     } finally {

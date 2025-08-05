@@ -103,16 +103,24 @@ export default function ReflectionPage() {
             const result = await response.json();
             
             if (!response.ok || !result.success) {
-                const errorMessage = result.error.includes('overloaded')
+                const errorMessage = result.details?.includes('overloaded') || result.error?.includes('overloaded')
                     ? t('ai_error_description')
-                    : result.error || 'AI request failed';
-                throw new Error(errorMessage);
+                    : result.error || t('ai_coach_error_message');
+                
+                setAiError(errorMessage);
+                toast({
+                    variant: "destructive",
+                    title: t('ai_error_title'),
+                    description: errorMessage,
+                });
+                setIsLoading(false);
+                return;
             }
             
             setAiInsight(result.data as GenerateInsightsOutput);
         } catch (error: any) {
             console.error("Error generating AI insights:", error);
-            const friendlyErrorMessage = error.message || t('ai_coach_error_message');
+            const friendlyErrorMessage = t('ai_coach_error_message');
             setAiError(friendlyErrorMessage);
             toast({
                 variant: "destructive",
@@ -269,7 +277,7 @@ export default function ReflectionPage() {
                 </Card>
             </div>
             
-            <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
+             <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
                  <FinancialReport 
                     ref={reportRef}
                     data={{
