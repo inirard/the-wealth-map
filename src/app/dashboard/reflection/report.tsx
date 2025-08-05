@@ -175,9 +175,9 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                         <section className={goals.length > 0 ? "col-span-2" : "col-span-5"}>
                             <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('your_wealth_wheel')}</h2>
                              <Card className="shadow-md" style={cardStyle}>
-                                 <CardContent className="h-[500px] p-4">
+                                 <CardContent className="p-4" style={{ height: '500px', width: '100%' }}>
                                     <ChartContainer config={chartConfig} className="w-full h-full">
-                                        <RadarChart data={wheelData} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+                                        <RadarChart data={wheelData} outerRadius="80%">
                                             <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
                                             <PolarGrid />
                                             <PolarAngleAxis dataKey="label" tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
@@ -232,9 +232,3 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
 FinancialReport.displayName = 'FinancialReport';
 export default FinancialReport;
-    
-    
-
-    
-
-    

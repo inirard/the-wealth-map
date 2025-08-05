@@ -6,9 +6,22 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useI18n } from '@/hooks/use-i18n';
 import { Gem, Sparkles } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
 
 export default function UpgradePage() {
     const { t } = useI18n();
+    const { toast } = useToast();
+
+    const handleNotifyClick = () => {
+        const subject = encodeURIComponent("Notificação de Interesse no Plano PRO - The Wealth Map");
+        const body = encodeURIComponent("Olá, gostaria de ser notificado(a) quando o Plano PRO for lançado. Obrigado!");
+        window.location.href = `mailto:thewealthmap.app@gmail.com?subject=${subject}&body=${body}`;
+
+        toast({
+            title: "A abrir o seu cliente de e-mail...",
+            description: "Se nada acontecer, por favor envie um e-mail para thewealthmap.app@gmail.com",
+        });
+    };
 
     return (
         <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
@@ -39,7 +52,7 @@ export default function UpgradePage() {
             </Card>
 
             <div className="text-center mt-12">
-                <Button size="lg" className="text-lg">
+                <Button size="lg" className="text-lg" onClick={handleNotifyClick}>
                     {t('notify_me')}
                 </Button>
             </div>

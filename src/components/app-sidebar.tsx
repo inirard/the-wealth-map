@@ -18,7 +18,8 @@ import {
     Languages,
     FileText,
     ShieldCheck,
-    MoreHorizontal
+    DatabaseZap,
+    Database
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -82,32 +83,6 @@ export default function AppSidebar() {
     window.localStorage.clear();
     router.push('/activate');
   };
-  
-  const SecondaryMenuContent = () => (
-    <>
-      <DropdownMenuSub>
-        <DropdownMenuSubTrigger className="focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary">
-          <Languages /> {t('languages')}
-        </DropdownMenuSubTrigger>
-        <DropdownMenuPortal>
-          <DropdownMenuSubContent>
-            {languages.map(lang => (
-              <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-primary/10' : ''}>
-                {lang.name}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuSubContent>
-        </DropdownMenuPortal>
-      </DropdownMenuSub>
-      <DataManagement isDropdown={true} />
-      <DropdownMenuItem onSelect={() => router.push('/legal/terms')}>
-        <FileText /> {t('terms_of_service')}
-      </DropdownMenuItem>
-      <DropdownMenuItem onSelect={() => router.push('/legal/privacy')}>
-        <ShieldCheck /> {t('privacy_policy')}
-      </DropdownMenuItem>
-    </>
-  );
 
   return (
     <>
@@ -139,11 +114,11 @@ export default function AppSidebar() {
 
             <SidebarSeparator className="my-3" />
             
-             <SidebarMenu className="group-data-[collapsible=icon]:hidden">
+            <SidebarMenu>
                 <SidebarMenuItem>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <SidebarMenuButton variant="ghost" className="w-full justify-start hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary">
+                            <SidebarMenuButton variant="ghost" className="w-full justify-start hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary" tooltip={t('languages')}>
                                 <Languages />
                                 <span className="group-data-[collapsible=icon]:hidden">{t('languages')}</span>
                             </SidebarMenuButton>
@@ -171,19 +146,6 @@ export default function AppSidebar() {
                 </SidebarMenuItem>
             </SidebarMenu>
             
-            <SidebarMenu className="hidden group-data-[collapsible=icon]:flex">
-                 <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <SidebarMenuButton tooltip={t('more')}>
-                             <MoreHorizontal />
-                        </SidebarMenuButton>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="right" align="start">
-                      <SecondaryMenuContent />
-                    </DropdownMenuContent>
-                 </DropdownMenu>
-            </SidebarMenu>
-
         </SidebarContent>
         <SidebarFooter>
             <SidebarSeparator className="my-2" />
