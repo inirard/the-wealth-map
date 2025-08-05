@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -265,8 +266,8 @@ export default function ProjectionsPage() {
 
             {renderContent()}
 
-            <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
-                {isClient && aiPredictions && (
+            {isClient && aiPredictions && (
+                <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
                     <ProjectionsReport 
                         ref={reportRef}
                         data={{
@@ -274,8 +275,8 @@ export default function ProjectionsPage() {
                             aiPredictions,
                         }}
                     />
-                )}
-            </div>
+                </div>
+            )}
         </div>
     );
 }

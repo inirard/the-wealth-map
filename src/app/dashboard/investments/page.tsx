@@ -256,8 +256,8 @@ export default function InvestmentsPage() {
           </CardContent>
       </Card>
 
-        <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
-            {isClient && (
+        {isClient && (
+            <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
                 <InvestmentsReport 
                     ref={reportRef}
                     data={{
@@ -267,8 +267,8 @@ export default function InvestmentsPage() {
                         investmentTypes
                     }}
                 />
-            )}
-        </div>
+            </div>
+        )}
     </div>
   );
 }
