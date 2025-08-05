@@ -93,18 +93,6 @@ const ProjectionsReport = forwardRef<HTMLDivElement, ProjectionsReportProps>(({ 
                         <CardContent><p className="text-gray-700">{aiPredictions.whatIfScenario}</p></CardContent>
                     </Card>
                 </section>
-
-                <Card className="bg-primary/5 border-primary shadow-md" style={cardStyle}>
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-3 text-primary">
-                            <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex items-start gap-4">
-                        <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
-                        <p className="text-base text-gray-700 italic">"This projection is based on your recent financial activity."</p>
-                    </CardContent>
-                </Card>
             </main>
         </div>
     );

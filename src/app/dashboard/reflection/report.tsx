@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Progress } from '@/components/ui/progress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts"
-import { CircleDollarSign, Target, TrendingUp, TrendingDown, Bot, Sparkles, Heart, Star, BookOpen } from 'lucide-react';
+import { CircleDollarSign, Target, TrendingUp, TrendingDown, Bot, Sparkles, Heart, Star, BookOpen, Donut } from 'lucide-react';
 import { format } from "date-fns";
 import { useI18n } from '@/hooks/use-i18n';
 import { cn } from "@/lib/utils";
@@ -96,23 +96,6 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                         </Card>
                     </div>
                 </section>
-
-                {/* AI Coach Insights */}
-                {aiInsight && aiInsight.analysis && (
-                    <section style={sectionStyle}>
-                        <Card className="bg-primary/5 border-primary shadow-md">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-3 text-primary">
-                                    <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex items-start gap-4">
-                                <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
-                                <p className="text-base text-gray-700 italic">"{aiInsight.analysis}"</p>
-                            </CardContent>
-                        </Card>
-                    </section>
-                )}
                 
                  {/* Reflections and Mood */}
                 {nonEmptyReflections.length > 0 && (
@@ -145,51 +128,51 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 )}
 
 
-                {/* Goals and Wealth Wheel */}
-                <div className="grid grid-cols-5 gap-8" style={sectionStyle}>
-                    {goals.length > 0 && (
-                        <section className="col-span-3">
-                            <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('goals_progress_title')}</h2>
-                            <div className="space-y-4">
-                                {goals.map(goal => (
-                                    <Card key={goal.id} className="shadow-md" style={cardStyle}>
-                                        <CardHeader>
-                                            <CardTitle className="flex justify-between items-center text-lg">
-                                                <span>{goal.name}</span>
-                                                <span className="text-sm font-medium text-gray-500">
-                                                    {t('target_date')}: {format(new Date(goal.targetDate), "PPP")}
-                                                </span>
-                                            </CardTitle>
-                                        </CardHeader>
-                                        <CardContent>
-                                            <p className="text-xl font-bold">${goal.currentAmount.toLocaleString()} / <span className="text-base font-medium text-gray-500">${goal.targetAmount.toLocaleString()}</span></p>
-                                            <Progress value={(goal.currentAmount / goal.targetAmount) * 100} className="mt-2" />
-                                        </CardContent>
-                                    </Card>
-                                ))}
-                            </div>
-                        </section>
-                    )}
+                {/* Goals */}
+                {goals.length > 0 && (
+                    <section style={sectionStyle}>
+                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('goals_progress_title')}</h2>
+                        <div className="space-y-4">
+                            {goals.map(goal => (
+                                <Card key={goal.id} className="shadow-md" style={cardStyle}>
+                                    <CardHeader>
+                                        <CardTitle className="flex justify-between items-center text-lg">
+                                            <span>{goal.name}</span>
+                                            <span className="text-sm font-medium text-gray-500">
+                                                {t('target_date')}: {format(new Date(goal.targetDate), "PPP")}
+                                            </span>
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <p className="text-xl font-bold">${goal.currentAmount.toLocaleString()} / <span className="text-base font-medium text-gray-500">${goal.targetAmount.toLocaleString()}</span></p>
+                                        <Progress value={(goal.currentAmount / goal.targetAmount) * 100} className="mt-2" />
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    </section>
+                )}
 
-                    {wheelData.length > 0 && (
-                        <section className={goals.length > 0 ? "col-span-2" : "col-span-5"}>
-                            <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('your_wealth_wheel')}</h2>
-                             <Card className="shadow-md" style={cardStyle}>
-                                 <CardContent className="p-4" style={{ height: '500px', width: '100%' }}>
-                                    <ChartContainer config={chartConfig} className="w-full h-full">
-                                        <RadarChart data={wheelData} outerRadius="80%">
-                                            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-                                            <PolarGrid />
-                                            <PolarAngleAxis dataKey="label" tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
-                                            <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
-                                            <Radar name="Score" dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
-                                        </RadarChart>
-                                    </ChartContainer>
-                                </CardContent>
-                            </Card>
-                        </section>
-                    )}
-                </div>
+                {/* Wealth Wheel - Full Page */}
+                {wheelData.length > 0 && (
+                    <section style={{ breakBefore: 'page', paddingTop: '2rem' }}>
+                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800 text-center">{t('your_wealth_wheel')}</h2>
+                         <Card className="shadow-md" style={{width: '100%', height: '80vh'}}>
+                             <CardContent className="p-4 w-full h-full">
+                                <ChartContainer config={chartConfig} className="w-full h-full">
+                                    <RadarChart data={wheelData} outerRadius="80%">
+                                        <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+                                        <PolarGrid gridType="circle" />
+                                        <PolarAngleAxis dataKey="label" tick={{ fill: 'hsl(var(--foreground))', fontSize: 14 }} />
+                                        <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
+                                        <Radar name="Score" dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
+                                    </RadarChart>
+                                </ChartContainer>
+                            </CardContent>
+                        </Card>
+                    </section>
+                )}
+                
 
                 {/* Transactions */}
                 {transactions.length > 0 && (
@@ -222,6 +205,23 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                     ))}
                                 </TableBody>
                             </Table>
+                        </Card>
+                    </section>
+                )}
+
+                {/* AI Coach Insights - Last Element */}
+                {aiInsight && aiInsight.analysis && (
+                    <section style={{ breakBefore: 'page', paddingTop: '2rem' }}>
+                        <Card className="bg-primary/5 border-primary shadow-md">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-3 text-primary">
+                                    <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex items-start gap-4">
+                                <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                                <p className="text-base text-gray-700 italic">"{aiInsight.analysis}"</p>
+                            </CardContent>
                         </Card>
                     </section>
                 )}
