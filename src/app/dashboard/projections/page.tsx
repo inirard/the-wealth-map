@@ -61,19 +61,22 @@ export default function ProjectionsPage() {
             const result = await response.json();
             
             if (!response.ok || !result.success) {
-                 throw new Error(result.error || 'AI request failed');
+                 const errorMessage = result.error.includes('overloaded')
+                    ? t('ai_error_description')
+                    : result.error || 'AI request failed';
+                 throw new Error(errorMessage);
             }
             
             setAiPredictions(result.data as PredictiveInsightsOutput);
 
         } catch (error: any) {
             console.error("Error generating AI predictions:", error);
-            const errorMessage = error.message.includes('DOCTYPE') ? t('ai_error_description') : error.message;
-            setAiError(errorMessage);
+            const friendlyErrorMessage = error.message || t('ai_coach_error_message');
+            setAiError(friendlyErrorMessage);
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
-                description: errorMessage,
+                description: friendlyErrorMessage,
             });
         } finally {
             setIsLoading(false);
@@ -266,8 +269,8 @@ export default function ProjectionsPage() {
 
             {renderContent()}
 
-            {isClient && aiPredictions && (
-                <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
+            <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
+                 {isClient && aiPredictions && (
                     <ProjectionsReport 
                         ref={reportRef}
                         data={{
@@ -275,8 +278,8 @@ export default function ProjectionsPage() {
                             aiPredictions,
                         }}
                     />
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
 }

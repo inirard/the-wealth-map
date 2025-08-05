@@ -19,7 +19,8 @@ import {
     FileText,
     ShieldCheck,
     DatabaseZap,
-    Database
+    Database,
+    CircleDollarSign
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -36,17 +37,12 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuPortal
 } from "@/components/ui/dropdown-menu";
 import DataManagement from '@/components/data-management';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarSeparator } from '@/components/ui/sidebar';
 import { useSidebar } from '@/components/ui/sidebar';
-import { useI18n } from '@/hooks/use-i18n';
-import type { Language } from '@/lib/types';
-import { cn } from '@/lib/utils';
+import { useI18n, useCurrency } from '@/hooks/use-i18n';
+import type { Language, Currency } from '@/lib/types';
 import { WealthMapIcon } from '@/components/icons/WealthMapIcon';
 
 export default function AppSidebar() {
@@ -55,6 +51,7 @@ export default function AppSidebar() {
   const { setOpenMobile } = useSidebar();
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
   const { t, language, setLanguage } = useI18n();
+  const { currency, setCurrency, availableCurrencies } = useCurrency();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
@@ -127,6 +124,23 @@ export default function AppSidebar() {
                             {languages.map(lang => (
                                 <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-primary/10' : ''}>
                                     {lang.name}
+                                </DropdownMenuItem>
+                            ))}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </SidebarMenuItem>
+                <SidebarMenuItem>
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <SidebarMenuButton variant="ghost" className="w-full justify-start hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary" tooltip={t('currency')}>
+                                <CircleDollarSign />
+                                <span className="group-data-[collapsible=icon]:hidden">{t('currency')}</span>
+                            </SidebarMenuButton>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right" align="start">
+                            {availableCurrencies.map(curr => (
+                                <DropdownMenuItem key={curr.code} onSelect={() => setCurrency(curr.code)} className={currency === curr.code ? 'bg-primary/10' : ''}>
+                                    {curr.name} ({curr.symbol})
                                 </DropdownMenuItem>
                             ))}
                         </DropdownMenuContent>

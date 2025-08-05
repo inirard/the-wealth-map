@@ -36,7 +36,7 @@ User's new message:
 ${input.message}`.trim();
 
     const result = await ai.generate({
-      model: googleAI.model('gemini-1.5-flash-latest'),
+      model: googleAI.model('gemini-1.5-flash'),
       prompt,
     });
 

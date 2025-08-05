@@ -16,7 +16,7 @@ import {
 
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
-  model: googleAI.model('gemini-1.5-flash-latest'),
+  model: googleAI.model('gemini-1.5-flash'),
   input: {schema: PredictiveInsightsInputSchema},
   output: {schema: PredictiveInsightsOutputSchema},
   prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.

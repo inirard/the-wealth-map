@@ -38,6 +38,8 @@ export interface Investment {
 
 export type Language = 'pt' | 'en' | 'es' | 'fr';
 
+export type Currency = 'EUR' | 'USD' | 'GBP' | 'BRL' | 'CVE';
+
 // This type is compatible with the AI ChatMessage schema
 export interface ChatMessage {
   role: 'user' | 'model';

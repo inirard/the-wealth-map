@@ -14,7 +14,7 @@ import {
 
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
-  model: googleAI.model('gemini-1.5-flash-latest'),
+  model: googleAI.model('gemini-1.5-flash'),
   input: { schema: GenerateInsightsInputSchema },
   output: { schema: GenerateInsightsOutputSchema },
   prompt: `

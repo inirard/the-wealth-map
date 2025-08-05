@@ -87,10 +87,12 @@ export default function Chatbot() {
       } catch {
         throw new Error(`Erro ao ler resposta da API: ${response.status} ${response.statusText}`);
       }
-
-      if (!response.ok || !result?.success) {
-        const errorDetail = result?.error || 'AI request failed';
-        throw new Error(errorDetail);
+      
+      if (!response.ok || !result.success) {
+        const errorMessage = result.error.includes('overloaded')
+           ? t('ai_error_description')
+           : result.error || 'AI request failed';
+        throw new Error(errorMessage);
       }
 
       const chatOutput = result.data as ChatOutput;
@@ -99,10 +101,11 @@ export default function Chatbot() {
 
     } catch (error: any) {
       console.error("Erro no Chatbot:", error);
+      const friendlyErrorMessage = error.message || t('ai_coach_error_message');
       toast({
         variant: "destructive",
         title: t('ai_error_title'),
-        description: error.message || 'Erro desconhecido ao conversar com a IA.',
+        description: friendlyErrorMessage,
       });
       setMessages(prev => prev.slice(0, -1)); // reverte última mensagem
     } finally {

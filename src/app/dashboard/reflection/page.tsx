@@ -103,18 +103,21 @@ export default function ReflectionPage() {
             const result = await response.json();
             
             if (!response.ok || !result.success) {
-                throw new Error(result.error || 'AI request failed');
+                const errorMessage = result.error.includes('overloaded')
+                    ? t('ai_error_description')
+                    : result.error || 'AI request failed';
+                throw new Error(errorMessage);
             }
             
             setAiInsight(result.data as GenerateInsightsOutput);
         } catch (error: any) {
             console.error("Error generating AI insights:", error);
-            const errorMessage = error.message.includes('DOCTYPE') ? t('ai_error_description') : error.message;
-            setAiError(errorMessage);
+            const friendlyErrorMessage = error.message || t('ai_coach_error_message');
+            setAiError(friendlyErrorMessage);
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
-                description: errorMessage,
+                description: friendlyErrorMessage,
             });
         } finally {
             setIsLoading(false);

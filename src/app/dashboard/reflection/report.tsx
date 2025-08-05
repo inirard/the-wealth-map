@@ -2,16 +2,16 @@
 "use client"
 
 import React, { forwardRef, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts"
-import { CircleDollarSign, Target, TrendingUp, TrendingDown, Bot, Sparkles, Heart, Star, BookOpen, Donut } from 'lucide-react';
+import { CircleDollarSign, Target, Bot, Sparkles, Donut } from 'lucide-react';
 import { format } from "date-fns";
-import { useI18n } from '@/hooks/use-i18n';
+import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { cn } from "@/lib/utils";
-import type { Goal, Transaction, WealthWheelData, Reflection, Language } from '@/lib/types';
+import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types';
 import type { GenerateInsightsOutput } from '@/lib/ai-types';
 
 interface ReportData {
@@ -42,6 +42,7 @@ const emotionalStates: { [key: string]: { labelKey: string; icon: React.FC<any> 
 
 const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data }, ref) => {
     const { t } = useI18n();
+    const { currency, formatCurrency } = useCurrency();
     const { username, goals, transactions, wheelData, reflections, mood, aiInsight } = data;
 
     const { totalIncome, totalExpenses, balance } = useMemo(() => {
@@ -54,10 +55,13 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
     const sectionStyle = {
         breakInside: 'avoid',
+        paddingTop: '1rem',
+        paddingBottom: '1rem',
     } as React.CSSProperties;
 
-    const cardStyle = {
-        breakInside: 'avoid-page',
+    const pageBreakBefore = {
+        breakBefore: 'page',
+        paddingTop: '2rem',
     } as React.CSSProperties;
 
     return (
@@ -77,41 +81,41 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                 </div>
             </header>
 
-            <main className="space-y-12">
+            <main>
                 {/* Financial Summary */}
                 <section style={sectionStyle}>
                     <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('financial_summary_title')}</h2>
                     <div className="grid grid-cols-3 gap-6">
                         <Card className="text-center shadow-md">
                             <CardHeader><CardTitle className="text-lg">{t('total_income')}</CardTitle></CardHeader>
-                            <CardContent><p className="text-3xl font-bold text-green-600">€{totalIncome.toFixed(2)}</p></CardContent>
+                            <CardContent><p className="text-3xl font-bold text-green-600">{formatCurrency(totalIncome)}</p></CardContent>
                         </Card>
                         <Card className="text-center shadow-md">
                             <CardHeader><CardTitle className="text-lg">{t('total_expenses')}</CardTitle></CardHeader>
-                            <CardContent><p className="text-3xl font-bold text-red-600">€{totalExpenses.toFixed(2)}</p></CardContent>
+                            <CardContent><p className="text-3xl font-bold text-red-600">{formatCurrency(totalExpenses)}</p></CardContent>
                         </Card>
                         <Card className="text-center shadow-md">
                             <CardHeader><CardTitle className="text-lg">{t('final_balance')}</CardTitle></CardHeader>
-                            <CardContent><p className={cn("text-3xl font-bold", balance >= 0 ? 'text-green-600' : 'text-red-600')}>€{balance.toFixed(2)}</p></CardContent>
+                            <CardContent><p className={cn("text-3xl font-bold", balance >= 0 ? 'text-green-600' : 'text-red-600')}>{formatCurrency(balance)}</p></CardContent>
                         </Card>
                     </div>
                 </section>
                 
                  {/* Reflections and Mood */}
-                {nonEmptyReflections.length > 0 && (
+                {(nonEmptyReflections.length > 0 || mood) && (
                      <section style={sectionStyle}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('reflection_motivation')}</h2>
                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                              <div className="space-y-4">
                                 {nonEmptyReflections.map(reflection => (
-                                    <Card key={reflection.id} className="shadow-md" style={cardStyle}>
+                                    <Card key={reflection.id} className="shadow-md" style={{breakInside: 'avoid-page'}}>
                                         <CardHeader><CardTitle className="text-base">{reflection.prompt}</CardTitle></CardHeader>
                                         <CardContent><p className="text-gray-600 italic">"{reflection.content}"</p></CardContent>
                                     </Card>
                                 ))}
                              </div>
                              {mood && emotionalStates[mood] && (
-                                <Card className="shadow-md text-center" style={cardStyle}>
+                                <Card className="shadow-md text-center" style={{breakInside: 'avoid-page'}}>
                                     <CardHeader className="p-6 pb-2">
                                         <CardTitle>{t('how_did_you_feel')}</CardTitle>
                                     </CardHeader>
@@ -127,14 +131,13 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                     </section>
                 )}
 
-
                 {/* Goals */}
                 {goals.length > 0 && (
                     <section style={sectionStyle}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('goals_progress_title')}</h2>
                         <div className="space-y-4">
                             {goals.map(goal => (
-                                <Card key={goal.id} className="shadow-md" style={cardStyle}>
+                                <Card key={goal.id} className="shadow-md" style={{breakInside: 'avoid-page'}}>
                                     <CardHeader>
                                         <CardTitle className="flex justify-between items-center text-lg">
                                             <span>{goal.name}</span>
@@ -144,7 +147,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent>
-                                        <p className="text-xl font-bold">${goal.currentAmount.toLocaleString()} / <span className="text-base font-medium text-gray-500">${goal.targetAmount.toLocaleString()}</span></p>
+                                        <p className="text-xl font-bold">{formatCurrency(goal.currentAmount)} / <span className="text-base font-medium text-gray-500">{formatCurrency(goal.targetAmount)}</span></p>
                                         <Progress value={(goal.currentAmount / goal.targetAmount) * 100} className="mt-2" />
                                     </CardContent>
                                 </Card>
@@ -153,9 +156,44 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                     </section>
                 )}
 
+                {/* Transactions */}
+                {transactions.length > 0 && (
+                    <section style={sectionStyle}>
+                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('transactions_title')}</h2>
+                        <Card className="shadow-md">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        <TableHead>{t('date')}</TableHead>
+                                        <TableHead>{t('description')}</TableHead>
+                                        <TableHead>{t('type')}</TableHead>
+                                        <TableHead className="text-right">{t('amount')} ({currency})</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {transactions.map(transaction => (
+                                        <TableRow key={transaction.id}>
+                                            <TableCell>{format(new Date(transaction.date), "PPP")}</TableCell>
+                                            <TableCell className="font-medium">{transaction.description}</TableCell>
+                                            <TableCell>
+                                                <span className={cn(transaction.type === 'income' ? 'text-green-700' : 'text-red-700')}>
+                                                    {transaction.type === 'income' ? t('income') : t('expense')}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell className={cn("text-right font-semibold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                                                {formatCurrency(transaction.amount)}
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </Card>
+                    </section>
+                )}
+                
                 {/* Wealth Wheel - Full Page */}
                 {wheelData.length > 0 && (
-                    <section style={{ breakBefore: 'page', paddingTop: '2rem' }}>
+                    <section style={pageBreakBefore}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800 text-center">{t('your_wealth_wheel')}</h2>
                          <Card className="shadow-md" style={{width: '100%', height: '80vh'}}>
                              <CardContent className="p-4 w-full h-full">
@@ -172,46 +210,10 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                         </Card>
                     </section>
                 )}
-                
-
-                {/* Transactions */}
-                {transactions.length > 0 && (
-                    <section style={sectionStyle}>
-                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('transactions_title')}</h2>
-                        <Card className="shadow-md">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>{t('date')}</TableHead>
-                                        <TableHead>{t('description')}</TableHead>
-                                        <TableHead>{t('type')}</TableHead>
-                                        <TableHead className="text-right">{t('amount')}</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {transactions.map(transaction => (
-                                        <TableRow key={transaction.id}>
-                                            <TableCell>{format(new Date(transaction.date), "PPP")}</TableCell>
-                                            <TableCell className="font-medium">{transaction.description}</TableCell>
-                                            <TableCell>
-                                                <span className={cn(transaction.type === 'income' ? 'text-green-700' : 'text-red-700')}>
-                                                    {transaction.type === 'income' ? t('income') : t('expense')}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className={cn("text-right font-semibold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                                                €{transaction.amount.toFixed(2)}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Card>
-                    </section>
-                )}
 
                 {/* AI Coach Insights - Last Element */}
                 {aiInsight && aiInsight.analysis && (
-                    <section style={{ breakBefore: 'page', paddingTop: '2rem' }}>
+                    <section style={pageBreakBefore}>
                         <Card className="bg-primary/5 border-primary shadow-md">
                             <CardHeader>
                                 <CardTitle className="flex items-center gap-3 text-primary">

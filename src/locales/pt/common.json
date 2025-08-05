@@ -29,8 +29,8 @@
   "edit_goal": "Editar Meta Financeira",
   "goal_name": "Nome da Meta",
   "goal_name_placeholder": "Ex: Poupar para a entrada da casa",
-  "target_amount": "Valor Alvo (€)",
-  "current_amount": "Valor Atual (€)",
+  "target_amount": "Valor Alvo",
+  "current_amount": "Valor Atual",
   "target_date": "Data Alvo",
   "pick_a_date": "Escolha uma data",
   "why_is_it_important": "Porque é que isto é importante para mim?",
@@ -170,7 +170,7 @@
   "investment_name_placeholder": "Ex: Ações da Apple Inc.",
   "investment_type": "Tipo de Investimento",
   "investment_type_placeholder": "Selecione um tipo",
-  "investment_amount": "Valor Total Investido (€)",
+  "investment_amount": "Valor Total Investido",
   "investment_quantity": "Quantidade / Unidades",
   "optional": "opcional",
   "stocks": "Ações",
@@ -208,5 +208,6 @@
   "ai_limit_title": "Limite Mensal Atingido",
   "ai_limit_description": "Já utilizou a sua análise de IA gratuita para este mês. Faça o upgrade para PRO para obter insights ilimitados.",
   "more": "Mais",
-  "languages": "Idiomas"
+  "languages": "Idiomas",
+  "currency": "Moeda"
 }
