@@ -26,11 +26,6 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
-  icons: {
-    icon: '/favicon.ico',
-    shortcut: '/favicon.ico',
-    apple: '/icons/apple-touch-icon.png',
-  },
 };
 
 export const viewport: Viewport = {
@@ -47,6 +42,7 @@ export default function RootLayout({
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
        <head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
        </head>
       <body>
         <I18nProvider>
