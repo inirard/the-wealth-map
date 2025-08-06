@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',
-    apple: '/icon-192.png',
+    apple: '/icon.svg',
   },
 };
 
@@ -44,7 +44,7 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en" suppressHydrationWarning className={`${poppins.variable}`}>
+    <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
        <head />
       <body>
         <I18nProvider>
