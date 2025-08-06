@@ -1,4 +1,3 @@
-
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './print.css';
@@ -27,8 +26,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: '/icons/icon-192x192.png',
-    shortcut: '/icons/icon-192x192.png',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
     apple: '/icons/apple-touch-icon.png',
   },
 };
