@@ -16,7 +16,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useI18n } from '@/hooks/use-i18n';
+import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
@@ -25,6 +25,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export default function InvestmentsPage() {
   const { t } = useI18n();
+  const { currency, formatCurrency } = useCurrency();
   const { toast } = useToast();
   const [isClient, setIsClient] = useState(false);
   const reportRef = useRef<HTMLDivElement>(null);
@@ -172,7 +173,7 @@ export default function InvestmentsPage() {
 
                     <FormField control={form.control} name="amount" render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{t('investment_amount')}</FormLabel>
+                        <FormLabel>{t('investment_amount')} ({currency})</FormLabel>
                         <FormControl><Input type="number" step="0.01" placeholder="1000.00" {...field} /></FormControl>
                         <FormMessage />
                       </FormItem>
@@ -202,7 +203,7 @@ export default function InvestmentsPage() {
           <CardDescription>{t('total_invested_capital_desc')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-2xl font-bold text-primary">€{isClient ? totalInvested.toFixed(2) : '0.00'}</p>
+          <p className="text-2xl font-bold text-primary">{isClient ? formatCurrency(totalInvested) : '...'}</p>
         </CardContent>
       </Card>
 
@@ -218,7 +219,7 @@ export default function InvestmentsPage() {
                     <TableHead>{t('name')}</TableHead>
                     <TableHead>{t('type')}</TableHead>
                     <TableHead>{t('quantity')}</TableHead>
-                    <TableHead className="text-right">{t('amount')} (€)</TableHead>
+                    <TableHead className="text-right">{t('amount')} ({currency})</TableHead>
                     <TableHead className="w-[100px]"></TableHead>
                 </TableRow>
                 </TableHeader>
@@ -233,7 +234,7 @@ export default function InvestmentsPage() {
                             </span>
                         </TableCell>
                         <TableCell>{investment.quantity || 'N/A'}</TableCell>
-                        <TableCell className="text-right font-semibold">€{investment.amount.toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-semibold">{formatCurrency(investment.amount)}</TableCell>
                         <TableCell className="text-right">
                              <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(investment)}>
                                 <Edit className="h-4 w-4 text-muted-foreground" />

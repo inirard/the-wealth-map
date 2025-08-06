@@ -20,11 +20,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Textarea } from '@/components/ui/textarea';
 import { cn } from "@/lib/utils";
-import { useI18n } from '@/hooks/use-i18n';
+import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function GoalsPage() {
   const { t } = useI18n();
+  const { currency, formatCurrency } = useCurrency();
 
   const goalSchema = useMemo(() => z.object({
     id: z.string().optional(),
@@ -150,10 +151,10 @@ export default function GoalsPage() {
                   <FormItem><FormLabel>{t('goal_name')}</FormLabel><FormControl><Input placeholder={t('goal_name_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="targetAmount" render={({ field }) => (
-                  <FormItem><FormLabel>{t('target_amount')}</FormLabel><FormControl><Input type="number" placeholder="20000" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>{t('target_amount')} ({currency})</FormLabel><FormControl><Input type="number" placeholder="20000" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="currentAmount" render={({ field }) => (
-                  <FormItem><FormLabel>{t('current_amount')}</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
+                  <FormItem><FormLabel>{t('current_amount')} ({currency})</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="targetDate" render={({ field }) => (
                   <FormItem className="flex flex-col"><FormLabel>{t('target_date')}</FormLabel><Popover>
@@ -207,7 +208,7 @@ export default function GoalsPage() {
                 <CardContent className="flex-grow space-y-4">
                   <div>
                     <p className="text-sm text-muted-foreground">{t('progress')}</p>
-                    <p className="text-2xl font-bold">${goal.currentAmount.toLocaleString()} / <span className="text-lg font-medium text-muted-foreground">${goal.targetAmount.toLocaleString()}</span></p>
+                    <p className="text-2xl font-bold">{formatCurrency(goal.currentAmount)} / <span className="text-lg font-medium text-muted-foreground">{formatCurrency(goal.targetAmount)}</span></p>
                   </div>
                   <Progress value={progress} />
                    {goal.importance && (

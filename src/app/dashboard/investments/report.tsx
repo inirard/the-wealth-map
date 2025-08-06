@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { CircleDollarSign, LineChart } from 'lucide-react';
 import { format } from "date-fns";
-import { useI18n } from '@/hooks/use-i18n';
+import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { cn } from "@/lib/utils";
 import type { Investment } from '@/lib/types';
 
@@ -23,6 +23,7 @@ interface InvestmentsReportProps {
 
 const InvestmentsReport = forwardRef<HTMLDivElement, InvestmentsReportProps>(({ data }, ref) => {
     const { t } = useI18n();
+    const { currency, formatCurrency } = useCurrency();
     const { username, investments, totalInvested, investmentTypes } = data;
 
     const sectionStyle = {
@@ -49,7 +50,7 @@ const InvestmentsReport = forwardRef<HTMLDivElement, InvestmentsReportProps>(({ 
                 <section style={sectionStyle}>
                     <Card className="text-center shadow-md">
                         <CardHeader><CardTitle className="text-lg">{t('total_invested_capital')}</CardTitle></CardHeader>
-                        <CardContent><p className="text-4xl font-bold text-primary">€{totalInvested.toFixed(2)}</p></CardContent>
+                        <CardContent><p className="text-4xl font-bold text-primary">{formatCurrency(totalInvested)}</p></CardContent>
                     </Card>
                 </section>
 
@@ -63,7 +64,7 @@ const InvestmentsReport = forwardRef<HTMLDivElement, InvestmentsReportProps>(({ 
                                         <TableHead>{t('name')}</TableHead>
                                         <TableHead>{t('type')}</TableHead>
                                         <TableHead>{t('quantity')}</TableHead>
-                                        <TableHead className="text-right">{t('amount')} (€)</TableHead>
+                                        <TableHead className="text-right">{t('amount')} ({currency})</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -72,7 +73,7 @@ const InvestmentsReport = forwardRef<HTMLDivElement, InvestmentsReportProps>(({ 
                                             <TableCell className="font-medium">{investment.name}</TableCell>
                                             <TableCell>{investmentTypes.find(i => i.value === investment.type)?.label || investment.type}</TableCell>
                                             <TableCell>{investment.quantity || 'N/A'}</TableCell>
-                                            <TableCell className="text-right font-semibold">€{investment.amount.toFixed(2)}</TableCell>
+                                            <TableCell className="text-right font-semibold">{formatCurrency(investment.amount)}</TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -87,5 +88,3 @@ const InvestmentsReport = forwardRef<HTMLDivElement, InvestmentsReportProps>(({ 
 
 InvestmentsReport.displayName = 'InvestmentsReport';
 export default InvestmentsReport;
-
-    

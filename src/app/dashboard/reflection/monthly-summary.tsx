@@ -5,7 +5,7 @@ import React, { useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { TrendingUp, TrendingDown, Target, Zap, Activity } from 'lucide-react';
 import type { Goal, Transaction, WealthWheelData } from '@/lib/types';
-import { useI18n } from '@/hooks/use-i18n';
+import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { cn } from '@/lib/utils';
 
 interface MonthlySummaryProps {
@@ -16,6 +16,7 @@ interface MonthlySummaryProps {
 
 export default function MonthlySummary({ goals, transactions, wheelData }: MonthlySummaryProps) {
   const { t } = useI18n();
+  const { formatCurrency } = useCurrency();
 
   const summary = useMemo(() => {
     // Transaction Summary
@@ -74,7 +75,7 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
                 </CardHeader>
                 <CardContent>
                     <p className={cn("text-2xl font-bold", summary.balance >= 0 ? 'text-green-600' : 'text-destructive')}>
-                        €{summary.balance.toFixed(2)}
+                        {formatCurrency(summary.balance)}
                     </p>
                 </CardContent>
             </Card>
