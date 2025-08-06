@@ -48,6 +48,7 @@ export default function TrackerPage() {
       description: "",
       amount: 0,
       type: "expense",
+      date: new Date(),
     },
     resetOptions: {
       keepValues: false,
@@ -60,7 +61,7 @@ export default function TrackerPage() {
           description: "",
           amount: 0,
           type: "expense",
-          date: undefined
+          date: new Date() // Default to today for new transactions
       });
     }
   }, [isDialogOpen, form]);
@@ -224,5 +225,3 @@ export default function TrackerPage() {
     </div>
   );
 }
-
-    
