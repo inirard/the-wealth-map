@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Progress } from '@/components/ui/progress';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts"
-import { CircleDollarSign, Target, Bot, Sparkles, Donut } from 'lucide-react';
+import { CircleDollarSign, Bot, Sparkles } from 'lucide-react';
 import { format } from "date-fns";
 import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { cn } from "@/lib/utils";
@@ -53,20 +53,12 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
     
     const nonEmptyReflections = reflections.filter(r => r.content.trim() !== '');
 
-    const sectionStyle = {
-        breakInside: 'avoid',
-        marginTop: '2rem',
-    } as React.CSSProperties;
-
-    const pageBreakStyle = {
-        breakBefore: 'page',
-        paddingTop: '2rem',
-    } as React.CSSProperties;
+    const hasDataForWheel = wheelData.length > 0 && wheelData.some(d => d.value > 0);
 
     return (
         <div ref={ref} className="p-8 font-body bg-white text-gray-800">
             {/* Report Header */}
-            <header className="flex items-center justify-between pb-4 border-b-2 border-primary mb-6">
+            <header className="flex items-center justify-between pb-4 border-b-2 border-primary mb-8">
                 <div className="flex items-center gap-3">
                     <CircleDollarSign className="h-10 w-10 text-primary" />
                     <div>
@@ -82,31 +74,31 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
             <main>
                 {/* Financial Summary */}
-                <section>
+                <div className="mb-8" style={{ breakInside: 'avoid' }}>
                     <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('financial_summary_title')}</h2>
-                    <div className="grid grid-cols-3 gap-6">
-                        <Card className="text-center shadow-md">
+                    <div className="flex justify-between gap-6">
+                        <Card className="text-center shadow-md flex-1">
                             <CardHeader><CardTitle className="text-lg">{t('total_income')}</CardTitle></CardHeader>
                             <CardContent><p className="text-3xl font-bold text-green-600">{formatCurrency(totalIncome)}</p></CardContent>
                         </Card>
-                        <Card className="text-center shadow-md">
+                        <Card className="text-center shadow-md flex-1">
                             <CardHeader><CardTitle className="text-lg">{t('total_expenses')}</CardTitle></CardHeader>
                             <CardContent><p className="text-3xl font-bold text-red-600">{formatCurrency(totalExpenses)}</p></CardContent>
                         </Card>
-                        <Card className="text-center shadow-md">
+                        <Card className="text-center shadow-md flex-1">
                             <CardHeader><CardTitle className="text-lg">{t('final_balance')}</CardTitle></CardHeader>
                             <CardContent><p className={cn("text-3xl font-bold", balance >= 0 ? 'text-green-600' : 'text-red-600')}>{formatCurrency(balance)}</p></CardContent>
                         </Card>
                     </div>
-                </section>
+                </div>
                 
-                 {/* Reflections and Mood */}
+                {/* Reflections and Mood */}
                 {(nonEmptyReflections.length > 0 || mood) && (
-                     <section style={sectionStyle}>
+                     <div className="mb-8" style={{ breakInside: 'avoid' }}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('reflection_motivation')}</h2>
                          <div className="space-y-4">
                              {mood && emotionalStates[mood] && (
-                                <Card className="shadow-md text-center" style={{breakInside: 'avoid-page'}}>
+                                <Card className="shadow-md text-center" style={{breakInside: 'avoid'}}>
                                     <CardHeader className="pb-2">
                                         <CardTitle>{t('how_did_you_feel')}</CardTitle>
                                     </CardHeader>
@@ -119,22 +111,22 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                 </Card>
                             )}
                             {nonEmptyReflections.map(reflection => (
-                                <Card key={reflection.id} className="shadow-md" style={{breakInside: 'avoid-page'}}>
+                                <Card key={reflection.id} className="shadow-md" style={{breakInside: 'avoid'}}>
                                     <CardHeader><CardTitle className="text-base">{reflection.prompt}</CardTitle></CardHeader>
                                     <CardContent><p className="text-gray-600 italic">"{reflection.content}"</p></CardContent>
                                 </Card>
                             ))}
                          </div>
-                    </section>
+                    </div>
                 )}
 
                 {/* Goals */}
                 {goals.length > 0 && (
-                    <section style={sectionStyle}>
+                    <div className="mb-8" style={{ breakInside: 'avoid' }}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('goals_progress_title')}</h2>
                         <div className="space-y-4">
                             {goals.map(goal => (
-                                <Card key={goal.id} className="shadow-md" style={{breakInside: 'avoid-page'}}>
+                                <Card key={goal.id} className="shadow-md" style={{breakInside: 'avoid'}}>
                                     <CardHeader>
                                         <CardTitle className="flex justify-between items-center text-lg">
                                             <span>{goal.name}</span>
@@ -150,12 +142,29 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                 </Card>
                             ))}
                         </div>
-                    </section>
+                    </div>
+                )}
+
+                {/* AI Coach Insights */}
+                {aiInsight && aiInsight.analysis && (
+                    <div className="mb-8" style={{ breakInside: 'avoid' }}>
+                        <Card className="bg-primary/5 border-primary shadow-md">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-3 text-primary">
+                                    <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex items-start gap-4">
+                                <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                                <p className="text-base text-gray-700 italic">"{aiInsight.analysis}"</p>
+                            </CardContent>
+                        </Card>
+                    </div>
                 )}
 
                 {/* Transactions */}
                 {transactions.length > 0 && (
-                    <section style={transactions.length > 5 ? pageBreakStyle : sectionStyle}>
+                    <div className="mb-8" style={{ breakInside: 'avoid' }}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('transactions_title')}</h2>
                         <Card className="shadow-md">
                             <Table>
@@ -185,14 +194,14 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                 </TableBody>
                             </Table>
                         </Card>
-                    </section>
+                    </div>
                 )}
                 
                 {/* Wealth Wheel - Full Page */}
-                {wheelData.length > 0 && wheelData.some(d => d.value > 0) && (
-                    <section style={pageBreakStyle}>
+                {hasDataForWheel && (
+                    <div style={{ breakBefore: 'page' }}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800 text-center">{t('your_wealth_wheel')}</h2>
-                         <Card className="shadow-md" style={{width: '100%', height: '700px'}}>
+                         <Card className="shadow-md h-[800px] w-full">
                              <CardContent className="p-4 w-full h-full">
                                 <ChartContainer config={chartConfig} className="w-full h-full">
                                     <RadarChart data={wheelData} outerRadius="80%">
@@ -205,25 +214,9 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                 </ChartContainer>
                             </CardContent>
                         </Card>
-                    </section>
+                    </div>
                 )}
 
-                {/* AI Coach Insights - Last Element */}
-                {aiInsight && aiInsight.analysis && (
-                    <section style={pageBreakStyle}>
-                        <Card className="bg-primary/5 border-primary shadow-md">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-3 text-primary">
-                                    <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex items-start gap-4">
-                                <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
-                                <p className="text-base text-gray-700 italic">"{aiInsight.analysis}"</p>
-                            </CardContent>
-                        </Card>
-                    </section>
-                )}
             </main>
         </div>
     );
