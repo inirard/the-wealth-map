@@ -2,8 +2,8 @@
 {
   "name": "The Wealth Map",
   "short_name": "Wealth Map",
-  "description": "Your interactive digital planner to navigate the journey to financial freedom.",
-  "start_url": "/dashboard",
+  "description": "Your Interactive Financial Planner to navigate your journey to financial freedom.",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#FDFCF9",
   "theme_color": "#007C7C",
