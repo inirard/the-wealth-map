@@ -5,8 +5,8 @@
       viewBox="0 0 512 512"
       fill="none"
     >
-      <circle cx="256" cy="256" r="256" fill="#007C7C"/>
-      <circle cx="256" cy="256" r="220" fill="white" />
-      <path d="M336 176H240C217.909 176 200 193.909 200 216V216C200 238.091 217.909 256 240 256H272C294.091 256 312 273.909 312 296V296C312 318.091 294.091 336 272 336H176" stroke="#007C7C" stroke-width="32" stroke-linecap="round"/>
-      <path d="M256 384V128" stroke="#007C7C" stroke-width="32" stroke-linecap="round"/>
+    <circle cx="256" cy="256" r="256" fill="#007C7C"/>
+    <circle cx="256" cy="256" r="192" fill="white" />
+    <path d="M336 176H216C198.327 176 184 190.327 184 208V208C184 225.673 198.327 240 216 240H296C313.673 240 328 254.327 328 272V272C328 289.673 313.673 304 296 304H176" stroke="#007C7C" stroke-width="24" stroke-linecap="round"/>
+    <path d="M256 352V160" stroke="#007C7C" stroke-width="24" stroke-linecap="round"/>
 </svg>
