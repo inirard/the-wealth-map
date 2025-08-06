@@ -1,14 +1,13 @@
 
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
-  disable: process.env.NODE_ENV === "development",
+  disable: false, // Always enable PWA for reliable testing
   register: true,
   skipWaiting: true,
 });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'standalone',
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -16,7 +15,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
