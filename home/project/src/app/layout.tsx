@@ -1,3 +1,4 @@
+
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import './print.css';
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
-    apple: '/icons/apple-touch-icon.png',
+    apple: '/apple-touch-icon.png',
   },
 };
 
@@ -44,7 +45,10 @@ export default function RootLayout({
 
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
-       <head />
+       <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+       </head>
       <body>
         <I18nProvider>
           {children}
