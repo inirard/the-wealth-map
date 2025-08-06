@@ -13,10 +13,11 @@ const poppins = Poppins({
   weight: ['300', '400', '500', '600', '700']
 });
 
+// Metadata object for Next.js - some systems might still use this.
 export const metadata: Metadata = {
   title: 'The Wealth Map | Your Interactive Financial Planner',
   description: 'Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.',
-  manifest: '/manifest.json',
+  manifest: '/manifest.webmanifest',
   applicationName: "The Wealth Map",
   appleWebApp: {
     capable: true,
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
   },
 };
 
+// Viewport object for theme color
 export const viewport: Viewport = {
   themeColor: '#007C7C',
 };
@@ -41,12 +43,22 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
        <head>
-        {/* Explicit PWA tags for iOS reliability */}
+        {/* PWA Tags for a robust cross-device experience */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        
+        {/* Manifest and Icons - Explicitly declared for reliability */}
+        <link rel="manifest" href="/manifest.webmanifest" />
+        
+        {/* Main favicon */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        
+        {/* Apple Touch Icons for iPhone/iPad Home Screen */}
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
        </head>
       <body>
         <I18nProvider>
