@@ -58,7 +58,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180.png" />
         <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
         <link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
        </head>
       <body>
         <I18nProvider>
