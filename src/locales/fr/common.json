@@ -208,5 +208,15 @@
   "ai_limit_title": "Limite Mensuelle Atteinte",
   "ai_limit_description": "Vous avez déjà utilisé votre analyse IA gratuite pour ce mois-ci. Passez à PRO pour des aperçus illimités.",
   "more": "Plus",
-  "languages": "Langues"
+  "languages": "Langues",
+  "how_to_install_button": "Comment installer l'application ?",
+  "install_instructions_title": "Instructions d'Installation",
+  "install_instructions_desc": "Pour une meilleure expérience, ajoutez l'application à votre écran d'accueil.",
+  "for_iphone_ipad": "Pour iPhone/iPad",
+  "for_android_desktop": "Pour Android/Bureau",
+  "ios_step_1": "Ouvrez ce site dans le navigateur Safari.",
+  "ios_step_2": "Appuyez sur le bouton '{{icon}}'.",
+  "ios_step_3": "Faites défiler vers le bas et sélectionnez '{{icon}}'.",
+  "ios_step_4": "Appuyez sur 'Ajouter' pour la placer sur votre écran d'accueil.",
+  "android_step_1": "Recherchez le bouton ou l'icône 'Installer' dans la barre d'adresse."
 }

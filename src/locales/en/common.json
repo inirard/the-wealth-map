@@ -208,5 +208,15 @@
   "ai_limit_title": "Monthly Limit Reached",
   "ai_limit_description": "You have already used your free AI analysis for this month. Upgrade to PRO for unlimited insights.",
   "more": "More",
-  "languages": "Languages"
+  "languages": "Languages",
+  "how_to_install_button": "How to install the app?",
+  "install_instructions_title": "Installation Instructions",
+  "install_instructions_desc": "To get the best experience, add the app to your home screen.",
+  "for_iphone_ipad": "For iPhone/iPad",
+  "for_android_desktop": "For Android/Desktop",
+  "ios_step_1": "Open this site in the Safari browser.",
+  "ios_step_2": "Tap the '{{icon}}' button.",
+  "ios_step_3": "Scroll down and select '{{icon}}'.",
+  "ios_step_4": "Tap 'Add' to place it on your home screen.",
+  "android_step_1": "Look for the 'Install' button or icon in the address bar."
 }

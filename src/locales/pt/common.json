@@ -209,5 +209,15 @@
   "ai_limit_description": "Já utilizou a sua análise de IA gratuita para este mês. Faça o upgrade para PRO para obter insights ilimitados.",
   "more": "Mais",
   "languages": "Idiomas",
-  "currency": "Moeda"
+  "currency": "Moeda",
+  "how_to_install_button": "Como instalar a app?",
+  "install_instructions_title": "Instruções de Instalação",
+  "install_instructions_desc": "Para a melhor experiência, adicione a aplicação ao seu ecrã principal.",
+  "for_iphone_ipad": "Para iPhone/iPad",
+  "for_android_desktop": "Para Android/Computador",
+  "ios_step_1": "Abra este site no navegador Safari.",
+  "ios_step_2": "Toque no botão '{{icon}}'.",
+  "ios_step_3": "Deslize para baixo e selecione '{{icon}}'.",
+  "ios_step_4": "Toque em 'Adicionar' para a colocar no seu ecrã principal.",
+  "android_step_1": "Procure o botão ou ícone de 'Instalar' na barra de endereço."
 }

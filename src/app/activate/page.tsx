@@ -12,6 +12,7 @@ import { useLocalStorage } from '@/hooks/use-local-storage';
 import { validKeys } from '@/lib/keys';
 import { useToast } from "@/hooks/use-toast";
 import { WealthMapIcon } from '@/components/icons/WealthMapIcon';
+import InstallInstructions from '@/components/install-instructions';
 
 export default function ActivatePage() {
   const [key, setKey] = useState('');
@@ -110,6 +111,9 @@ export default function ActivatePage() {
                 </form>
             </CardContent>
         </Card>
+        <div className="mt-6">
+            <InstallInstructions />
+        </div>
       </main>
     </div>
   );
