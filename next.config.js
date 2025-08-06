@@ -23,9 +23,4 @@ const nextConfig = {
         hostname: 'placehold.co',
         port: '',
         pathname: '/**',
-      },
-    ],
-  },
-};
-
-module.exports = withPWA(nextConfig);
+      
