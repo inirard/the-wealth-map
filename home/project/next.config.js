@@ -1,7 +1,7 @@
 
 const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
-  disable: false, // Always enable PWA for reliable testing
+  disable: false, // Always enable PWA for reliable installation across all devices
   register: true,
   skipWaiting: true,
 });
