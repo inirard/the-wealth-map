@@ -9,5 +9,6 @@ export const validKeys: string[] = [
   'WHP-ANOTHER-KEY-67890',
   'WHP-SAMPLE-LICENSE-ABCDE',
   'WHP-FRIEND-A1B2C3D4',
+  'WHP-STUDIO-ACCESS-KEY1',
   // Adicione novas chaves aqui
 ];
