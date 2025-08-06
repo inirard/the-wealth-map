@@ -60,9 +60,11 @@ export default function GoalsPage() {
   React.useEffect(() => {
     if (isDialogOpen) {
       if (editingGoal) {
+        // iPhone/Safari safe date parsing
+        const safeDate = new Date(editingGoal.targetDate.replace(/-/g, '/').replace(/T.*/, ''));
         form.reset({
             ...editingGoal,
-            targetDate: new Date(editingGoal.targetDate),
+            targetDate: safeDate,
         });
       } else {
         form.reset({
@@ -216,7 +218,7 @@ export default function GoalsPage() {
                    )}
                   <div>
                     <p className="text-sm text-muted-foreground">{t('target_date')}</p>
-                    <p className="font-medium">{format(new Date(goal.targetDate), "PPP")}</p>
+                    <p className="font-medium">{format(new Date(goal.targetDate.replace(/-/g, '/').replace(/T.*/, '')), "PPP")}</p>
                   </div>
                 </CardContent>
               </Card>

@@ -194,7 +194,7 @@ export default function TrackerPage() {
               {isClient && transactions.length > 0 ? (
                 transactions.map(transaction => (
                   <TableRow key={transaction.id}>
-                    <TableCell>{format(new Date(transaction.date), "PPP")}</TableCell>
+                    <TableCell>{format(new Date(transaction.date.replace(/-/g, '/').replace(/T.*/, '')), "PPP")}</TableCell>
                     <TableCell className="font-medium">{transaction.description}</TableCell>
                     <TableCell>
                       <span className={cn("px-2 py-1 rounded-full text-xs", transaction.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')}>
