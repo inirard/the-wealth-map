@@ -27,8 +27,9 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/icons/apple-touch-icon.png',
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon-192.png',
   },
 };
 
@@ -44,9 +45,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning className={`${poppins.variable}`}>
-       <head>
-        <link rel="manifest" href="/manifest.json" />
-      </head>
+       <head />
       <body>
         <I18nProvider>
           {children}
