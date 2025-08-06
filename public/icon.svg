@@ -1,19 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
-    <!-- Safe zone mask -->
-    <mask id="mask">
-        <rect width="100%" height="100%" fill="white" />
-        <circle cx="256" cy="256" r="102.4" fill="black" />
-    </mask>
-
-    <!-- Background circle, visible everywhere -->
-    <circle cx="256" cy="256" r="256" fill="#007C7C"/>
-
-    <!-- White circle in the middle, clipped by the mask -->
-    <g mask="url(#mask)">
-      <circle cx="256" cy="256" r="204.8" fill="white"/>
-    </g>
-    
-    <!-- The dollar sign, always visible -->
-    <path d="M320 179h-88a44 44 0 1 0 0 88h66a44 44 0 1 1 0 88h-88" fill="none" stroke="#007C7C" stroke-width="35" stroke-linecap="round"/>
-    <path d="M256 384V128" fill="none" stroke="#007C7C" stroke-width="35" stroke-linecap="round"/>
+<svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="512"
+      height="512"
+      viewBox="0 0 512 512"
+      fill="none"
+    >
+      <circle cx="256" cy="256" r="256" fill="#007C7C"/>
+      <circle cx="256" cy="256" r="220" fill="white" />
+      <path d="M336 176H240C217.909 176 200 193.909 200 216V216C200 238.091 217.909 256 240 256H272C294.091 256 312 273.909 312 296V296C312 318.091 294.091 336 272 336H176" stroke="#007C7C" stroke-width="32" stroke-linecap="round"/>
+      <path d="M256 384V128" stroke="#007C7C" stroke-width="32" stroke-linecap="round"/>
 </svg>
