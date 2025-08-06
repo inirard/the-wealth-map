@@ -41,8 +41,12 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
        <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        {/* Explicit PWA tags for iOS reliability */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
        </head>
       <body>
         <I18nProvider>
