@@ -66,9 +66,6 @@ export default function TrackerPage() {
       type: "expense",
       date: new Date(),
     },
-    resetOptions: {
-      keepValues: false,
-    }
   });
 
   React.useEffect(() => {

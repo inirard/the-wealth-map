@@ -69,7 +69,7 @@ export default function GoalsPage() {
       name: "",
       targetAmount: 0,
       currentAmount: 0,
-      targetDate: undefined,
+      targetDate: new Date(),
       importance: "",
     },
   });
@@ -88,7 +88,7 @@ export default function GoalsPage() {
             name: "",
             targetAmount: 0,
             currentAmount: 0,
-            targetDate: undefined,
+            targetDate: new Date(),
             importance: "",
         });
       }
