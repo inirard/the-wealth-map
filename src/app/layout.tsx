@@ -27,8 +27,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    // This is the correct way to specify icons in Next.js App Router
-    icon: '/icon.svg',
+    icon: '/icon.svg', // Main icon, Next.js will handle favicon.ico generation from this.
     shortcut: '/favicon.ico', // Fallback for older browsers
     apple: [
       { url: '/icons/apple-icon-180.png', sizes: '180x180', type: 'image/png' },

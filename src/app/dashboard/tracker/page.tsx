@@ -24,6 +24,11 @@ import { cn } from "@/lib/utils";
 import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
 
+// Helper function to safely parse dates on all browsers, especially Safari
+const safeParseDate = (dateString: string) => {
+    return new Date(dateString.replace(/-/g, '/').replace(/T.*/, ''));
+}
+
 export default function TrackerPage() {
   const { t } = useI18n();
   const { currency, formatCurrency } = useCurrency();
@@ -96,7 +101,7 @@ export default function TrackerPage() {
   const handleExport = useCallback(() => {
     const dataToExport = transactions.map(transaction => ({
         ...transaction, 
-        date: format(new Date(transaction.date), "yyyy-MM-dd"),
+        date: format(safeParseDate(transaction.date), "yyyy-MM-dd"),
         type: transaction.type === 'income' ? t('income') : t('expense')
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
@@ -196,7 +201,7 @@ export default function TrackerPage() {
               {isClient && transactions.length > 0 ? (
                 transactions.map(transaction => (
                   <TableRow key={transaction.id}>
-                    <TableCell>{format(new Date(transaction.date.replace(/-/g, '/').replace(/T.*/, '')), "PPP")}</TableCell>
+                    <TableCell>{format(safeParseDate(transaction.date), "PPP")}</TableCell>
                     <TableCell className="font-medium">{transaction.description}</TableCell>
                     <TableCell>
                       <span className={cn("px-2 py-1 rounded-full text-xs", transaction.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')}>

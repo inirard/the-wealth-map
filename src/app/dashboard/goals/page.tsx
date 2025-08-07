@@ -23,6 +23,11 @@ import { cn } from "@/lib/utils";
 import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
 
+// Helper function to safely parse dates on all browsers, especially Safari
+const safeParseDate = (dateString: string) => {
+    return new Date(dateString.replace(/-/g, '/').replace(/T.*/, ''));
+}
+
 export default function GoalsPage() {
   const { t } = useI18n();
   const { currency, formatCurrency } = useCurrency();
@@ -61,11 +66,9 @@ export default function GoalsPage() {
   React.useEffect(() => {
     if (isDialogOpen) {
       if (editingGoal) {
-        // iPhone/Safari safe date parsing
-        const safeDate = new Date(editingGoal.targetDate.replace(/-/g, '/').replace(/T.*/, ''));
         form.reset({
             ...editingGoal,
-            targetDate: safeDate,
+            targetDate: safeParseDate(editingGoal.targetDate),
         });
       } else {
         form.reset({
@@ -219,7 +222,7 @@ export default function GoalsPage() {
                    )}
                   <div>
                     <p className="text-sm text-muted-foreground">{t('target_date')}</p>
-                    <p className="font-medium">{format(new Date(goal.targetDate.replace(/-/g, '/').replace(/T.*/, '')), "PPP")}</p>
+                    <p className="font-medium">{format(safeParseDate(goal.targetDate), "PPP")}</p>
                   </div>
                 </CardContent>
               </Card>
