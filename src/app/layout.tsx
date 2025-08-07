@@ -13,7 +13,6 @@ const poppins = Poppins({
   weight: ['300', '400', '500', '600', '700']
 });
 
-// Metadata object for Next.js - some systems might still use this.
 export const metadata: Metadata = {
   title: 'The Wealth Map | Your Interactive Financial Planner',
   description: 'Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.',
@@ -29,7 +28,6 @@ export const metadata: Metadata = {
   },
 };
 
-// Viewport object for theme color
 export const viewport: Viewport = {
   themeColor: '#007C7C',
 };
