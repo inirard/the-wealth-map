@@ -61,9 +61,6 @@ export default function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="The Wealth Map" />
         <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
-        <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />
-        <link rel="shortcut icon" href="/favicon.ico" />
       </head>
       <body>
         <I18nProvider>
