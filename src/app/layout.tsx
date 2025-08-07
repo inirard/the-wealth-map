@@ -59,7 +59,7 @@ export default function RootLayout({
         <meta name="application-name" content="The Wealth Map" />
         <meta name="mobile-web-app-capable" content="yes" />
 
-        {/* iOS PWA */}
+        {/* iOS PWA - Tags explícitas para máxima compatibilidade */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
