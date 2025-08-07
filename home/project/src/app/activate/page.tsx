@@ -22,39 +22,38 @@ export default function ActivatePage() {
   const { toast } = useToast();
   
   const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
-  const [username, setUsername] = useLocalStorage<string | null>('username', '');
+  const [username] = useLocalStorage<string | null>('username', null);
   
   const [status, setStatus] = useState<'checking' | 'ready'>('checking');
 
   useEffect(() => {
     // This effect is the single source of truth for redirection logic.
+    // It waits until the values from localStorage have been hydrated.
     if (licenseKey === null || username === null) {
-      // Still waiting for localStorage to hydrate
+      // Still waiting for localStorage...
       return;
     }
 
     if (validKeys.includes(licenseKey)) {
       if (username) {
-        // Key is valid and user is onboarded
+        // Key is valid and user is onboarded -> GO TO DASHBOARD
         router.replace('/dashboard');
       } else {
-        // Key is valid but user needs onboarding
+        // Key is valid but user needs onboarding -> GO TO WELCOME
         router.replace('/welcome');
       }
     } else {
-      // No valid key, so stay on this page to allow activation.
-      // Clear any potentially invalid data to prevent loops.
-      if (licenseKey) setLicenseKey(null);
-      if (username) setUsername(null);
+      // No valid key, so we are ready to show the activation form.
       setStatus('ready');
     }
-  }, [licenseKey, username, router, setLicenseKey, setUsername]);
+  }, [licenseKey, username, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
+    // Simulate network request
     setTimeout(() => {
       if (validKeys.includes(key.trim())) {
         setLicenseKey(key.trim());
@@ -62,7 +61,7 @@ export default function ActivatePage() {
           title: 'Ativação bem-sucedida!',
           description: 'A preparar a sua conta...',
         });
-        // The useEffect will handle the redirect to /welcome
+        // The useEffect will catch the change in licenseKey and redirect to /welcome
       } else {
         setError('Chave de licença inválida. Por favor, verifique e tente novamente.');
         setIsLoading(false);
@@ -73,7 +72,7 @@ export default function ActivatePage() {
   if (status === 'checking') {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
-        <div className="animate-pulse text-muted-foreground">A carregar...</div>
+        <div className="animate-pulse text-muted-foreground">A verificar acesso...</div>
       </div>
     );
   }

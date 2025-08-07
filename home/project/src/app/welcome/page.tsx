@@ -19,15 +19,15 @@ export default function WelcomePage() {
   const [status, setStatus] = useState<'checking' | 'ready'>('checking');
 
   useEffect(() => {
-    // This effect only ensures the user belongs on this page.
-    // It does not handle complex redirection logic.
+    // This effect ensures the user belongs on this page.
+    // It does not handle complex redirection logic, which is the job of /activate.
     if (licenseKey === null) {
-      // Still waiting for localStorage to hydrate
+      // Still waiting for localStorage to hydrate...
       return;
     }
 
     if (!validKeys.includes(licenseKey)) {
-      // Invalid key, should not be here.
+      // Invalid key, should not be here. Go back to the entry point.
       router.replace('/activate');
       return;
     }

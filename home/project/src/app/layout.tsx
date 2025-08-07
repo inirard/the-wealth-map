@@ -63,6 +63,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        
+        {/* Adicionando a tag apple-touch-icon diretamente para máxima compatibilidade com iOS */}
         <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
         
         {/* Fallback icons */}

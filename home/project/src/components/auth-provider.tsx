@@ -3,7 +3,7 @@
 
 import React, { ReactNode, useEffect, useState } from 'react';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { validKeys } from '@/lib/keys';
 
 interface AuthProviderProps {
@@ -12,26 +12,25 @@ interface AuthProviderProps {
 
 export default function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const [isVerified, setIsVerified] = useState(false);
   
   const [licenseKey] = useLocalStorage<string | null>('license_key', null);
+  const [username] = useLocalStorage<string | null>('username', null);
 
   useEffect(() => {
     // Wait for localStorage to hydrate from client
-    if (licenseKey === null) {
+    if (licenseKey === null || username === null) {
       return;
     }
 
     // The single responsibility of this provider is to protect dashboard routes.
-    // All other redirection logic is handled by the /activate page.
-    if (validKeys.includes(licenseKey)) {
+    // If the key is invalid OR the user is not onboarded, redirect to the start of the flow.
+    if (validKeys.includes(licenseKey) && username) {
       setIsVerified(true);
     } else {
-      // If the key is invalid while on a protected route, redirect to activate.
       router.replace('/activate');
     }
-  }, [licenseKey, router, pathname]);
+  }, [licenseKey, username, router]);
 
   // Show a loading state while we verify the key on the client side.
   // This prevents rendering the dashboard and then quickly redirecting if the key is bad.
