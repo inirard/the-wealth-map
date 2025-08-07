@@ -24,6 +24,10 @@
         size: A4;
         margin: 0;
     }
+
+    .break-before-page {
+        break-before: page;
+    }
 }
 
 /* Hide the report component by default */

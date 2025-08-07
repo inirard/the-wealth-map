@@ -55,6 +55,14 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
 
     const hasDataForWheel = wheelData.length > 0 && wheelData.some(d => d.value > 0);
 
+    const sectionStyle = {
+        breakInside: 'avoid',
+    } as React.CSSProperties;
+
+    const pageBreakStyle = {
+        breakBefore: 'page',
+    } as React.CSSProperties;
+
     return (
         <div ref={ref} className="p-8 font-body bg-white text-gray-800">
             {/* Report Header */}
@@ -73,32 +81,95 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
             </header>
 
             <main>
-                {/* Financial Summary */}
-                <div className="mb-8" style={{ breakInside: 'avoid' }}>
-                    <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('financial_summary_title')}</h2>
-                    <div className="flex justify-between gap-6">
-                        <Card className="text-center shadow-md flex-1">
-                            <CardHeader><CardTitle className="text-lg">{t('total_income')}</CardTitle></CardHeader>
-                            <CardContent><p className="text-3xl font-bold text-green-600">{formatCurrency(totalIncome)}</p></CardContent>
-                        </Card>
-                        <Card className="text-center shadow-md flex-1">
-                            <CardHeader><CardTitle className="text-lg">{t('total_expenses')}</CardTitle></CardHeader>
-                            <CardContent><p className="text-3xl font-bold text-red-600">{formatCurrency(totalExpenses)}</p></CardContent>
-                        </Card>
-                        <Card className="text-center shadow-md flex-1">
-                            <CardHeader><CardTitle className="text-lg">{t('final_balance')}</CardTitle></CardHeader>
-                            <CardContent><p className={cn("text-3xl font-bold", balance >= 0 ? 'text-green-600' : 'text-red-600')}>{formatCurrency(balance)}</p></CardContent>
-                        </Card>
+                {/* --- PAGE 1: Summary, Goals, Transactions --- */}
+                <section>
+                    {/* Financial Summary */}
+                    <div className="mb-8" style={sectionStyle}>
+                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('financial_summary_title')}</h2>
+                        <div className="flex justify-between gap-6">
+                            <Card className="text-center shadow-md flex-1">
+                                <CardHeader><CardTitle className="text-lg">{t('total_income')}</CardTitle></CardHeader>
+                                <CardContent><p className="text-3xl font-bold text-green-600">{formatCurrency(totalIncome)}</p></CardContent>
+                            </Card>
+                            <Card className="text-center shadow-md flex-1">
+                                <CardHeader><CardTitle className="text-lg">{t('total_expenses')}</CardTitle></CardHeader>
+                                <CardContent><p className="text-3xl font-bold text-red-600">{formatCurrency(totalExpenses)}</p></CardContent>
+                            </Card>
+                            <Card className="text-center shadow-md flex-1">
+                                <CardHeader><CardTitle className="text-lg">{t('final_balance')}</CardTitle></CardHeader>
+                                <CardContent><p className={cn("text-3xl font-bold", balance >= 0 ? 'text-green-600' : 'text-red-600')}>{formatCurrency(balance)}</p></CardContent>
+                            </Card>
+                        </div>
                     </div>
-                </div>
+
+                    {/* Goals */}
+                    {goals.length > 0 && (
+                        <div className="mb-8" style={sectionStyle}>
+                            <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('goals_progress_title')}</h2>
+                            <div className="space-y-4">
+                                {goals.map(goal => (
+                                    <Card key={goal.id} className="shadow-md" style={{breakInside: 'avoid'}}>
+                                        <CardHeader>
+                                            <CardTitle className="flex justify-between items-center text-lg">
+                                                <span>{goal.name}</span>
+                                                <span className="text-sm font-medium text-gray-500">
+                                                    {t('target_date')}: {format(new Date(goal.targetDate), "PPP")}
+                                                </span>
+                                            </CardTitle>
+                                        </CardHeader>
+                                        <CardContent>
+                                            <p className="text-xl font-bold">{formatCurrency(goal.currentAmount)} / <span className="text-base font-medium text-gray-500">{formatCurrency(goal.targetAmount)}</span></p>
+                                            <Progress value={(goal.currentAmount / goal.targetAmount) * 100} className="mt-2" />
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    
+                    {/* Transactions */}
+                    {transactions.length > 0 && (
+                        <div style={sectionStyle}>
+                            <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('transactions_title')}</h2>
+                            <Card className="shadow-md">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead>{t('date')}</TableHead>
+                                            <TableHead>{t('description')}</TableHead>
+                                            <TableHead>{t('type')}</TableHead>
+                                            <TableHead className="text-right">{t('amount')} ({currency})</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {transactions.map(transaction => (
+                                            <TableRow key={transaction.id} style={{ breakInside: 'avoid' }}>
+                                                <TableCell>{format(new Date(transaction.date), "PPP")}</TableCell>
+                                                <TableCell className="font-medium">{transaction.description}</TableCell>
+                                                <TableCell>
+                                                    <span className={cn(transaction.type === 'income' ? 'text-green-700' : 'text-red-700')}>
+                                                        {transaction.type === 'income' ? t('income') : t('expense')}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell className={cn("text-right font-semibold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                                                    {formatCurrency(transaction.amount)}
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </Card>
+                        </div>
+                    )}
+                </section>
                 
-                {/* Reflections and Mood */}
+                {/* --- PAGE 2: Reflections & Mood --- */}
                 {(nonEmptyReflections.length > 0 || mood) && (
-                     <div className="mb-8" style={{ breakInside: 'avoid' }}>
+                     <section style={pageBreakStyle}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('reflection_motivation')}</h2>
                          <div className="space-y-4">
                              {mood && emotionalStates[mood] && (
-                                <Card className="shadow-md text-center" style={{breakInside: 'avoid'}}>
+                                <Card className="shadow-md text-center" style={sectionStyle}>
                                     <CardHeader className="pb-2">
                                         <CardTitle>{t('how_did_you_feel')}</CardTitle>
                                     </CardHeader>
@@ -111,95 +182,18 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                 </Card>
                             )}
                             {nonEmptyReflections.map(reflection => (
-                                <Card key={reflection.id} className="shadow-md" style={{breakInside: 'avoid'}}>
+                                <Card key={reflection.id} className="shadow-md" style={sectionStyle}>
                                     <CardHeader><CardTitle className="text-base">{reflection.prompt}</CardTitle></CardHeader>
                                     <CardContent><p className="text-gray-600 italic">"{reflection.content}"</p></CardContent>
                                 </Card>
                             ))}
                          </div>
-                    </div>
+                    </section>
                 )}
 
-                {/* Goals */}
-                {goals.length > 0 && (
-                    <div className="mb-8" style={{ breakInside: 'avoid' }}>
-                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('goals_progress_title')}</h2>
-                        <div className="space-y-4">
-                            {goals.map(goal => (
-                                <Card key={goal.id} className="shadow-md" style={{breakInside: 'avoid'}}>
-                                    <CardHeader>
-                                        <CardTitle className="flex justify-between items-center text-lg">
-                                            <span>{goal.name}</span>
-                                            <span className="text-sm font-medium text-gray-500">
-                                                {t('target_date')}: {format(new Date(goal.targetDate), "PPP")}
-                                            </span>
-                                        </CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <p className="text-xl font-bold">{formatCurrency(goal.currentAmount)} / <span className="text-base font-medium text-gray-500">{formatCurrency(goal.targetAmount)}</span></p>
-                                        <Progress value={(goal.currentAmount / goal.targetAmount) * 100} className="mt-2" />
-                                    </CardContent>
-                                </Card>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {/* AI Coach Insights */}
-                {aiInsight && aiInsight.analysis && (
-                    <div className="mb-8" style={{ breakInside: 'avoid' }}>
-                        <Card className="bg-primary/5 border-primary shadow-md">
-                            <CardHeader>
-                                <CardTitle className="flex items-center gap-3 text-primary">
-                                    <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent className="flex items-start gap-4">
-                                <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
-                                <p className="text-base text-gray-700 italic">"{aiInsight.analysis}"</p>
-                            </CardContent>
-                        </Card>
-                    </div>
-                )}
-
-                {/* Transactions */}
-                {transactions.length > 0 && (
-                    <div className="mb-8" style={{ breakInside: 'avoid' }}>
-                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800">{t('transactions_title')}</h2>
-                        <Card className="shadow-md">
-                            <Table>
-                                <TableHeader>
-                                    <TableRow>
-                                        <TableHead>{t('date')}</TableHead>
-                                        <TableHead>{t('description')}</TableHead>
-                                        <TableHead>{t('type')}</TableHead>
-                                        <TableHead className="text-right">{t('amount')} ({currency})</TableHead>
-                                    </TableRow>
-                                </TableHeader>
-                                <TableBody>
-                                    {transactions.map(transaction => (
-                                        <TableRow key={transaction.id} style={{ breakInside: 'avoid' }}>
-                                            <TableCell>{format(new Date(transaction.date), "PPP")}</TableCell>
-                                            <TableCell className="font-medium">{transaction.description}</TableCell>
-                                            <TableCell>
-                                                <span className={cn(transaction.type === 'income' ? 'text-green-700' : 'text-red-700')}>
-                                                    {transaction.type === 'income' ? t('income') : t('expense')}
-                                                </span>
-                                            </TableCell>
-                                            <TableCell className={cn("text-right font-semibold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                                                {formatCurrency(transaction.amount)}
-                                            </TableCell>
-                                        </TableRow>
-                                    ))}
-                                </TableBody>
-                            </Table>
-                        </Card>
-                    </div>
-                )}
-                
-                {/* Wealth Wheel - Full Page */}
+                {/* --- PAGE 3: Wealth Wheel --- */}
                 {hasDataForWheel && (
-                    <div style={{ breakBefore: 'page' }}>
+                    <section style={pageBreakStyle}>
                         <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800 text-center">{t('your_wealth_wheel')}</h2>
                          <Card className="shadow-md h-[800px] w-full">
                              <CardContent className="p-4 w-full h-full">
@@ -214,9 +208,25 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                                 </ChartContainer>
                             </CardContent>
                         </Card>
-                    </div>
+                    </section>
                 )}
 
+                {/* --- PAGE 4: AI Coach Insights --- */}
+                {aiInsight && aiInsight.analysis && (
+                    <section style={pageBreakStyle}>
+                        <Card className="bg-primary/5 border-primary shadow-md">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-3 text-primary">
+                                    <Sparkles className="h-6 w-6" /> {t('ai_coach_title')}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex items-start gap-4">
+                                <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                                <p className="text-base text-gray-700 italic">"{aiInsight.analysis}"</p>
+                            </CardContent>
+                        </Card>
+                    </section>
+                )}
             </main>
         </div>
     );
