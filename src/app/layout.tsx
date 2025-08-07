@@ -1,13 +1,11 @@
 
-"use client";
-
 import type { Metadata, Viewport } from 'next';
-import { useEffect } from 'react';
 import './globals.css';
 import './print.css';
 import { Toaster } from "@/components/ui/toaster";
 import { I18nProvider } from '@/hooks/use-i18n';
 import { Poppins } from 'next/font/google';
+import ServiceWorkerRegistrar from '@/components/service-worker-registrar';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -51,21 +49,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker
-          .register("/service-worker.js")
-          .then((reg) => {
-            console.log("✅ Service Worker registrado:", reg);
-          })
-          .catch((err) => {
-            console.error("❌ Erro ao registrar o Service Worker:", err);
-          });
-      });
-    }
-  }, []);
 
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
@@ -89,6 +72,7 @@ export default function RootLayout({
       </head>
       <body>
         <I18nProvider>
+          <ServiceWorkerRegistrar />
           {children}
           <Toaster />
         </I18nProvider>
