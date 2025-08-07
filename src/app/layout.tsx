@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/icon.svg', // Updated to use the SVG icon
     apple: '/icons/apple-icon-180.png',
   },
 };
@@ -52,9 +52,6 @@ export default function RootLayout({
         
         {/* Manifest and Icons - Explicitly declared for reliability */}
         <link rel="manifest" href="/manifest.json" />
-        
-        {/* Main favicon */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
         
         {/* Apple Touch Icons for iPhone/iPad Home Screen */}
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180.png" />
