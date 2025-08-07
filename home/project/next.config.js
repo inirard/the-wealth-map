@@ -3,9 +3,13 @@ const withPWA = require("@ducanh2912/next-pwa").default({
   dest: "public",
   register: true,
   skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development', // Disable PWA in dev for faster reloads
+  disable: process.env.NODE_ENV === 'development', // Disable PWA in dev to prevent issues
   cacheOnFrontEndNav: true,
   aggressiveFrontEndNavCaching: true,
+  swcMinify: true,
+  workboxOptions: {
+    disableDevLogs: true, // Disable logs in development
+  },
 });
 
 /** @type {import('next').NextConfig} */

@@ -21,11 +21,21 @@ import { Calendar } from "@/components/ui/calendar";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { useI18n } from '@/hooks/use-i18n';
+import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
+
+// Helper function to safely parse dates on all browsers, especially Safari
+const safeParseDate = (dateString: string) => {
+    if (!dateString) return new Date();
+    // Replaces dashes with slashes for better browser compatibility
+    const safeDateString = dateString.replace(/-/g, '/').replace(/T.*/, '');
+    const date = new Date(safeDateString);
+    return isNaN(date.getTime()) ? new Date() : date;
+}
 
 export default function TrackerPage() {
   const { t } = useI18n();
+  const { currency, formatCurrency } = useCurrency();
 
   const transactionSchema = useMemo(() => z.object({
     description: z.string().min(2, t('description_error')),
@@ -48,6 +58,7 @@ export default function TrackerPage() {
       description: "",
       amount: 0,
       type: "expense",
+      date: new Date(),
     },
     resetOptions: {
       keepValues: false,
@@ -71,7 +82,7 @@ export default function TrackerPage() {
       ...values,
       date: values.date.toISOString(),
     };
-    setTransactions([...transactions, newTransaction].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+    setTransactions([...transactions, newTransaction].sort((a, b) => safeParseDate(b.date).getTime() - safeParseDate(a.date).getTime()));
     form.reset();
     setIsDialogOpen(false);
   }
@@ -94,7 +105,7 @@ export default function TrackerPage() {
   const handleExport = useCallback(() => {
     const dataToExport = transactions.map(transaction => ({
         ...transaction, 
-        date: format(new Date(transaction.date), "yyyy-MM-dd"),
+        date: format(safeParseDate(transaction.date), "yyyy-MM-dd"),
         type: transaction.type === 'income' ? t('income') : t('expense')
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
@@ -121,9 +132,9 @@ export default function TrackerPage() {
 
     return (
         <div className="grid gap-4 md:grid-cols-3">
-            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_income')}</CardTitle><TrendingUp className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-xl font-bold text-green-600">€{totalIncome.toFixed(2)}</div></CardContent></Card>
-            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_expenses')}</CardTitle><TrendingDown className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-xl font-bold text-destructive">€{totalExpenses.toFixed(2)}</div></CardContent></Card>
-            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('balance')}</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-xl font-bold">€{balance.toFixed(2)}</div></CardContent></Card>
+            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_income')}</CardTitle><TrendingUp className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-xl font-bold text-green-600">{formatCurrency(totalIncome)}</div></CardContent></Card>
+            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('total_expenses')}</CardTitle><TrendingDown className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-xl font-bold text-destructive">{formatCurrency(totalExpenses)}</div></CardContent></Card>
+            <Card><CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2"><CardTitle className="text-sm font-medium">{t('balance')}</CardTitle><Wallet className="h-4 w-4 text-muted-foreground" /></CardHeader><CardContent><div className="text-xl font-bold">{formatCurrency(balance)}</div></CardContent></Card>
         </div>
     );
   };
@@ -146,7 +157,7 @@ export default function TrackerPage() {
                       <FormItem><FormLabel>{t('description')}</FormLabel><FormControl><Input placeholder={t('description_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="amount" render={({ field }) => (
-                      <FormItem><FormLabel>{t('amount')} (€)</FormLabel><FormControl><Input type="number" step="0.01" placeholder="55.75" {...field} /></FormControl><FormMessage /></FormItem>
+                      <FormItem><FormLabel>{t('amount')} ({currency})</FormLabel><FormControl><Input type="number" step="0.01" placeholder="55.75" {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="type" render={({ field }) => (
                       <FormItem className="space-y-3"><FormLabel>{t('type')}</FormLabel><FormControl>
@@ -194,15 +205,15 @@ export default function TrackerPage() {
               {isClient && transactions.length > 0 ? (
                 transactions.map(transaction => (
                   <TableRow key={transaction.id}>
-                    <TableCell>{format(new Date(transaction.date.replace(/-/g, '/').replace(/T.*/, '')), "PPP")}</TableCell>
+                    <TableCell>{format(safeParseDate(transaction.date), "PPP")}</TableCell>
                     <TableCell className="font-medium">{transaction.description}</TableCell>
                     <TableCell>
-                      <span className={cn("px-2 py-1 rounded-full text-xs", transaction.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')}>
+                      <span className={cn("px-2 py-1 rounded-full text-xs", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
                         {transaction.type === 'income' ? t('income') : t('expense')}
                       </span>
                     </TableCell>
                     <TableCell className={cn("text-right font-semibold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                      €{transaction.amount.toFixed(2)}
+                      {formatCurrency(transaction.amount)}
                     </TableCell>
                     <TableCell>
                       <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
