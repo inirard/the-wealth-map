@@ -16,7 +16,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'The Wealth Map | Your Interactive Financial Planner',
   description: 'Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.',
-  manifest: '/manifest.webmanifest',
+  manifest: '/manifest.json',
   applicationName: "The Wealth Map",
   appleWebApp: {
     capable: true,
@@ -27,8 +27,16 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/icons/apple-icon-180.png',
+    // This is the correct way to specify icons in Next.js App Router
+    icon: '/icon.svg',
+    shortcut: '/favicon.ico', // Fallback for older browsers
+    apple: [
+      { url: '/icons/apple-icon-180.png', sizes: '180x180', type: 'image/png' },
+    ],
+    other: [
+       { rel: 'icon', type: 'image/png', sizes: '192x192', url: '/icons/icon-192x192.png' },
+       { rel: 'icon', type: 'image/png', sizes: '512x512', url: '/icons/icon-512x512.png' },
+    ]
   },
 };
 
@@ -44,21 +52,7 @@ export default function RootLayout({
 
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
-       <head>
-        {/* PWA Tags for a robust cross-device experience */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
-        
-        {/* Manifest and Icons - Explicitly declared for reliability */}
-        <link rel="manifest" href="/manifest.webmanifest" />
-        
-        {/* Main favicon */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        
-        {/* Apple Touch Icons for iPhone/iPad Home Screen */}
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180.png" />
-       </head>
+       <head />
       <body>
         <I18nProvider>
           {children}
