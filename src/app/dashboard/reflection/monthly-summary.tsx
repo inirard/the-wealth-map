@@ -31,9 +31,18 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
     // Goal Summary
     const incompleteGoals = goals
       .filter(g => g.currentAmount < g.targetAmount)
-      .sort((a, b) => new Date(a.targetDate).getTime() - new Date(b.targetDate).getTime());
+      .sort((a, b) => {
+          // Safari-safe date comparison
+          const dateA = new Date(a.targetDate.replace(/-/g, '/').replace(/T.*/, '')).getTime();
+          const dateB = new Date(b.targetDate.replace(/-/g, '/').replace(/T.*/, '')).getTime();
+          return dateA - dateB;
+      });
 
-    const closestGoal = incompleteGoals[0] || [...goals].sort((a, b) => new Date(b.targetDate).getTime() - new Date(a.targetDate).getTime())[0];
+    const closestGoal = incompleteGoals[0] || [...goals].sort((a, b) => {
+         const dateA = new Date(a.targetDate.replace(/-/g, '/').replace(/T.*/, '')).getTime();
+         const dateB = new Date(b.targetDate.replace(/-/g, '/').replace(/T.*/, '')).getTime();
+         return dateB - dateA;
+    })[0];
     
     let goalProgress = 0;
     if (closestGoal && closestGoal.targetAmount > 0) {
