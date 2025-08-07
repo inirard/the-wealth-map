@@ -33,8 +33,8 @@ export const metadata: Metadata = {
       { url: '/icons/apple-icon-180.png', sizes: '180x180', type: 'image/png' },
     ],
     other: [
-      { rel: 'icon', type: 'image/png', sizes: '192x192', url: '/icons/icon-192x192.png' },
-      { rel: 'icon', type: 'image/png', sizes: '512x512', url: '/icons/icon-512x512.png' },
+       { rel: 'icon', type: 'image/png', sizes: '192x192', url: '/icons/icon-192x192.png' },
+       { rel: 'icon', type: 'image/png', sizes: '512x512', url: '/icons/icon-512x512.png' },
     ]
   },
 };
@@ -62,6 +62,8 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
+        <link rel="apple-touch-startup-image" href="https://placehold.co/1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" data-ai-hint="financial growth" />
+
 
         {/* Fallback icons */}
         <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
