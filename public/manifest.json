@@ -1,10 +1,9 @@
-
 {
   "name": "The Wealth Map",
   "short_name": "WealthMap",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FDFCF9",
+  "background_color": "#ffffff",
   "theme_color": "#007C7C",
   "orientation": "portrait",
   "icons": [

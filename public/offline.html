@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
@@ -7,31 +6,35 @@
   <title>Offline - The Wealth Map</title>
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       text-align: center;
       padding: 2rem;
       background: #FDFCF9;
-      color: #1a202c;
+      color: #333;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
     }
+    .container {
+        max-width: 600px;
+    }
     h1 { 
         color: #007C7C; 
-        font-size: 1.75rem;
+        font-size: 2rem;
     }
     p { 
-        color: #4a5568; 
-        font-size: 1rem;
-        max-width: 400px;
+        color: #6B7280; 
+        font-size: 1.1rem;
+        line-height: 1.6;
     }
   </style>
 </head>
 <body>
-  <h1>Você está offline</h1>
-  <p>Parece que não há conexão com a internet. O conteúdo será carregado assim que sua conexão voltar.</p>
+  <div class="container">
+    <h1>Você está offline</h1>
+    <p>Parece que não há ligação à internet. O conteúdo será carregado assim que a sua conexão for restabelecida.</p>
+  </div>
 </body>
 </html>

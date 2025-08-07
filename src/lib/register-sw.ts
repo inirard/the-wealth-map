@@ -1,4 +1,3 @@
-
 // src/lib/register-sw.ts
 export async function registerServiceWorker() {
   if (typeof window !== "undefined" && "serviceWorker" in navigator) {

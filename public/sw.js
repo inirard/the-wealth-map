@@ -1,6 +1,5 @@
-
 // Nome e versão do cache
-const CACHE_NAME = "wealthmap-cache-v1";
+const CACHE_NAME = "wealth-map-cache-v1";
 const OFFLINE_URL = "/offline.html";
 
 // Arquivos essenciais para cache na instalação
@@ -28,12 +27,7 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
-      Promise.all(keys.map((key) => {
-        if (key !== CACHE_NAME) {
-          console.log("[Service Worker] Deleting old cache:", key);
-          return caches.delete(key);
-        }
-      }))
+      Promise.all(keys.map((key) => key !== CACHE_NAME && caches.delete(key)))
     )
   );
   self.clients.claim();
@@ -46,40 +40,48 @@ self.addEventListener("fetch", (event) => {
   // Ignora requisições que não sejam GET
   if (request.method !== "GET") return;
 
-  // Network First para páginas HTML e API
-  if (request.destination === 'document' || request.url.includes('/api/')) {
+  // Network First para páginas HTML
+  if (request.headers.get("accept")?.includes("text/html")) {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Se for uma resposta válida, armazena em cache
-          if (response.ok) {
-            const cloned = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
-          }
+          // Clona a resposta para colocar no cache
+          const clonedResponse = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(request, clonedResponse);
+          });
           return response;
         })
-        .catch(() => {
-            // Se a rede falhar, tenta obter do cache ou mostra a página offline
-            return caches.match(request).then((res) => res || caches.match(OFFLINE_URL))
-        })
+        .catch(() => 
+            // Se a rede falhar, tenta buscar do cache
+            caches.match(request).then((cachedResponse) => {
+                // Se estiver no cache, retorna. Senão, retorna a página offline.
+                return cachedResponse || caches.match(OFFLINE_URL);
+            })
+        )
     );
-  } else if (request.destination) { // Cache First para outros assets (css, js, images)
-    event.respondWith(
-      caches.match(request).then((cached) => {
-        return (
-          cached ||
-          fetch(request).then((response) => {
-            if (response.ok) {
-              const cloned = response.clone();
-              caches.open(CACHE_NAME).then((cache) => cache.put(request, cloned));
-            }
-            return response;
-          })
-        );
-      })
-    );
-  }
+    return;
+  } 
+  
+  // Cache First para todos os outros assets (CSS, JS, imagens)
+  event.respondWith(
+    caches.match(request).then((cachedResponse) => {
+      // Se estiver no cache, retorna a resposta do cache
+      if (cachedResponse) {
+        return cachedResponse;
+      }
+      // Senão, busca na rede, coloca no cache e retorna
+      return fetch(request).then((networkResponse) => {
+        const clonedResponse = networkResponse.clone();
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(request, clonedResponse);
+        });
+        return networkResponse;
+      });
+    })
+  );
 });
+
 
 // Placeholder para futuras notificações push
 self.addEventListener("push", (event) => {
