@@ -28,24 +28,6 @@ const nextConfig = {
       },
     ],
   },
-  // Garante headers corretos para Safari/iOS para forçar a revalidação
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=0, must-revalidate",
-          },
-          {
-            key: "X-Timestamp",
-            value: new Date().toISOString(), // Força a mudança no build para o iPhone
-          },
-        ],
-      },
-    ];
-  },
 };
 
 module.exports = withPWA(nextConfig);

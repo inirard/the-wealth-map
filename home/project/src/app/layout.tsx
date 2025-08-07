@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     icon: '/icon.svg',
     shortcut: '/favicon.ico',
     apple: [
-      { url: '/icons/apple-icon-180.png' },
+      { url: '/icons/apple-icon-180.png', sizes: '180x180', type: 'image/png' },
     ],
     other: [
        { rel: 'icon', type: 'image/png', sizes: '192x192', url: '/icons/icon-192x192.png' },
@@ -48,10 +48,26 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
-       <head />
+      <head>
+        {/* PWA */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#007C7C" />
+        <meta name="application-name" content="The Wealth Map" />
+        <meta name="mobile-web-app-capable" content="yes" />
+
+        {/* iOS PWA */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
+        
+        {/* Fallback icons */}
+        <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </head>
       <body>
         <I18nProvider>
           {children}
