@@ -25,8 +25,16 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // Helper function to safely parse dates on all browsers, especially Safari
 const safeParseDate = (dateString: string) => {
-    return new Date(dateString.replace(/-/g, '/').replace(/T.*/, ''));
-}
+    if (!dateString) return new Date();
+    // Usa Date.parse de forma robusta e cross-browser
+    const parts = dateString.split('T')[0].split('-'); // YYYY-MM-DD
+    if (parts.length !== 3) return new Date(); // Retorna data atual se o formato for inesperado
+    const [year, month, day] = parts.map(Number);
+    // Validação simples dos números
+    if (isNaN(year) || isNaN(month) || isNaN(day)) return new Date();
+    return new Date(year, month - 1, day); // Mês no construtor de Date é 0-indexed
+};
+
 
 export default function GoalsPage() {
   const { t } = useI18n();
@@ -189,7 +197,7 @@ export default function GoalsPage() {
       {!isClient ? renderSkeletons() : goals.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {goals.map((goal) => {
-            const progress = (goal.currentAmount / goal.targetAmount) * 100;
+            const progress = (goal.targetAmount > 0) ? (goal.currentAmount / goal.targetAmount) * 100 : 0;
             return (
               <Card key={goal.id} className="flex flex-col">
                 <CardHeader>
@@ -243,3 +251,5 @@ export default function GoalsPage() {
     </div>
   );
 }
+
+    

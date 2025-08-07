@@ -14,6 +14,19 @@ interface MonthlySummaryProps {
   wheelData: WealthWheelData[];
 }
 
+// Helper function to safely parse dates on all browsers, especially Safari
+const safeParseDate = (dateString: string) => {
+    if (!dateString) return new Date();
+    // Usa Date.parse de forma robusta e cross-browser
+    const parts = dateString.split('T')[0].split('-'); // YYYY-MM-DD
+    if (parts.length !== 3) return new Date(); // Retorna data atual se o formato for inesperado
+    const [year, month, day] = parts.map(Number);
+    // Validação simples dos números
+    if (isNaN(year) || isNaN(month) || isNaN(day)) return new Date();
+    return new Date(year, month - 1, day); // Mês no construtor de Date é 0-indexed
+};
+
+
 export default function MonthlySummary({ goals, transactions, wheelData }: MonthlySummaryProps) {
   const { t } = useI18n();
   const { formatCurrency } = useCurrency();
@@ -32,15 +45,14 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
     const incompleteGoals = goals
       .filter(g => g.currentAmount < g.targetAmount)
       .sort((a, b) => {
-          // Safari-safe date comparison
-          const dateA = new Date(a.targetDate.replace(/-/g, '/').replace(/T.*/, '')).getTime();
-          const dateB = new Date(b.targetDate.replace(/-/g, '/').replace(/T.*/, '')).getTime();
+          const dateA = safeParseDate(a.targetDate).getTime();
+          const dateB = safeParseDate(b.targetDate).getTime();
           return dateA - dateB;
       });
 
     const closestGoal = incompleteGoals[0] || [...goals].sort((a, b) => {
-         const dateA = new Date(a.targetDate.replace(/-/g, '/').replace(/T.*/, '')).getTime();
-         const dateB = new Date(b.targetDate.replace(/-/g, '/').replace(/T.*/, '')).getTime();
+         const dateA = safeParseDate(a.targetDate).getTime();
+         const dateB = safeParseDate(b.targetDate).getTime();
          return dateB - dateA;
     })[0];
     
@@ -141,3 +153,5 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
     </Card>
   );
 }
+
+    

@@ -26,8 +26,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 // Helper function to safely parse dates on all browsers, especially Safari
 const safeParseDate = (dateString: string) => {
-    return new Date(dateString.replace(/-/g, '/').replace(/T.*/, ''));
-}
+    if (!dateString) return new Date();
+    // Usa Date.parse de forma robusta e cross-browser
+    const parts = dateString.split('T')[0].split('-'); // YYYY-MM-DD
+    if (parts.length !== 3) return new Date(); // Retorna data atual se o formato for inesperado
+    const [year, month, day] = parts.map(Number);
+    // Validação simples dos números
+    if (isNaN(year) || isNaN(month) || isNaN(day)) return new Date();
+    return new Date(year, month - 1, day); // Mês no construtor de Date é 0-indexed
+};
 
 export default function TrackerPage() {
   const { t } = useI18n();
@@ -78,7 +85,7 @@ export default function TrackerPage() {
       ...values,
       date: values.date.toISOString(),
     };
-    setTransactions([...transactions, newTransaction].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+    setTransactions([...transactions, newTransaction].sort((a, b) => safeParseDate(b.date).getTime() - safeParseDate(a.date).getTime()));
     form.reset();
     setIsDialogOpen(false);
   }
@@ -204,7 +211,7 @@ export default function TrackerPage() {
                     <TableCell>{format(safeParseDate(transaction.date), "PPP")}</TableCell>
                     <TableCell className="font-medium">{transaction.description}</TableCell>
                     <TableCell>
-                      <span className={cn("px-2 py-1 rounded-full text-xs", transaction.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800')}>
+                      <span className={cn("px-2 py-1 rounded-full text-xs", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
                         {transaction.type === 'income' ? t('income') : t('expense')}
                       </span>
                     </TableCell>
@@ -231,3 +238,5 @@ export default function TrackerPage() {
     </div>
   );
 }
+
+    
