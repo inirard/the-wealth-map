@@ -5,6 +5,7 @@ import './print.css';
 import { Toaster } from "@/components/ui/toaster";
 import { I18nProvider } from '@/hooks/use-i18n';
 import { Poppins } from 'next/font/google';
+import ServiceWorkerRegistrar from '@/components/service-worker-registrar';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -48,6 +49,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
@@ -70,6 +72,7 @@ export default function RootLayout({
       </head>
       <body>
         <I18nProvider>
+          <ServiceWorkerRegistrar />
           {children}
           <Toaster />
         </I18nProvider>
