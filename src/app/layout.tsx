@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  icons: {
+    icon: '/favicon.ico', // Standard favicon
+    apple: '/icons/apple-icon-180.png', // Apple touch icon
+  },
 };
 
 export const viewport: Viewport = {
