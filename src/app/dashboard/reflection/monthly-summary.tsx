@@ -15,15 +15,18 @@ interface MonthlySummaryProps {
 }
 
 // Helper function to safely parse dates on all browsers, especially Safari
-const safeParseDate = (dateString: string) => {
+const safeParseDate = (dateString: string): Date => {
     if (!dateString) return new Date();
-    // Usa Date.parse de forma robusta e cross-browser
-    const parts = dateString.split('T')[0].split('-'); // YYYY-MM-DD
-    if (parts.length !== 3) return new Date(); // Retorna data atual se o formato for inesperado
-    const [year, month, day] = parts.map(Number);
-    // Validação simples dos números
-    if (isNaN(year) || isNaN(month) || isNaN(day)) return new Date();
-    return new Date(year, month - 1, day); // Mês no construtor de Date é 0-indexed
+    // Tenta analisar a data em vários formatos para máxima compatibilidade
+    const date = new Date(dateString);
+    if (!isNaN(date.getTime())) {
+      return date;
+    }
+    // Fallback para o formato YYYY-MM-DD, trocando hífens por barras
+    const formattedString = dateString.split('T')[0].replace(/-/g, '/');
+    const fallbackDate = new Date(formattedString);
+    // Se tudo falhar, retorna a data atual para evitar erros
+    return isNaN(fallbackDate.getTime()) ? new Date() : fallbackDate;
 };
 
 
@@ -153,5 +156,3 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
     </Card>
   );
 }
-
-    
