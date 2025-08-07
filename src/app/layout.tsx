@@ -1,5 +1,8 @@
 
+"use client";
+
 import type { Metadata, Viewport } from 'next';
+import { useEffect } from 'react';
 import './globals.css';
 import './print.css';
 import { Toaster } from "@/components/ui/toaster";
@@ -48,6 +51,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/service-worker.js")
+          .then((reg) => {
+            console.log("✅ Service Worker registrado:", reg);
+          })
+          .catch((err) => {
+            console.error("❌ Erro ao registrar o Service Worker:", err);
+          });
+      });
+    }
+  }, []);
+
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
