@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: '/icon.svg', // Main icon, Next.js will handle favicon.ico generation from this.
-    shortcut: '/favicon.ico', // Fallback for older browsers
+    icon: '/icon.svg',
+    shortcut: '/favicon.ico',
     apple: [
       { url: '/icons/apple-icon-180.png', sizes: '180x180', type: 'image/png' },
     ],
@@ -51,7 +51,20 @@ export default function RootLayout({
 
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
-       <head />
+      <head>
+        {/* Obrigatório para iOS */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#007C7C" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="The Wealth Map" />
+        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
+        <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
+        <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+      </head>
       <body>
         <I18nProvider>
           {children}
