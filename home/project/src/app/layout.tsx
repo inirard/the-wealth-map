@@ -27,14 +27,15 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: '/icon.svg', // Main icon, Next.js will handle favicon.ico generation from this.
-    shortcut: '/favicon.ico', // Fallback for older browsers
+    icon: '/icon.svg',
+    shortcut: '/favicon.ico',
     apple: [
-      { url: '/icons/apple-icon-180.png', sizes: '180x180', type: 'image/png' },
+      { url: '/icons/apple-icon-180.png' },
+      { url: '/icons/apple-icon-152.png', sizes: '152x152' },
+      { url: '/icons/apple-icon-167.png', sizes: '167x167' },
     ],
     other: [
-       { rel: 'icon', type: 'image/png', sizes: '192x192', url: '/icons/icon-192x192.png' },
-       { rel: 'icon', type: 'image/png', sizes: '512x512', url: '/icons/icon-512x512.png' },
+      { rel: 'mask-icon', url: '/icons/safari-pinned-tab.svg', color: '#007C7C' }
     ]
   },
 };
@@ -51,7 +52,7 @@ export default function RootLayout({
 
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
-       <head />
+      <head />
       <body>
         <I18nProvider>
           {children}
