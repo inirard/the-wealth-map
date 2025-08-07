@@ -1,3 +1,4 @@
+
 {
   "name": "The Wealth Map",
   "short_name": "Wealth Map",
@@ -26,5 +27,6 @@
   "background_color": "#FDFCF9",
   "start_url": "/dashboard",
   "display": "standalone",
-  "scope": "/"
+  "scope": "/",
+  "orientation": "portrait"
 }
