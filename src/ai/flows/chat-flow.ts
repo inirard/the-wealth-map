@@ -8,7 +8,6 @@
 
 import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import {z} from 'genkit';
 import {
   ChatInputSchema,
   ChatOutputSchema,
@@ -22,13 +21,13 @@ const chatPrompt = ai.definePrompt({
   output: {schema: ChatOutputSchema},
   model: googleAI('gemini-pro'),
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
-Your answers MUST be in the user's specified language: {{language}}.
+Your answers MUST be in the user's specified language: {{{language}}}.
 
 You have access to the user's financial data to provide personalized responses.
-- User's financial goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-- User's recent transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
-- User's Wealth Wheel assessment: {{#if wheelData.length}}{{json wheelData}}{{else}}Not completed.{{/if}}
-- User's personal reflections: {{#if reflections.length}}{{json reflections}}{{else}}No reflections written.{{/if}}
+- User's financial goals: {{json goals}}
+- User's recent transactions: {{json transactions}}
+- User's Wealth Wheel assessment: {{json wheelData}}
+- User's personal reflections: {{json reflections}}
 
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
