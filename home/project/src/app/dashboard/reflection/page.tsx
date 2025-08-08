@@ -103,22 +103,15 @@ export default function ReflectionPage() {
             const result = await response.json();
             
             if (!response.ok || !result.success) {
-                let errorDetailsString = '';
-                if (result.details && typeof result.details === 'string') {
-                    errorDetailsString = result.details;
-                } else if (result.details) {
-                    errorDetailsString = JSON.stringify(result.details);
-                }
-
-                const errorMessage = errorDetailsString.includes('overloaded') || (result.error && typeof result.error === 'string' && result.error.includes('overloaded'))
-                    ? t('ai_error_description')
-                    : result.error || t('ai_coach_error_message');
+                const errorDetails = result.details ? JSON.stringify(result.details) : '';
+                const errorMessage = result.error || t('ai_coach_error_message');
+                const fullError = `${errorMessage}${errorDetails ? ` (${errorDetails})` : ''}`;
                 
-                setAiError(errorMessage);
+                setAiError(fullError);
                 toast({
                     variant: "destructive",
                     title: t('ai_error_title'),
-                    description: errorMessage,
+                    description: fullError,
                 });
                 setIsLoading(false);
                 return;

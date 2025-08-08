@@ -33,6 +33,15 @@ Based on the data, generate the following predictive insights:
 Your entire output must be a valid JSON object matching the output schema.
 `;
 
+const predictiveInsightsPrompt = ai.definePrompt({
+    name: 'predictiveInsightsPrompt',
+    input: {schema: PredictiveInsightsInputSchema},
+    output: {schema: PredictiveInsightsOutputSchema},
+    model: googleAI('gemini-pro'),
+    prompt: promptTemplate,
+});
+
+
 const predictiveInsightsFlow = ai.defineFlow(
   {
     name: 'predictiveInsightsFlow',
@@ -40,14 +49,7 @@ const predictiveInsightsFlow = ai.defineFlow(
     outputSchema: PredictiveInsightsOutputSchema,
   },
   async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
-    const { output } = await ai.generate({
-      model: googleAI('gemini-pro'),
-      prompt: {
-        template: promptTemplate,
-        input,
-      },
-      output: { schema: PredictiveInsightsOutputSchema },
-    });
+    const { output } = await predictiveInsightsPrompt(input);
     return output!;
   }
 );

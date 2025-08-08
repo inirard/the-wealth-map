@@ -29,6 +29,15 @@ const promptTemplate = `
   The entire analysis should be a single paragraph.
 `;
 
+const generateInsightsPrompt = ai.definePrompt({
+    name: 'generateInsightsPrompt',
+    input: {schema: GenerateInsightsInputSchema},
+    output: {schema: GenerateInsightsOutputSchema},
+    model: googleAI('gemini-pro'),
+    prompt: promptTemplate,
+});
+
+
 const generateInsightsFlow = ai.defineFlow(
   {
     name: 'generateInsightsFlow',
@@ -36,14 +45,7 @@ const generateInsightsFlow = ai.defineFlow(
     outputSchema: GenerateInsightsOutputSchema,
   },
   async (input: GenerateInsightsInput): Promise<GenerateInsightsOutput> => {
-    const { output } = await ai.generate({
-      model: googleAI('gemini-pro'),
-      prompt: {
-        template: promptTemplate,
-        input,
-      },
-      output: { schema: GenerateInsightsOutputSchema },
-    });
+    const { output } = await generateInsightsPrompt(input);
     return output!;
   }
 );
