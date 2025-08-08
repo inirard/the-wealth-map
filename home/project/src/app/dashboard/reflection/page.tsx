@@ -45,15 +45,15 @@ export default function ReflectionPage() {
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [wheelData] = useLocalStorage<WealthWheelData[]>('wealthWheel', []);
     const [username] = useLocalStorage<string>('username', 'User');
+    const [licenseKey] = useLocalStorage<string>('license_key', '');
     const [aiInsight, setAiInsight] = useLocalStorage<GenerateInsightsOutput | null>('aiInsight', null);
     const [isLoading, setIsLoading] = useState(false);
-    const [aiError, setAiError] = useState<boolean>(false);
+    const [aiError, setAiError] = useState<string | null>(null);
     const [isDownloading, setIsDownloading] = useState(false);
     const [isInitialLoad, setIsInitialLoad] = useState(true);
 
     const handleDownloadPdf = () => {
         setIsDownloading(true);
-        // Timeout to allow state to update and show loading state
         setTimeout(() => {
             window.print();
             setIsDownloading(false);
@@ -78,38 +78,54 @@ export default function ReflectionPage() {
     const handleGenerateInsights = async () => {
         setIsLoading(true);
         setAiInsight(null);
-        setAiError(false);
+        setAiError(null);
         setLsReflections(reflections);
 
         try {
             const payload = {
                 language,
-                goals,
-                transactions,
-                wheelData,
-                reflections,
+                goals: JSON.stringify(goals),
+                transactions: JSON.stringify(transactions),
+                wheelData: JSON.stringify(wheelData),
+                reflections: JSON.stringify(reflections),
             };
 
             const response = await fetch('/api/ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ flow: 'generateInsights', payload }),
+                body: JSON.stringify({ 
+                    flow: 'generateInsights', 
+                    payload,
+                    licenseKey 
+                }),
             });
-
+            
             const result = await response.json();
             
-            if (!result.success) {
-                throw new Error(result.error || 'AI request failed');
+            if (!response.ok || !result.success) {
+                const errorMessage = result.details?.includes('overloaded') || result.error?.includes('overloaded')
+                    ? t('ai_error_description')
+                    : result.error || t('ai_coach_error_message');
+                
+                setAiError(errorMessage);
+                toast({
+                    variant: "destructive",
+                    title: t('ai_error_title'),
+                    description: errorMessage,
+                });
+                setIsLoading(false);
+                return;
             }
             
             setAiInsight(result.data as GenerateInsightsOutput);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error generating AI insights:", error);
-            setAiError(true);
+            const friendlyErrorMessage = t('ai_coach_error_message');
+            setAiError(friendlyErrorMessage);
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
-                description: t('ai_error_description'),
+                description: friendlyErrorMessage,
             });
         } finally {
             setIsLoading(false);
@@ -148,7 +164,7 @@ export default function ReflectionPage() {
                             <TooltipTrigger asChild>
                                  <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="outline" size="icon">
                                     <Download className="h-5 w-5" />
-                                </Button>
+                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
                                <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>
@@ -231,7 +247,7 @@ export default function ReflectionPage() {
                         ) : aiError ? (
                              <div className="flex items-start gap-3 text-destructive">
                                 <TriangleAlert className="h-5 w-5 flex-shrink-0" />
-                                <p className="text-sm font-medium">{t('ai_coach_error_message')}</p>
+                                <p className="text-sm font-medium">{aiError}</p>
                             </div>
                         ) : aiInsight ? (
                             <div className="flex items-start gap-4">
@@ -261,7 +277,7 @@ export default function ReflectionPage() {
                 </Card>
             </div>
             
-            <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
+             <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
                  <FinancialReport 
                     ref={reportRef}
                     data={{

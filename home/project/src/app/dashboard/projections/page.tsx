@@ -23,11 +23,12 @@ export default function ProjectionsPage() {
     const [goals] = useLocalStorage<Goal[]>('goals', []);
     const [transactions] = useLocalStorage<Transaction[]>('transactions', []);
     const [username] = useLocalStorage<string>('username', 'User');
+    const [licenseKey] = useLocalStorage<string>('license_key', '');
     
     const [aiPredictions, setAiPredictions] = useLocalStorage<PredictiveInsightsOutput | null>('aiProjections', null);
     const [isLoading, setIsLoading] = useState(false);
     const [isDownloading, setIsDownloading] = useState(false);
-    const [aiError, setAiError] = useState<boolean>(false);
+    const [aiError, setAiError] = useState<string | null>(null);
     const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
@@ -37,37 +38,53 @@ export default function ProjectionsPage() {
     const handleGeneratePredictions = async () => {
         setIsLoading(true);
         setAiPredictions(null);
-        setAiError(false);
+        setAiError(null);
 
         try {
             const payload = {
                 language,
-                goals,
-                transactions,
+                goals: JSON.stringify(goals),
+                transactions: JSON.stringify(transactions),
                 currentDate: new Date().toISOString(),
             };
             
             const response = await fetch('/api/ai', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ flow: 'predictFinancialFuture', payload }),
+                body: JSON.stringify({ 
+                    flow: 'predictFinancialFuture', 
+                    payload,
+                    licenseKey
+                }),
             });
 
             const result = await response.json();
             
-            if (!result.success) {
-                 throw new Error(result.error || 'AI request failed');
+            if (!response.ok || !result.success) {
+                 const errorMessage = result.details?.includes('overloaded') || result.error?.includes('overloaded')
+                    ? t('ai_error_description')
+                    : result.error || t('ai_coach_error_message');
+                 
+                 setAiError(errorMessage);
+                 toast({
+                    variant: "destructive",
+                    title: t('ai_error_title'),
+                    description: errorMessage,
+                 });
+                 setIsLoading(false);
+                 return;
             }
             
             setAiPredictions(result.data as PredictiveInsightsOutput);
 
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error generating AI predictions:", error);
-            setAiError(true);
+            const friendlyErrorMessage = t('ai_coach_error_message');
+            setAiError(friendlyErrorMessage);
             toast({
                 variant: "destructive",
                 title: t('ai_error_title'),
-                description: t('ai_error_description'),
+                description: friendlyErrorMessage,
             });
         } finally {
             setIsLoading(false);
@@ -116,7 +133,7 @@ export default function ProjectionsPage() {
                            <TriangleAlert className="h-8 w-8 flex-shrink-0" />
                            <div>
                                <h3 className="font-bold">{t('ai_error_title')}</h3>
-                               <p className="text-sm">{t('ai_coach_error_message')}</p>
+                               <p className="text-sm">{aiError}</p>
                            </div>
                        </div>
                     </CardContent>
@@ -130,8 +147,8 @@ export default function ProjectionsPage() {
                      <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3">
-                                <div className="p-3 rounded-full bg-green-100">
-                                    <TrendingUp className="text-green-600"/>
+                                <div className="p-3 rounded-full bg-green-100 dark:bg-green-900/50">
+                                    <TrendingUp className="text-green-600 dark:text-green-400"/>
                                 </div>
                                 {t('future_balance_prediction')}
                             </CardTitle>
@@ -141,8 +158,8 @@ export default function ProjectionsPage() {
                      <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3">
-                                 <div className="p-3 rounded-full bg-blue-100">
-                                    <AlertCircle className="text-blue-600"/>
+                                 <div className="p-3 rounded-full bg-blue-100 dark:bg-blue-900/50">
+                                    <AlertCircle className="text-blue-600 dark:text-blue-400"/>
                                 </div>
                                 {t('proactive_alerts')}
                             </CardTitle>
@@ -156,8 +173,8 @@ export default function ProjectionsPage() {
                      <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3">
-                                <div className="p-3 rounded-full bg-purple-100">
-                                    <FlaskConical className="text-purple-600"/>
+                                <div className="p-3 rounded-full bg-purple-100 dark:bg-purple-900/50">
+                                    <FlaskConical className="text-purple-600 dark:text-purple-400"/>
                                 </div>
                                 {t('spending_pattern_analysis')}
                             </CardTitle>
@@ -167,29 +184,31 @@ export default function ProjectionsPage() {
                     <Card>
                         <CardHeader>
                             <CardTitle className="flex items-center gap-3">
-                                <div className="p-3 rounded-full bg-yellow-100">
-                                    <Lightbulb className="text-yellow-600"/>
+                                <div className="p-3 rounded-full bg-yellow-100 dark:bg-yellow-900/50">
+                                    <Lightbulb className="text-yellow-600 dark:text-yellow-400"/>
                                 </div>
                                 {t('what_if_scenario')}
                             </CardTitle>
                         </CardHeader>
                         <CardContent><p className="text-muted-foreground">{aiPredictions.whatIfScenario}</p></CardContent>
                     </Card>
-                    <Card className="md:col-span-2">
-                        <CardHeader>
-                            <CardTitle className="flex items-center gap-3">
-                                 <div className="p-3 rounded-full bg-primary/10">
-                                    <Target className="text-primary"/>
-                                </div>
-                                {t('goal_projections')}
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
-                                {aiPredictions.goalProjections.map((p, i) => <li key={i}><b>{p.goalName}:</b> {p.projection}</li>)}
-                            </ul>
-                        </CardContent>
-                     </Card>
+                    {aiPredictions.goalProjections.length > 0 && (
+                        <Card className="md:col-span-2">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-3">
+                                     <div className="p-3 rounded-full bg-primary/10">
+                                        <Target className="text-primary"/>
+                                    </div>
+                                    {t('goal_projections')}
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ul className="list-disc pl-5 space-y-2 text-muted-foreground">
+                                    {aiPredictions.goalProjections.map((p, i) => <li key={i}><b>{p.goalName}:</b> {p.projection}</li>)}
+                                </ul>
+                            </CardContent>
+                         </Card>
+                    )}
                 </div>
             )
         }
@@ -229,7 +248,7 @@ export default function ProjectionsPage() {
                     <p className="text-muted-foreground mt-2">{t('ai_projections_description')}</p>
                 </div>
                 <div className="flex items-center gap-2">
-                    {isClient && aiPredictions && (
+                    {isClient && aiPredictions && !aiError && (
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -259,7 +278,7 @@ export default function ProjectionsPage() {
             {renderContent()}
 
             <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
-                {isClient && aiPredictions && (
+                 {isClient && aiPredictions && (
                     <ProjectionsReport 
                         ref={reportRef}
                         data={{
