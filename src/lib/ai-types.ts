@@ -1,3 +1,4 @@
+
 import {z} from 'zod';
 
 // These are the base schemas from localStorage.
@@ -43,7 +44,6 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 
 // Input schemas for the AI flows.
-// These schemas now expect all complex data to be pre-formatted as strings by the client.
 export const ChatInputSchema = z.object({
   language: z.enum(['pt', 'en', 'es', 'fr']),
   history: z.array(ChatMessageSchema),
