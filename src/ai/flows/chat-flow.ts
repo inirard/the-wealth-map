@@ -7,7 +7,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {googleAI} from '@genkit-ai/googleai';
 import {
   ChatInputSchema,
   ChatOutputSchema,
@@ -19,7 +18,7 @@ const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
-  model: googleAI('gemini-pro'),
+  model: 'gemini-pro',
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
 Your answers MUST be in the user's specified language: {{{language}}}.
 

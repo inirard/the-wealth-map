@@ -12,7 +12,7 @@ const generateInsightsPrompt = ai.definePrompt({
     name: 'generateInsightsPrompt',
     input: {schema: GenerateInsightsInputSchema},
     output: {schema: GenerateInsightsOutputSchema},
-    model: googleAI('gemini-pro'),
+    model: 'gemini-pro',
     prompt: `
         You are a friendly and positive financial coach for the "The Wealth Map" app.
         Your task is to provide a short, personalized, and encouraging analysis for the user based on their financial data.
