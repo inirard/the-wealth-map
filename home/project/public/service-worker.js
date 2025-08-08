@@ -1,5 +1,6 @@
-// This is a basic service worker to enable PWA installation.
-// It uses a network-first caching strategy.
+
+// This is a basic service worker for PWA functionality.
+// It focuses on caching the main application shell files.
 
 const CACHE_NAME = 'the-wealth-map-cache-v1';
 const urlsToCache = [
@@ -10,64 +11,74 @@ const urlsToCache = [
   '/icon.svg',
   '/icons/icon-192x192.png',
   '/icons/icon-512x512.png',
-  '/icons/apple-icon-180.png'
+  '/images/dashboardimage.png'
+  // Add other critical assets here, like main CSS/JS bundles if they have stable names.
+  // Next.js generates unique names for chunks, so we rely on caching at runtime.
 ];
 
-self.addEventListener('install', (event) => {
-  console.log('[Service Worker] Install');
+// Install a service worker
+self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('[Service Worker] Caching app shell');
+      .then(cache => {
+        console.log('Opened cache');
         return cache.addAll(urlsToCache);
       })
   );
-  self.skipWaiting();
 });
 
-self.addEventListener('activate', (event) => {
-  console.log('[Service Worker] Activate');
-  // Remove old caches
+// Cache and return requests
+self.addEventListener('fetch', event => {
+    // We only want to cache GET requests.
+    if (event.request.method !== 'GET') {
+        return;
+    }
+
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        // Cache hit - return response
+        if (response) {
+          return response;
+        }
+
+        // Clone the request because it's a stream and can only be consumed once.
+        const fetchRequest = event.request.clone();
+
+        return fetch(fetchRequest).then(
+          response => {
+            // Check if we received a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response;
+            }
+
+            // Clone the response because it's also a stream.
+            const responseToCache = response.clone();
+
+            caches.open(CACHE_NAME)
+              .then(cache => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return response;
+          }
+        );
+      })
+    );
+});
+
+// Update a service worker
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
+    caches.keys().then(cacheNames => {
       return Promise.all(
-        cacheNames.map((cache) => {
-          if (cache !== CACHE_NAME) {
-            console.log('[Service Worker] Removing old cache', cache);
-            return caches.delete(cache);
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
           }
         })
       );
     })
-  );
-  return self.clients.claim();
-});
-
-self.addEventListener('fetch', (event) => {
-  // We only want to handle GET requests
-  if (event.request.method !== 'GET') {
-    return;
-  }
-
-  event.respondWith(
-    fetch(event.request)
-      .then((response) => {
-        // If we get a valid response, clone it and cache it
-        if (response && response.status === 200) {
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-        }
-        return response;
-      })
-      .catch(() => {
-        // If the network fails, try to serve from cache
-        return caches.match(event.request)
-          .then((response) => {
-            return response || caches.match('/'); // Fallback to home page
-          });
-      })
   );
 });
