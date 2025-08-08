@@ -14,34 +14,40 @@ import {
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
-const predictiveInsightsPrompt = ai.definePrompt({
-  name: 'predictiveInsightsPrompt',
-  input: {schema: PredictiveInsightsInputSchema},
-  output: {schema: PredictiveInsightsOutputSchema},
-  model: googleAI('gemini-pro'),
-  prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
-Your response MUST be in the user's specified language: {{language}}.
-The current date is {{currentDate}}.
 
-Analyze the user's financial data:
-- Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-- Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
+const predictiveInsightsFlow = ai.defineFlow({
+    name: 'predictiveInsightsFlow',
+    inputSchema: PredictiveInsightsInputSchema,
+    outputSchema: PredictiveInsightsOutputSchema,
+}, async (input) => {
+    const { output } = await ai.generate({
+        model: googleAI('gemini-pro'),
+        prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
+        Your response MUST be in the user's specified language: ${input.language}.
+        The current date is ${input.currentDate}.
 
-Based on the data, generate the following predictive insights:
+        Analyze the user's financial data:
+        - Goals: ${input.goals}
+        - Transactions: ${input.transactions}
 
-1.  **futureBalancePrediction**: A realistic prediction of the user's net balance change over the next 30 days.
-2.  **goalProjections**: For each goal, provide a projection on when they might achieve it based on their current savings rate.
-3.  **spendingAnalysis**: Identify the top spending category and suggest one specific, actionable way to reduce it.
-4.  **proactiveAlerts**: Generate one or two automated-style alerts, such as "High spending on 'Eating Out' detected this month" or "You are on track to meet your 'Vacation' goal."
-5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner."
+        Based on the data, generate the following predictive insights:
 
-Your entire output must be a valid JSON object matching the output schema.
-`,
+        1.  **futureBalancePrediction**: A realistic prediction of the user's net balance change over the next 30 days.
+        2.  **goalProjections**: For each goal, provide a projection on when they might achieve it based on their current savings rate.
+        3.  **spendingAnalysis**: Identify the top spending category and suggest one specific, actionable way to reduce it.
+        4.  **proactiveAlerts**: Generate one or two automated-style alerts, such as "High spending on 'Eating Out' detected this month" or "You are on track to meet your 'Vacation' goal."
+        5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner."
+
+        Your entire output must be a valid JSON object matching the output schema.
+        `,
+        output: { schema: PredictiveInsightsOutputSchema },
+    });
+    return output!;
 });
+
 
 export async function predictiveInsights(
   input: PredictiveInsightsInput
 ): Promise<PredictiveInsightsOutput> {
-  const {output} = await predictiveInsightsPrompt(input);
-  return output!;
+  return await predictiveInsightsFlow(input);
 }
