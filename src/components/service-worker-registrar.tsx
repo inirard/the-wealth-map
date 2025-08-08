@@ -1,9 +1,8 @@
-
 "use client";
 
 import { useEffect } from 'react';
 
-export default function ServiceWorkerRegistrar() {
+function ServiceWorkerRegistrar() {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
@@ -21,3 +20,5 @@ export default function ServiceWorkerRegistrar() {
 
   return null; // This component does not render anything.
 }
+
+export { ServiceWorkerRegistrar };
