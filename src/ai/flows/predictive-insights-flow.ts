@@ -14,18 +14,19 @@ import {
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
-const predictiveInsightsPrompt = ai.definePrompt({
-  name: 'predictiveInsightsPrompt',
-  input: {schema: PredictiveInsightsInputSchema},
-  output: {schema: PredictiveInsightsOutputSchema},
-  model: googleAI('gemini-pro'),
-  prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
-Your response MUST be in the user's specified language: {{language}}.
-The current date is {{currentDate}}.
+
+export async function predictiveInsights(
+  input: PredictiveInsightsInput
+): Promise<PredictiveInsightsOutput> {
+  const model = googleAI('gemini-pro');
+
+  const prompt = `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
+Your response MUST be in the user's specified language: ${input.language}.
+The current date is ${input.currentDate}.
 
 Analyze the user's financial data:
-- Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-- Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
+- Goals: ${input.goals}
+- Transactions: ${input.transactions}
 
 Based on the data, generate the following predictive insights:
 
@@ -36,12 +37,13 @@ Based on the data, generate the following predictive insights:
 5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner."
 
 Your entire output must be a valid JSON object matching the output schema.
-`,
-});
+`;
+  
+  const {output} = await ai.generate({
+      prompt,
+      model,
+      output: { schema: PredictiveInsightsOutputSchema },
+  });
 
-export async function predictiveInsights(
-  input: PredictiveInsightsInput
-): Promise<PredictiveInsightsOutput> {
-  const {output} = await predictiveInsightsPrompt(input);
   return output!;
 }
