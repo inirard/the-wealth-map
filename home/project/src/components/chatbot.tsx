@@ -61,10 +61,7 @@ export default function Chatbot() {
     try {
       const payload = {
         language,
-        history: newMessages
-          .slice(0, -1)
-          .map(msg => `${msg.role === 'model' ? 'AI' : 'User'}: ${msg.content}`)
-          .join('\n'),
+        history: newMessages.slice(0, -1),
         message: input,
         goals: JSON.stringify(goals),
         transactions: JSON.stringify(transactions),
@@ -85,7 +82,12 @@ export default function Chatbot() {
       const result = await response.json();
       
       if (!response.ok || !result.success) {
-        const errorMessage = result.details?.includes('overloaded') || result.error?.includes('overloaded')
+        let errorDetailsString = '';
+        if (result.details) {
+          errorDetailsString = typeof result.details === 'string' ? result.details : JSON.stringify(result.details);
+        }
+        
+        const errorMessage = errorDetailsString.includes('overloaded') || (result.error && typeof result.error === 'string' && result.error.includes('overloaded'))
            ? t('ai_error_description')
            : result.error || t('ai_coach_error_message');
 

@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow to generate financial predictions based on user data.
@@ -5,6 +6,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import {
   PredictiveInsightsInputSchema,
   PredictiveInsightsOutputSchema,
@@ -16,6 +18,7 @@ const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
   input: {schema: PredictiveInsightsInputSchema},
   output: {schema: PredictiveInsightsOutputSchema},
+  model: googleAI('gemini-pro'),
   prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
 Your response MUST be in the user's specified language: {{language}}.
 The current date is {{currentDate}}.
