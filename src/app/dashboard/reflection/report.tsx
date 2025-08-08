@@ -5,14 +5,12 @@ import React, { forwardRef, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
-import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts"
 import { CircleDollarSign, Bot, Sparkles } from 'lucide-react';
 import { format } from "date-fns";
 import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { cn } from "@/lib/utils";
-import type { Goal, Transaction, WealthWheelData, Reflection } from '@/lib/types';
-import type { GenerateInsightsOutput } from '@/lib/ai-types';
+import type { Goal, Transaction, Reflection } from '@/lib/types';
+import type { GenerateInsightsOutput, WealthWheelData } from '@/lib/ai-types';
 
 interface ReportData {
     username: string;
@@ -28,10 +26,6 @@ interface FinancialReportProps {
     data: ReportData;
 }
 
-const chartConfig = {
-    value: { label: "Score", color: "hsl(var(--primary))" },
-};
-
 const emotionalStates: { [key: string]: { labelKey: string; icon: React.FC<any> } } = {
     '😃': { labelKey: 'excellent', icon: (props) => <span {...props}>😃</span> },
     '🙂': { labelKey: 'good', icon: (props) => <span {...props}>🙂</span> },
@@ -43,7 +37,7 @@ const emotionalStates: { [key: string]: { labelKey: string; icon: React.FC<any> 
 const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data }, ref) => {
     const { t } = useI18n();
     const { currency, formatCurrency } = useCurrency();
-    const { username, goals, transactions, wheelData, reflections, mood, aiInsight } = data;
+    const { username, goals, transactions, reflections, mood, aiInsight } = data;
 
     const { totalIncome, totalExpenses, balance } = useMemo(() => {
         const income = transactions.filter(t => t.type === 'income').reduce((sum, t) => sum + t.amount, 0);
@@ -52,8 +46,6 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
     }, [transactions]);
     
     const nonEmptyReflections = reflections.filter(r => r.content.trim() !== '');
-
-    const hasDataForWheel = wheelData.length > 0 && wheelData.some(d => d.value > 0);
 
     const sectionStyle = {
         breakInside: 'avoid',
@@ -191,27 +183,7 @@ const FinancialReport = forwardRef<HTMLDivElement, FinancialReportProps>(({ data
                     </section>
                 )}
 
-                {/* --- PAGE 3: Wealth Wheel --- */}
-                {hasDataForWheel && (
-                    <section style={pageBreakStyle}>
-                        <h2 className="text-2xl font-bold font-headline mb-4 text-gray-800 text-center">{t('your_wealth_wheel')}</h2>
-                         <Card className="shadow-md h-[800px] w-full">
-                             <CardContent className="p-4 w-full h-full">
-                                <ChartContainer config={chartConfig} className="w-full h-full">
-                                    <RadarChart data={wheelData} outerRadius="80%">
-                                        <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-                                        <PolarGrid gridType="circle" />
-                                        <PolarAngleAxis dataKey="label" tick={{ fill: 'hsl(var(--foreground))', fontSize: 14 }} />
-                                        <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
-                                        <Radar name="Score" dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
-                                    </RadarChart>
-                                </ChartContainer>
-                            </CardContent>
-                        </Card>
-                    </section>
-                )}
-
-                {/* --- PAGE 4: AI Coach Insights --- */}
+                {/* --- PAGE 3: AI Coach Insights --- */}
                 {aiInsight && aiInsight.analysis && (
                     <section style={pageBreakStyle}>
                         <Card className="bg-primary/5 border-primary shadow-md">
