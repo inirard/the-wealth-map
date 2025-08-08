@@ -2,7 +2,7 @@
 'use server';
 /**
  * @fileOverview An AI flow to generate financial predictions based on user data.
- * - predictiveInsightsFlow - A function that handles the financial prediction process.
+ * - predictiveInsights - A function that handles the financial prediction process.
  */
 
 import {ai} from '@/ai/genkit';
@@ -24,8 +24,8 @@ Your response MUST be in the user's specified language: {{language}}.
 The current date is {{currentDate}}.
 
 Analyze the user's financial data:
-- Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-- Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
+- Goals: {{json goals}}
+- Transactions: {{json transactions}}
 
 Based on the data, generate the following predictive insights:
 
@@ -39,9 +39,21 @@ Your entire output must be a valid JSON object matching the output schema.
 `,
 });
 
+const predictiveInsightsFlow = ai.defineFlow(
+  {
+    name: 'predictiveInsightsFlow',
+    inputSchema: PredictiveInsightsInputSchema,
+    outputSchema: PredictiveInsightsOutputSchema,
+  },
+  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
+    const { output } = await predictiveInsightsPrompt(input);
+    return output!;
+  }
+);
+
+
 export async function predictiveInsights(
   input: PredictiveInsightsInput
 ): Promise<PredictiveInsightsOutput> {
-  const {output} = await predictiveInsightsPrompt(input);
-  return output!;
+  return predictiveInsightsFlow(input);
 }

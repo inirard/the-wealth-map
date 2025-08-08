@@ -62,8 +62,10 @@ export default function ProjectionsPage() {
             
             if (!response.ok || !result.success) {
                 let errorDetailsString = '';
-                if (result.details) {
-                  errorDetailsString = typeof result.details === 'string' ? result.details : JSON.stringify(result.details);
+                if (result.details && typeof result.details === 'string') {
+                    errorDetailsString = result.details;
+                } else if (result.details) {
+                    errorDetailsString = JSON.stringify(result.details);
                 }
 
                  const errorMessage = errorDetailsString.includes('overloaded') || (result.error && typeof result.error === 'string' && result.error.includes('overloaded'))
