@@ -5,7 +5,6 @@
  */
 
 import {ai} from '@/ai/genkit';
-import {googleAI} from '@genkit-ai/googleai';
 import {
   PredictiveInsightsInputSchema,
   PredictiveInsightsOutputSchema,
@@ -13,7 +12,6 @@ import {
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
-<<<<<<< HEAD
 export const predictiveInsights = ai.defineFlow(
   {
     name: 'predictiveInsightsFlow',
@@ -28,20 +26,6 @@ The current date is ${input.currentDate}.
 Analyze the user's financial data, provided as JSON strings:
 - Goals: ${input.goals}
 - Transactions: ${input.transactions}
-=======
-const predictiveInsightsPrompt = ai.definePrompt({
-  name: 'predictiveInsightsPrompt',
-  input: {schema: PredictiveInsightsInputSchema},
-  output: {schema: PredictiveInsightsOutputSchema},
-  model: googleAI('gemini-pro'),
-  prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
-Your response MUST be in the user's specified language: {{language}}.
-The current date is {{currentDate}}.
-
-Analyze the user's financial data:
-- Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
-- Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
->>>>>>> 8b241952df080804acb3466bf9918650c25dc9cd
 
 Based on the data, generate the following predictive insights:
 
@@ -55,22 +39,13 @@ Your entire output must be a valid JSON object matching the output schema.
 `;
     
     const {output} = await ai.generate({
-      model: googleAI.model('gemini-1.5-flash'),
+      model: 'googleai/gemini-1.5-flash-preview',
       prompt,
       output: {
         schema: PredictiveInsightsOutputSchema
       }
     });
 
-<<<<<<< HEAD
     return output!;
   }
 );
-=======
-export async function predictiveInsights(
-  input: PredictiveInsightsInput
-): Promise<PredictiveInsightsOutput> {
-  const {output} = await predictiveInsightsPrompt(input);
-  return output!;
-}
->>>>>>> 8b241952df080804acb3466bf9918650c25dc9cd
