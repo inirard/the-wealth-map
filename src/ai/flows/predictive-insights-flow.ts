@@ -6,6 +6,7 @@
  */
 
 import {ai} from '@/ai/genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import {
   PredictiveInsightsInputSchema,
   PredictiveInsightsOutputSchema,
@@ -13,20 +14,18 @@ import {
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
-export const predictiveInsights = ai.defineFlow(
-  {
-    name: 'predictiveInsightsFlow',
-    inputSchema: PredictiveInsightsInputSchema,
-    outputSchema: PredictiveInsightsOutputSchema,
-  },
-  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
-    const prompt = `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
-Your response MUST be in the user's specified language: ${input.language}.
-The current date is ${input.currentDate}.
+const predictiveInsightsPrompt = ai.definePrompt({
+  name: 'predictiveInsightsPrompt',
+  input: {schema: PredictiveInsightsInputSchema},
+  output: {schema: PredictiveInsightsOutputSchema},
+  model: googleAI('gemini-pro'),
+  prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
+Your response MUST be in the user's specified language: {{language}}.
+The current date is {{currentDate}}.
 
-Analyze the user's financial data, provided as JSON strings:
-- Goals: ${input.goals}
-- Transactions: ${input.transactions}
+Analyze the user's financial data:
+- Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
+- Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
 
 Based on the data, generate the following predictive insights:
 
@@ -37,16 +36,12 @@ Based on the data, generate the following predictive insights:
 5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner."
 
 Your entire output must be a valid JSON object matching the output schema.
-`;
-    
-    const {output} = await ai.generate({
-      model: 'googleai/gemini-pro',
-      prompt,
-      output: {
-        schema: PredictiveInsightsOutputSchema
-      }
-    });
+`,
+});
 
-    return output!;
-  }
-);
+export async function predictiveInsights(
+  input: PredictiveInsightsInput
+): Promise<PredictiveInsightsOutput> {
+  const {output} = await predictiveInsightsPrompt(input);
+  return output!;
+}
