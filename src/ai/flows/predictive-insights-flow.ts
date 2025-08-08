@@ -13,19 +13,20 @@ import {
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
-
-const predictiveInsightsPrompt = ai.definePrompt({
-  name: 'predictiveInsightsPrompt',
-  model: googleAI.model('gemini-1.5-flash'),
-  input: {schema: PredictiveInsightsInputSchema},
-  output: {schema: PredictiveInsightsOutputSchema},
-  prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
-Your response MUST be in the user's specified language: {{language}}.
-The current date is {{currentDate}}.
+export const predictiveInsights = ai.defineFlow(
+  {
+    name: 'predictiveInsightsFlow',
+    inputSchema: PredictiveInsightsInputSchema,
+    outputSchema: PredictiveInsightsOutputSchema,
+  },
+  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
+    const prompt = `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
+Your response MUST be in the user's specified language: ${input.language}.
+The current date is ${input.currentDate}.
 
 Analyze the user's financial data, provided as JSON strings:
-- Goals: {{goals}}
-- Transactions: {{transactions}}
+- Goals: ${input.goals}
+- Transactions: ${input.transactions}
 
 Based on the data, generate the following predictive insights:
 
@@ -36,19 +37,16 @@ Based on the data, generate the following predictive insights:
 5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner." If there is not enough data, provide a generic motivational scenario.
 
 Your entire output must be a valid JSON object matching the output schema.
-`,
-});
+`;
+    
+    const {output} = await ai.generate({
+      model: googleAI.model('gemini-1.5-flash'),
+      prompt,
+      output: {
+        schema: PredictiveInsightsOutputSchema
+      }
+    });
 
-export const predictiveInsights = ai.defineFlow(
-  {
-    name: 'predictiveInsightsFlow',
-    inputSchema: PredictiveInsightsInputSchema,
-    outputSchema: PredictiveInsightsOutputSchema,
-  },
-  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
-    // The input is already formatted as strings by the frontend.
-    // We can pass it directly to the prompt.
-    const {output} = await predictiveInsightsPrompt(input);
     return output!;
   }
 );
