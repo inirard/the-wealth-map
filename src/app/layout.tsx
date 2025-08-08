@@ -5,7 +5,7 @@ import './print.css';
 import { Toaster } from "@/components/ui/toaster";
 import { I18nProvider } from '@/hooks/use-i18n';
 import { Poppins } from 'next/font/google';
-import { ServiceWorkerRegistrar } from '@/components/service-worker-registrar';
+import AppLifecycle from '@/components/app-lifecycle';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -22,26 +22,24 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "The Wealth Map",
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent",
   },
   formatDetection: {
     telephone: false,
   },
   icons: {
-    icon: '/icon.svg',
+    icon: '/icons/icon-192x192.png',
     shortcut: '/favicon.ico',
-    apple: [
-      { url: '/icons/apple-icon-180.png', sizes: '180x180', type: 'image/png' },
-    ],
-    other: [
-       { rel: 'icon', type: 'image/png', sizes: '192x192', url: '/icons/icon-192x192.png' },
-       { rel: 'icon', type: 'image/png', sizes: '512x512', url: '/icons/icon-512x512.png' },
-    ]
+    apple: '/icons/apple-touch-icon.png',
   },
 };
 
 export const viewport: Viewport = {
   themeColor: '#007C7C',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  viewportFit: 'cover',
 };
 
 export default function RootLayout({
@@ -53,26 +51,11 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
-        {/* PWA */}
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#007C7C" />
-        <meta name="application-name" content="The Wealth Map" />
-        <meta name="mobile-web-app-capable" content="yes" />
-
-        {/* iOS PWA */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
-        
-        {/* Fallback icons */}
-        <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png" />
-        <link rel="icon" type="image/png" sizes="512x512" href="/icons/icon-512x512.png" />
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
       </head>
       <body>
         <I18nProvider>
-          <ServiceWorkerRegistrar />
+          <AppLifecycle />
           {children}
           <Toaster />
         </I18nProvider>
