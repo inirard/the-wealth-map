@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow to generate financial predictions based on user data.
@@ -39,7 +40,7 @@ Your entire output must be a valid JSON object matching the output schema.
 `;
     
     const {output} = await ai.generate({
-      model: 'googleai/gemini-1.5-flash-preview',
+      model: 'googleai/gemini-pro',
       prompt,
       output: {
         schema: PredictiveInsightsOutputSchema

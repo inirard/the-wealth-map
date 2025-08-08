@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview An AI flow to generate financial insights based on user data.
@@ -35,7 +36,7 @@ export const generateInsights = ai.defineFlow(
     `;
     
     const {output} = await ai.generate({
-      model: 'googleai/gemini-1.5-flash-preview',
+      model: 'googleai/gemini-pro',
       prompt,
       output: {
         schema: GenerateInsightsOutputSchema,
