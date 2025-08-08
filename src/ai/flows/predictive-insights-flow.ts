@@ -13,24 +13,6 @@ import {
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
-<<<<<<< HEAD
-
-export const predictiveInsights = ai.defineFlow(
-  {
-    name: 'predictiveInsightsFlow',
-    inputSchema: PredictiveInsightsInputSchema,
-    outputSchema: PredictiveInsightsOutputSchema,
-  },
-  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
-    
-    const prompt = `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
-Your response MUST be in the user's specified language: ${input.language}.
-The current date is ${input.currentDate}.
-
-Analyze the user's financial data, provided as JSON strings:
-- Goals: ${input.goals}
-- Transactions: ${input.transactions}
-=======
 const predictiveInsightsPrompt = ai.definePrompt({
   name: 'predictiveInsightsPrompt',
   input: {schema: PredictiveInsightsInputSchema},
@@ -43,7 +25,6 @@ The current date is {{currentDate}}.
 Analyze the user's financial data:
 - Goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
 - Transactions: {{#if transactions.length}}{{json transactions}}{{else}}No transactions recorded.{{/if}}
->>>>>>> cbcbf3981e9c9f1e3387c7722b5253eeb81af78b
 
 Based on the data, generate the following predictive insights:
 
@@ -54,21 +35,6 @@ Based on the data, generate the following predictive insights:
 5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner."
 
 Your entire output must be a valid JSON object matching the output schema.
-<<<<<<< HEAD
-`;
-    
-    const {output} = await ai.generate({
-        model: googleAI.model('gemini-1.5-flash'),
-        prompt: prompt,
-        output: {
-            schema: PredictiveInsightsOutputSchema,
-        },
-    });
-    
-    return output!;
-  }
-);
-=======
 `,
 });
 
@@ -78,4 +44,3 @@ export async function predictiveInsights(
   const {output} = await predictiveInsightsPrompt(input);
   return output!;
 }
->>>>>>> cbcbf3981e9c9f1e3387c7722b5253eeb81af78b
