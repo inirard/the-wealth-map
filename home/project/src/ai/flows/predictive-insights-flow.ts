@@ -14,13 +14,8 @@ import {
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
 
-const predictiveInsightsPrompt = ai.definePrompt({
-  name: 'predictiveInsightsPrompt',
-  input: {schema: PredictiveInsightsInputSchema},
-  output: {schema: PredictiveInsightsOutputSchema},
-  model: googleAI('gemini-pro'),
-  prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
-Your response MUST be in the user's specified language: {{language}}.
+const promptTemplate = `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
+Your response MUST be in the user's specified language: {{{language}}}.
 The current date is {{currentDate}}.
 
 Analyze the user's financial data:
@@ -36,8 +31,7 @@ Based on the data, generate the following predictive insights:
 5.  **whatIfScenario**: Create a simple, motivating 'what if' scenario, like "If you saved an extra €50 per month, you could reach your emergency fund goal 3 months sooner."
 
 Your entire output must be a valid JSON object matching the output schema.
-`,
-});
+`;
 
 const predictiveInsightsFlow = ai.defineFlow(
   {
@@ -46,7 +40,14 @@ const predictiveInsightsFlow = ai.defineFlow(
     outputSchema: PredictiveInsightsOutputSchema,
   },
   async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
-    const { output } = await predictiveInsightsPrompt(input);
+    const { output } = await ai.generate({
+      model: googleAI('gemini-pro'),
+      prompt: {
+        template: promptTemplate,
+        input,
+      },
+      output: { schema: PredictiveInsightsOutputSchema },
+    });
     return output!;
   }
 );

@@ -16,13 +16,8 @@ import {
   type ChatOutput,
 } from '@/lib/ai-types';
 
-const chatPrompt = ai.definePrompt({
-  name: 'chatPrompt',
-  input: {schema: ChatInputSchema},
-  output: {schema: ChatOutputSchema},
-  model: googleAI('gemini-pro'),
-  prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
-Your answers MUST be in the user's specified language: {{language}}.
+const chatPromptTemplate = `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
+Your answers MUST be in the user's specified language: {{{language}}}.
 
 You have access to the user's financial data to provide personalized responses.
 - User's financial goals: {{#if goals.length}}{{json goals}}{{else}}No goals set.{{/if}}
@@ -43,8 +38,7 @@ Conversation History:
 
 User's new message:
 {{{message}}}
-`,
-});
+`;
 
 export const chatFlow = ai.defineFlow(
   {
@@ -53,7 +47,16 @@ export const chatFlow = ai.defineFlow(
     outputSchema: ChatOutputSchema,
   },
   async (input: ChatInput): Promise<ChatOutput> => {
-    const {output} = await chatPrompt(input);
+    const { output } = await ai.generate({
+      model: googleAI('gemini-pro'),
+      prompt: {
+        template: chatPromptTemplate,
+        input,
+      },
+      output: {
+        schema: ChatOutputSchema,
+      }
+    });
     return output!;
   }
 );
