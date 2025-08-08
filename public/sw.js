@@ -1,92 +1,78 @@
-/**
- * Copyright 2018 Google Inc. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
-// If the loader is already loaded, just stop.
-if (!self.define) {
-  let registry = {};
+const CACHE_NAME = 'the-wealth-map-cache-v1.1';
+const URLS_TO_CACHE = [
+  '/',
+  '/manifest.json',
+  '/favicon.ico',
+  '/icons/icon-192x192.png',
+  '/icons/icon-512x512.png',
+  '/icons/apple-touch-icon.png',
+  '/images/dashboardimage.png'
+];
 
-  // Used for `eval` and `importScripts` where we can't get script URL by other means.
-  // In both cases, it's safe to use a global var because those functions are synchronous.
-  let nextDefineUri;
+// Instalação do Service Worker
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => {
+        console.log('Cache aberto');
+        return cache.addAll(URLS_TO_CACHE);
+      })
+  );
+});
 
-  const singleRequire = (uri, parentUri) => {
-    uri = new URL(uri + ".js", parentUri).href;
-    return registry[uri] || (
-      
-        new Promise(resolve => {
-          if ("document" in self) {
-            const script = document.createElement("script");
-            script.src = uri;
-            script.onload = resolve;
-            document.head.appendChild(script);
-          } else {
-            nextDefineUri = uri;
-            importScripts(uri);
-            resolve();
+// Ativação do Service Worker e limpeza de caches antigos
+self.addEventListener('activate', (event) => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            console.log('A apagar cache antigo:', cacheName);
+            return caches.delete(cacheName);
           }
         })
-      
-      .then(() => {
-        let promise = registry[uri];
-        if (!promise) {
-          throw new Error(`Module ${uri} didn’t register its module`);
+      );
+    })
+  );
+  return self.clients.claim();
+});
+
+
+// Interceta os pedidos de rede (fetch)
+self.addEventListener('fetch', (event) => {
+  // Estratégia: Cache-First, caindo para a rede
+  event.respondWith(
+    caches.match(event.request)
+      .then((response) => {
+        // Se o recurso estiver no cache, retorna-o
+        if (response) {
+          return response;
         }
-        return promise;
+
+        // Se não, busca na rede
+        return fetch(event.request).then(
+          (networkResponse) => {
+            // Se a resposta da rede for válida, clona-a e guarda-a no cache para uso futuro
+            if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+              return networkResponse;
+            }
+
+            const responseToCache = networkResponse.clone();
+
+            caches.open(CACHE_NAME)
+              .then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+
+            return networkResponse;
+          }
+        );
+      }).catch(() => {
+          // Se tanto o cache quanto a rede falharem (ex: offline e recurso não está em cache)
+          // Aqui poderíamos retornar uma página de fallback offline, se tivéssemos uma.
+          // Por agora, o navegador irá simplesmente mostrar o erro de rede padrão.
       })
-    );
-  };
-
-  self.define = (depsNames, factory) => {
-    const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href;
-    if (registry[uri]) {
-      // Module is already loading or loaded.
-      return;
-    }
-    let exports = {};
-    const require = depUri => singleRequire(depUri, uri);
-    const specialDeps = {
-      module: { uri },
-      exports,
-      require
-    };
-    registry[uri] = Promise.all(depsNames.map(
-      depName => specialDeps[depName] || require(depName)
-    )).then(deps => {
-      factory(...deps);
-      return exports;
-    });
-  };
-}
-define(['./workbox-63364639'], (function (workbox) { 'use strict';
-
-  importScripts();
-  self.skipWaiting();
-  workbox.clientsClaim();
-  workbox.registerRoute("/", new workbox.NetworkFirst({
-    "cacheName": "start-url",
-    plugins: [{
-      cacheWillUpdate: async ({
-        response: e
-      }) => e && "opaqueredirect" === e.type ? new Response(e.body, {
-        status: 200,
-        statusText: "OK",
-        headers: e.headers
-      }) : e
-    }]
-  }), 'GET');
-  workbox.registerRoute(/.*/i, new workbox.NetworkOnly({
-    "cacheName": "dev",
-    plugins: []
-  }), 'GET');
-
-}));
+  );
+});

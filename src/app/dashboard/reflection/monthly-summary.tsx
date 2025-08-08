@@ -15,17 +15,17 @@ interface MonthlySummaryProps {
 }
 
 // Helper function to safely parse dates on all browsers, especially Safari
-const safeParseDate = (dateString: string): Date => {
+const safeParseDate = (dateString: string | undefined | null): Date => {
     if (!dateString) return new Date();
-    // Tenta analisar a data em vários formatos para máxima compatibilidade
+    // Handles ISO strings (YYYY-MM-DDTHH:mm:ss.sssZ) and simple dates (YYYY-MM-DD)
     const date = new Date(dateString);
     if (!isNaN(date.getTime())) {
       return date;
     }
-    // Fallback para o formato YYYY-MM-DD, trocando hífens por barras
+    // Fallback for formats that new Date() might not handle well, like 'YYYY/MM/DD'
     const formattedString = dateString.split('T')[0].replace(/-/g, '/');
     const fallbackDate = new Date(formattedString);
-    // Se tudo falhar, retorna a data atual para evitar erros
+    // If all else fails, return the current date to prevent crashes
     return isNaN(fallbackDate.getTime()) ? new Date() : fallbackDate;
 };
 
