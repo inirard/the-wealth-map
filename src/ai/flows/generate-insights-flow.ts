@@ -4,12 +4,14 @@
  * - generateInsightsFlow - A function that handles the financial analysis process.
  */
 import { ai } from '@/ai/genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
 
 const generateInsightsPrompt = ai.definePrompt({
   name: 'generateInsightsPrompt',
   input: { schema: GenerateInsightsInputSchema },
   output: { schema: GenerateInsightsOutputSchema },
+  model: googleAI('gemini-pro'),
   prompt: `
     You are a friendly and positive financial coach for the "The Wealth Map" app.
     Your task is to provide a short, personalized, and encouraging analysis for the user based on their financial data.
