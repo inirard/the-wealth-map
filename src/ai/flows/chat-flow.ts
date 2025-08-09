@@ -6,7 +6,6 @@
  * - chatFlow - A function that handles the chat interaction.
  */
 
-import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
   ChatInputSchema,
@@ -14,14 +13,15 @@ import {
   type ChatInput,
   type ChatOutput,
 } from '@/lib/ai-types';
+import {ai} from '@/ai/genkit';
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
-  model: googleAI('gemini-1.5-flash-latest'),
+  model: 'gemini-1.5-flash-latest',
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
-Your answers MUST be in the user's specified language: {{{language}}}.
+Your answers MUST be in the user's specified language: {{language}}.
 
 You have access to the user's financial data to provide personalized responses.
 - User's financial goals: {{json goals}}
@@ -34,14 +34,14 @@ Based on this context and the conversation history, provide a concise and helpfu
 Conversation History:
 {{#each history}}
   {{#if (eq role "model")}}
-    AI: {{{content}}}
+    AI: {{content}}
   {{else}}
-    User: {{{content}}}
+    User: {{content}}
   {{/if}}
 {{/each}}
 
 User's new message:
-{{{message}}}
+{{message}}
 `,
 });
 
