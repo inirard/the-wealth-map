@@ -2,9 +2,10 @@
 'use server';
 /**
  * @fileOverview An AI flow to generate financial predictions based on user data.
- * This file exports the prompt configuration to be used by the API route.
+ * - predictiveInsights - A function that handles the financial prediction process.
  */
 
+import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
   PredictiveInsightsInputSchema,
@@ -12,9 +13,8 @@ import {
   type PredictiveInsightsInput,
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
-import {ai} from '@/ai/genkit';
 
-export const predictiveInsightsPrompt = ai.definePrompt({
+const predictiveInsightsPrompt = ai.definePrompt({
     name: 'predictiveInsightsPrompt',
     input: {schema: PredictiveInsightsInputSchema},
     output: {schema: PredictiveInsightsOutputSchema},
@@ -40,9 +40,21 @@ export const predictiveInsightsPrompt = ai.definePrompt({
 });
 
 
+const predictiveInsightsFlow = ai.defineFlow(
+  {
+    name: 'predictiveInsightsFlow',
+    inputSchema: PredictiveInsightsInputSchema,
+    outputSchema: PredictiveInsightsOutputSchema,
+  },
+  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
+    const { output } = await predictiveInsightsPrompt(input);
+    return output!;
+  }
+);
+
+
 export async function predictiveInsights(
   input: PredictiveInsightsInput
 ): Promise<PredictiveInsightsOutput> {
-    const { output } = await predictiveInsightsPrompt(input);
-    return output!;
+  return predictiveInsightsFlow(input);
 }

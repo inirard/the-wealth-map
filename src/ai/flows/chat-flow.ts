@@ -3,9 +3,10 @@
 
 /**
  * @fileOverview A chat flow for interacting with the AI financial coach.
- * This file exports the prompt configuration to be used by the API route.
+ * - chatFlow - A function that handles the chat interaction.
  */
 
+import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
   ChatInputSchema,
@@ -13,9 +14,8 @@ import {
   type ChatInput,
   type ChatOutput,
 } from '@/lib/ai-types';
-import {ai} from '@/ai/genkit';
 
-export const chatPrompt = ai.definePrompt({
+const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
@@ -45,7 +45,14 @@ User's new message:
 `,
 });
 
-export async function chatFlow(input: ChatInput): Promise<ChatOutput> {
-  const {output} = await chatPrompt(input);
-  return output!;
-}
+export const chatFlow = ai.defineFlow(
+  {
+    name: 'chatFlow',
+    inputSchema: ChatInputSchema,
+    outputSchema: ChatOutputSchema,
+  },
+  async (input: ChatInput): Promise<ChatOutput> => {
+    const {output} = await chatPrompt(input);
+    return output!;
+  }
+);

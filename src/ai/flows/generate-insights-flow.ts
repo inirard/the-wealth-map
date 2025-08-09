@@ -2,13 +2,13 @@
 'use server';
 /**
  * @fileOverview An AI flow to generate financial insights based on user data.
- * This file exports the prompt configuration to be used by the API route.
+ * - generateInsights - A function that handles the financial analysis process.
  */
+import { ai } from '@/ai/genkit';
 import { googleAI } from '@genkit-ai/googleai';
 import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
-import {ai} from '@/ai/genkit';
 
-export const generateInsightsPrompt = ai.definePrompt({
+const generateInsightsPrompt = ai.definePrompt({
     name: 'generateInsightsPrompt',
     input: {schema: GenerateInsightsInputSchema},
     output: {schema: GenerateInsightsOutputSchema},
@@ -35,7 +35,20 @@ export const generateInsightsPrompt = ai.definePrompt({
     `,
 });
 
+
+const generateInsightsFlow = ai.defineFlow(
+  {
+    name: 'generateInsightsFlow',
+    inputSchema: GenerateInsightsInputSchema,
+    outputSchema: GenerateInsightsOutputSchema,
+  },
+  async (input: GenerateInsightsInput): Promise<GenerateInsightsOutput> => {
+    const { output } = await generateInsightsPrompt(input);
+    return output!;
+  }
+);
+
+
 export async function generateInsights(input: GenerateInsightsInput): Promise<GenerateInsightsOutput> {
-  const { output } = await generateInsightsPrompt(input);
-  return output!;
+  return generateInsightsFlow(input);
 }
