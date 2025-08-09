@@ -33,11 +33,7 @@ Based on this context and the conversation history, provide a concise and helpfu
 
 Conversation History:
 {{#each history}}
-  {{#if (eq this.role "model")}}
-    AI: {{{this.content}}}
-  {{else}}
-    User: {{{this.content}}}
-  {{/if}}
+{{this.role}}: {{{this.content}}}
 {{/each}}
 
 User's new message:
