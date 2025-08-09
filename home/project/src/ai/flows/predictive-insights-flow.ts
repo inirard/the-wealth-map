@@ -24,8 +24,8 @@ const predictiveInsightsPrompt = ai.definePrompt({
     The current date is {{currentDate}}.
 
     Analyze the user's financial data:
-    - Goals: {{json goals}}
-    - Transactions: {{json transactions}}
+    - Goals: {{{goals}}}
+    - Transactions: {{{transactions}}}
 
     Based on the data, generate the following predictive insights:
 

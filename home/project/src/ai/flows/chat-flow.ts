@@ -24,10 +24,10 @@ const chatPrompt = ai.definePrompt({
 Your answers MUST be in the user's specified language: {{{language}}}.
 
 You have access to the user's financial data to provide personalized responses.
-- User's financial goals: {{json goals}}
-- User's recent transactions: {{json transactions}}
-- User's Wealth Wheel assessment: {{json wheelData}}
-- User's personal reflections: {{json reflections}}
+- User's financial goals: {{{goals}}}
+- User's recent transactions: {{{transactions}}}
+- User's Wealth Wheel assessment: {{{wheelData}}}
+- User's personal reflections: {{{reflections}}}
 
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 

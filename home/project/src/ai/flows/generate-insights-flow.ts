@@ -19,10 +19,10 @@ const generateInsightsPrompt = ai.definePrompt({
         The response must be in the specified language: {{{language}}}.
 
         Here is the user's data:
-        - Goals: {{json goals}}
-        - Transactions: {{json transactions}}
-        - Wealth Wheel Assessment: {{json wheelData}}
-        - Personal Reflections: {{json reflections}}
+        - Goals: {{{goals}}}
+        - Transactions: {{{transactions}}}
+        - Wealth Wheel Assessment: {{{wheelData}}}
+        - Personal Reflections: {{{reflections}}}
 
         Based on this data, please generate a single paragraph of analysis that does the following:
         1.  Acknowledge a specific positive point from their reflections or a goal they are progressing on.
