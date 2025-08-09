@@ -34,9 +34,9 @@ Based on this context and the conversation history, provide a concise and helpfu
 Conversation History:
 {{#each history}}
   {{#if (eq this.role "model")}}
-    AI: {{{this.content}}}
+    AI: {{{this.content.[0].text}}}
   {{else}}
-    User: {{{this.content}}}
+    User: {{{this.content.[0].text}}}
   {{/if}}
 {{/each}}
 
