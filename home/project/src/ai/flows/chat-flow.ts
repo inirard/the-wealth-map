@@ -3,17 +3,18 @@
 
 /**
  * @fileOverview A chat flow for interacting with the AI financial coach.
- * - chatFlow - A function that handles the chat interaction.
+ * - chatPrompt - Configuration for the chat prompt.
  */
 
-import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
+import type {PromptConfig} from 'genkit/ai';
 import {
   ChatInputSchema,
   ChatOutputSchema,
   type ChatInput,
   type ChatOutput,
 } from '@/lib/ai-types';
+import {ai} from '@/ai/genkit';
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
