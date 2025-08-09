@@ -1,10 +1,10 @@
-const CACHE_NAME = 'the-wealth-map-cache-v1';
+
+const CACHE_NAME = 'wealth-map-cache-v1';
 const urlsToCache = [
   '/',
+  '/dashboard',
   '/manifest.json',
-  '/icons/icon-192x192.png',
-  '/icons/icon-512x512.png',
-  '/images/dashboardimage.png'
+  '/icons/favicon.svg'
 ];
 
 self.addEventListener('install', event => {
