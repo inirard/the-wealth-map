@@ -57,9 +57,5 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ],
-  "categories": ["finance", "productivity", "business"],
-  "dir": "ltr",
-  "lang": "en-US",
-  "prefer_related_applications": false
+  ]
 }
