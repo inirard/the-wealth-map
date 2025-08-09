@@ -19,7 +19,7 @@ const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
-  model: googleAI('gemini-1.5-flash-latest'),
+  model: googleAI.model('gemini-1.5-flash-latest'),
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
 Your answers MUST be in the user's specified language: {{{language}}}.
 
@@ -34,9 +34,9 @@ Based on this context and the conversation history, provide a concise and helpfu
 Conversation History:
 {{#each history}}
   {{#if (eq this.role "model")}}
-    AI: {{{this.content.[0].text}}}
+    AI: {{{this.content}}}
   {{else}}
-    User: {{{this.content.[0].text}}}
+    User: {{{this.content}}}
   {{/if}}
 {{/each}}
 
