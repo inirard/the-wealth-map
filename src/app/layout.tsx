@@ -28,9 +28,16 @@ export const metadata: Metadata = {
     telephone: false,
   },
   icons: {
-    icon: '/icons/icon-192x192.png',
     shortcut: '/icons/icon-192x192.png',
-    apple: '/icons/apple-touch-icon.png',
+    icon: [
+        { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+        { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+        { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+        { url: '/icons/apple-touch-icon-152x152.png', sizes: '152x152', type: 'image/png' },
+        { url: '/icons/apple-touch-icon-167x167.png', sizes: '167x167', type: 'image/png' },
+    ],
   },
 };
 
