@@ -34,9 +34,7 @@ export const metadata: Metadata = {
         { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-        { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-        { url: '/icons/apple-touch-icon-152x152.png', sizes: '152x152', type: 'image/png' },
-        { url: '/icons/apple-touch-icon-167x167.png', sizes: '167x167', type: 'image/png' },
+        { url: '/icons/apple-icon-180.png' },
     ],
   },
 };
@@ -58,7 +56,8 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
+        {/* This explicit link is a good fallback for older devices */}
+        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" sizes="180x180" />
       </head>
       <body>
         <I18nProvider>
