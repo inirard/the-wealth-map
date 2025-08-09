@@ -1,36 +1,11 @@
-
 {
-<<<<<<< HEAD
-    "name": "The Wealth Map",
-    "short_name": "WealthMap",
-    "description": "Navigate your journey to financial freedom with an interactive digital planner.",
-    "theme_color": "#007C7C",
-    "background_color": "#FDFCF9",
-    "display": "standalone",
-    "scope": "/",
-    "start_url": ".",
-    "icons": [
-        {
-            "src": "/icons/icon-192x192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "/icons/icon-512x512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
-        }
-    ]
-=======
   "name": "The Wealth Map",
   "short_name": "WealthMap",
+  "description": "Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#FDFCF9",
   "theme_color": "#007C7C",
-  "orientation": "portrait",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
@@ -41,13 +16,6 @@
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "/icons/apple-touch-icon.png",
-      "sizes": "180x180",
-      "type": "image/png",
-      "purpose": "maskable any"
     }
   ]
->>>>>>> 484140835dea099e59b6c4348aeac0e04b0f73c7
 }
