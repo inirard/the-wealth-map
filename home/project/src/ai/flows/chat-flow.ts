@@ -3,24 +3,23 @@
 
 /**
  * @fileOverview A chat flow for interacting with the AI financial coach.
- * - chatPrompt - Configuration for the chat prompt.
+ * - chatFlow - A function that handles the chat interaction.
  */
 
+import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
-import type {PromptConfig} from 'genkit/ai';
 import {
   ChatInputSchema,
   ChatOutputSchema,
   type ChatInput,
   type ChatOutput,
 } from '@/lib/ai-types';
-import {ai} from '@/ai/genkit';
 
 const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
-  model: googleAI('gemini-pro'),
+  model: googleAI('gemini-1.5-flash-latest'),
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
 Your answers MUST be in the user's specified language: {{{language}}}.
 

@@ -103,8 +103,8 @@ export default function DashboardPage() {
             <Image
               src="/images/dashboardimage.png"
               alt="Dashboard Illustration"
-              width={400}
-              height={300}
+ width={400}
+ height={300}
               className="w-full max-w-[400px] h-auto rounded-lg"
               priority
             />
