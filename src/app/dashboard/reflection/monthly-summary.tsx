@@ -14,22 +14,6 @@ interface MonthlySummaryProps {
   wheelData: WealthWheelData[];
 }
 
-// Helper function to safely parse dates on all browsers, especially Safari
-const safeParseDate = (dateString: string | undefined | null): Date => {
-    if (!dateString) return new Date();
-    // Handles ISO strings (YYYY-MM-DDTHH:mm:ss.sssZ) and simple dates (YYYY-MM-DD)
-    const date = new Date(dateString);
-    if (!isNaN(date.getTime())) {
-      return date;
-    }
-    // Fallback for formats that new Date() might not handle well, like 'YYYY/MM/DD'
-    const formattedString = dateString.split('T')[0].replace(/-/g, '/');
-    const fallbackDate = new Date(formattedString);
-    // If all else fails, return the current date to prevent crashes
-    return isNaN(fallbackDate.getTime()) ? new Date() : fallbackDate;
-};
-
-
 export default function MonthlySummary({ goals, transactions, wheelData }: MonthlySummaryProps) {
   const { t } = useI18n();
   const { formatCurrency } = useCurrency();
@@ -48,14 +32,14 @@ export default function MonthlySummary({ goals, transactions, wheelData }: Month
     const incompleteGoals = goals
       .filter(g => g.currentAmount < g.targetAmount)
       .sort((a, b) => {
-          const dateA = safeParseDate(a.targetDate).getTime();
-          const dateB = safeParseDate(b.targetDate).getTime();
+          const dateA = new Date(a.targetDate).getTime();
+          const dateB = new Date(b.targetDate).getTime();
           return dateA - dateB;
       });
 
     const closestGoal = incompleteGoals[0] || [...goals].sort((a, b) => {
-         const dateA = safeParseDate(a.targetDate).getTime();
-         const dateB = safeParseDate(b.targetDate).getTime();
+         const dateA = new Date(a.targetDate).getTime();
+         const dateB = new Date(b.targetDate).getTime();
          return dateB - dateA;
     })[0];
     

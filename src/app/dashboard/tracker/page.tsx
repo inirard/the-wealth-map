@@ -24,21 +24,6 @@ import { cn } from "@/lib/utils";
 import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// Helper function to safely parse dates on all browsers, especially Safari
-const safeParseDate = (dateString: string | undefined | null): Date => {
-    if (!dateString) return new Date();
-    // Handles ISO strings (YYYY-MM-DDTHH:mm:ss.sssZ) and simple dates (YYYY-MM-DD)
-    const date = new Date(dateString);
-    if (!isNaN(date.getTime())) {
-      return date;
-    }
-    // Fallback for formats that new Date() might not handle well, like 'YYYY/MM/DD'
-    const formattedString = dateString.split('T')[0].replace(/-/g, '/');
-    const fallbackDate = new Date(formattedString);
-    // If all else fails, return the current date to prevent crashes
-    return isNaN(fallbackDate.getTime()) ? new Date() : fallbackDate;
-};
-
 export default function TrackerPage() {
   const { t } = useI18n();
   const { currency, formatCurrency } = useCurrency();
@@ -84,9 +69,9 @@ export default function TrackerPage() {
     const newTransaction: Transaction = {
       id: new Date().toISOString(),
       ...values,
-      date: values.date.toISOString(),
+      date: values.date.toISOString(), // Save as ISO string
     };
-    setTransactions([...transactions, newTransaction].sort((a, b) => safeParseDate(b.date).getTime() - safeParseDate(a.date).getTime()));
+    setTransactions([...transactions, newTransaction].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
     form.reset();
     setIsDialogOpen(false);
   }
@@ -109,7 +94,7 @@ export default function TrackerPage() {
   const handleExport = useCallback(() => {
     const dataToExport = transactions.map(transaction => ({
         ...transaction, 
-        date: format(safeParseDate(transaction.date), "yyyy-MM-dd"),
+        date: format(new Date(transaction.date), "yyyy-MM-dd"), // Parse ISO string for formatting
         type: transaction.type === 'income' ? t('income') : t('expense')
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
@@ -209,7 +194,7 @@ export default function TrackerPage() {
               {isClient && transactions.length > 0 ? (
                 transactions.map(transaction => (
                   <TableRow key={transaction.id}>
-                    <TableCell>{format(safeParseDate(transaction.date), "PPP")}</TableCell>
+                    <TableCell>{format(new Date(transaction.date), "PPP")}</TableCell>
                     <TableCell className="font-medium">{transaction.description}</TableCell>
                     <TableCell>
                       <span className={cn("px-2 py-1 rounded-full text-xs", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>

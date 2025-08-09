@@ -23,22 +23,6 @@ import { cn } from "@/lib/utils";
 import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// Helper function to safely parse dates on all browsers, especially Safari
-const safeParseDate = (dateString: string | undefined | null): Date => {
-    if (!dateString) return new Date();
-    // Handles ISO strings (YYYY-MM-DDTHH:mm:ss.sssZ) and simple dates (YYYY-MM-DD)
-    const date = new Date(dateString);
-    if (!isNaN(date.getTime())) {
-      return date;
-    }
-    // Fallback for formats that new Date() might not handle well, like 'YYYY/MM/DD'
-    const formattedString = dateString.split('T')[0].replace(/-/g, '/');
-    const fallbackDate = new Date(formattedString);
-    // If all else fails, return the current date to prevent crashes
-    return isNaN(fallbackDate.getTime()) ? new Date() : fallbackDate;
-};
-
-
 export default function GoalsPage() {
   const { t } = useI18n();
   const { currency, formatCurrency } = useCurrency();
@@ -77,11 +61,10 @@ export default function GoalsPage() {
   React.useEffect(() => {
     if (isDialogOpen) {
       if (editingGoal) {
-        // Guarantee that a valid Date object is passed to the form
-        const validDate = safeParseDate(editingGoal.targetDate);
+        // When editing, parse the stored ISO string back into a Date object
         form.reset({
             ...editingGoal,
-            targetDate: validDate,
+            targetDate: new Date(editingGoal.targetDate),
         });
       } else {
         form.reset({
@@ -100,7 +83,7 @@ export default function GoalsPage() {
         const updatedGoals = goals.map(g => g.id === editingGoal.id ? {
             ...g,
             ...values,
-            targetDate: values.targetDate.toISOString(),
+            targetDate: values.targetDate.toISOString(), // Save as ISO string
             currentAmount: values.currentAmount || 0,
             importance: values.importance || "",
         } : g);
@@ -111,7 +94,7 @@ export default function GoalsPage() {
           name: values.name,
           targetAmount: values.targetAmount,
           currentAmount: values.currentAmount || 0,
-          targetDate: values.targetDate.toISOString(),
+          targetDate: values.targetDate.toISOString(), // Save as ISO string
           importance: values.importance || "",
         };
         setGoals([...goals, newGoal]);
@@ -235,7 +218,7 @@ export default function GoalsPage() {
                    )}
                   <div>
                     <p className="text-sm text-muted-foreground">{t('target_date')}</p>
-                    <p className="font-medium">{format(safeParseDate(goal.targetDate), "PPP")}</p>
+                    <p className="font-medium">{format(new Date(goal.targetDate), "PPP")}</p>
                   </div>
                 </CardContent>
               </Card>
