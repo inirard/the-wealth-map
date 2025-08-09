@@ -3,7 +3,7 @@
 
 /**
  * @fileOverview A chat flow for interacting with the AI financial coach.
- * - chatFlow - A function that handles the chat interaction.
+ * This file exports the prompt configuration to be used by the API route.
  */
 
 import {googleAI} from '@genkit-ai/googleai';
@@ -15,44 +15,37 @@ import {
 } from '@/lib/ai-types';
 import {ai} from '@/ai/genkit';
 
-const chatPrompt = ai.definePrompt({
+export const chatPrompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {schema: ChatOutputSchema},
-  model: 'gemini-1.5-flash-latest',
+  model: googleAI('gemini-1.5-flash-latest'),
   prompt: `You are "The Wealth Map AI Coach", a friendly, encouraging, and helpful financial assistant.
-Your answers MUST be in the user's specified language: {{language}}.
+Your answers MUST be in the user's specified language: {{{language}}}.
 
 You have access to the user's financial data to provide personalized responses.
-- User's financial goals: {{json goals}}
-- User's recent transactions: {{json transactions}}
-- User's Wealth Wheel assessment: {{json wheelData}}
-- User's personal reflections: {{json reflections}}
+- User's financial goals: {{{goals}}}
+- User's recent transactions: {{{transactions}}}
+- User's Wealth Wheel assessment: {{{wheelData}}}
+- User's personal reflections: {{{reflections}}}
 
 Based on this context and the conversation history, provide a concise and helpful response to the user's message.
 
 Conversation History:
 {{#each history}}
   {{#if (eq role "model")}}
-    AI: {{content}}
+    AI: {{{content}}}
   {{else}}
-    User: {{content}}
+    User: {{{content}}}
   {{/if}}
 {{/each}}
 
 User's new message:
-{{message}}
+{{{message}}}
 `,
 });
 
-export const chatFlow = ai.defineFlow(
-  {
-    name: 'chatFlow',
-    inputSchema: ChatInputSchema,
-    outputSchema: ChatOutputSchema,
-  },
-  async (input: ChatInput): Promise<ChatOutput> => {
-    const {output} = await chatPrompt(input);
-    return output!;
-  }
-);
+export async function chatFlow(input: ChatInput): Promise<ChatOutput> {
+  const {output} = await chatPrompt(input);
+  return output!;
+}

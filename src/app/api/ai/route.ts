@@ -1,11 +1,12 @@
+
 import {NextResponse} from 'next/server';
 import {genkit} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
-// Import the specific flow functions
-import {chatFlow} from '@/ai/flows/chat-flow';
-import {generateInsights} from '@/ai/flows/generate-insights-flow';
-import {predictiveInsights} from '@/ai/flows/predictive-insights-flow';
+// Import the specific flow functions, which now export the prompt runners
+import { chatFlow } from '@/ai/flows/chat-flow';
+import { generateInsights } from '@/ai/flows/generate-insights-flow';
+import { predictiveInsights } from '@/ai/flows/predictive-insights-flow';
 
 import {
   ChatInputSchema,
@@ -26,7 +27,7 @@ export async function POST(req: Request) {
     }
     
     // Initialize Genkit with the API key from environment variables.
-    // This is secure and works in both local dev (from .env) and production (from Secret Manager).
+    // This is the SINGLE source of truth for Genkit initialization.
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
       console.error('GEMINI_API_KEY not found in environment variables.');
@@ -84,9 +85,17 @@ export async function POST(req: Request) {
     return NextResponse.json({success: true, data: result});
   } catch (error: any) {
     console.error(`Erro na rota /api/ai:`, error);
+    // Check for specific Genkit/Google AI errors if possible
+    const errorMessage = error.message || 'Erro interno ao processar a IA.';
+    const status = error.status || 500;
+    
+    // Return a structured error response
     return NextResponse.json(
-      {error: error.message || 'Erro interno ao processar a IA.'},
-      {status: 500}
+      {
+        error: errorMessage,
+        details: error.stack, // Or more specific details if available
+      },
+      {status: status}
     );
   }
 }

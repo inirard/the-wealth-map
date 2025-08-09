@@ -2,27 +2,27 @@
 'use server';
 /**
  * @fileOverview An AI flow to generate financial insights based on user data.
- * - generateInsights - A function that handles the financial analysis process.
+ * This file exports the prompt configuration to be used by the API route.
  */
-import { ai } from '@/ai/genkit';
 import { googleAI } from '@genkit-ai/googleai';
 import { GenerateInsightsInputSchema, GenerateInsightsOutputSchema, type GenerateInsightsInput, type GenerateInsightsOutput } from '@/lib/ai-types';
+import {ai} from '@/ai/genkit';
 
-const generateInsightsPrompt = ai.definePrompt({
+export const generateInsightsPrompt = ai.definePrompt({
     name: 'generateInsightsPrompt',
     input: {schema: GenerateInsightsInputSchema},
     output: {schema: GenerateInsightsOutputSchema},
-    model: 'gemini-1.5-flash-latest',
+    model: googleAI('gemini-1.5-flash-latest'),
     prompt: `
         You are a friendly and positive financial coach for the "The Wealth Map" app.
         Your task is to provide a short, personalized, and encouraging analysis for the user based on their financial data.
         The response must be in the specified language: {{{language}}}.
 
         Here is the user's data:
-        - Goals: {{json goals}}
-        - Transactions: {{json transactions}}
-        - Wealth Wheel Assessment: {{json wheelData}}
-        - Personal Reflections: {{json reflections}}
+        - Goals: {{{goals}}}
+        - Transactions: {{{transactions}}}
+        - Wealth Wheel Assessment: {{{wheelData}}}
+        - Personal Reflections: {{{reflections}}}
 
         Based on this data, please generate a single paragraph of analysis that does the following:
         1.  Acknowledge a specific positive point from their reflections or a goal they are progressing on.
@@ -35,20 +35,7 @@ const generateInsightsPrompt = ai.definePrompt({
     `,
 });
 
-
-const generateInsightsFlow = ai.defineFlow(
-  {
-    name: 'generateInsightsFlow',
-    inputSchema: GenerateInsightsInputSchema,
-    outputSchema: GenerateInsightsOutputSchema,
-  },
-  async (input: GenerateInsightsInput): Promise<GenerateInsightsOutput> => {
-    const { output } = await generateInsightsPrompt(input);
-    return output!;
-  }
-);
-
-
 export async function generateInsights(input: GenerateInsightsInput): Promise<GenerateInsightsOutput> {
-  return generateInsightsFlow(input);
+  const { output } = await generateInsightsPrompt(input);
+  return output!;
 }

@@ -2,10 +2,9 @@
 'use server';
 /**
  * @fileOverview An AI flow to generate financial predictions based on user data.
- * - predictiveInsights - A function that handles the financial prediction process.
+ * This file exports the prompt configuration to be used by the API route.
  */
 
-import {ai} from '@/ai/genkit';
 import {googleAI} from '@genkit-ai/googleai';
 import {
   PredictiveInsightsInputSchema,
@@ -13,19 +12,20 @@ import {
   type PredictiveInsightsInput,
   type PredictiveInsightsOutput,
 } from '@/lib/ai-types';
+import {ai} from '@/ai/genkit';
 
-const predictiveInsightsPrompt = ai.definePrompt({
+export const predictiveInsightsPrompt = ai.definePrompt({
     name: 'predictiveInsightsPrompt',
     input: {schema: PredictiveInsightsInputSchema},
     output: {schema: PredictiveInsightsOutputSchema},
-    model: 'gemini-1.5-flash-latest',
+    model: googleAI('gemini-1.5-flash-latest'),
     prompt: `You are "The Wealth Map AI Forecaster", an analytical and insightful financial prediction engine.
     Your response MUST be in the user's specified language: {{{language}}}.
     The current date is {{currentDate}}.
 
     Analyze the user's financial data:
-    - Goals: {{json goals}}
-    - Transactions: {{json transactions}}
+    - Goals: {{{goals}}}
+    - Transactions: {{{transactions}}}
 
     Based on the data, generate the following predictive insights:
 
@@ -40,21 +40,9 @@ const predictiveInsightsPrompt = ai.definePrompt({
 });
 
 
-const predictiveInsightsFlow = ai.defineFlow(
-  {
-    name: 'predictiveInsightsFlow',
-    inputSchema: PredictiveInsightsInputSchema,
-    outputSchema: PredictiveInsightsOutputSchema,
-  },
-  async (input: PredictiveInsightsInput): Promise<PredictiveInsightsOutput> => {
-    const { output } = await predictiveInsightsPrompt(input);
-    return output!;
-  }
-);
-
-
 export async function predictiveInsights(
   input: PredictiveInsightsInput
 ): Promise<PredictiveInsightsOutput> {
-  return predictiveInsightsFlow(input);
+    const { output } = await predictiveInsightsPrompt(input);
+    return output!;
 }
