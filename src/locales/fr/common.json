@@ -218,5 +218,19 @@
   "ios_step_2": "Appuyez sur le bouton '{{icon}}'.",
   "ios_step_3": "Faites défiler vers le bas et sélectionnez '{{icon}}'.",
   "ios_step_4": "Appuyez sur 'Ajouter' pour la placer sur votre écran d'accueil.",
-  "android_step_1": "Recherchez le bouton ou l'icône 'Installer' dans la barre d'adresse."
+  "android_step_1": "Recherchez le bouton ou l'icône 'Installer' dans la barre d'adresse.",
+  "settings": "Paramètres",
+  "settings_desc": "Gérez votre profil, vos préférences et vos données.",
+  "user_profile": "Profil Utilisateur",
+  "full_name": "Nom Complet",
+  "save": "Enregistrer",
+  "app_preferences": "Préférences de l'App",
+  "language": "Langue",
+  "currency_format": "Format de Devise",
+  "privacy_and_data": "Confidentialité et Données",
+  "delete_all_data": "Supprimer Toutes les Données de l'App",
+  "delete": "Supprimer",
+  "support_and_feedback": "Support et Retours",
+  "send_feedback": "Envoyer des Retours ou Signaler un Problème",
+  "contact_support": "Contacter le Support"
 }

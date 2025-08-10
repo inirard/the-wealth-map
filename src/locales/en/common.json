@@ -218,5 +218,19 @@
   "ios_step_2": "Tap the '{{icon}}' button.",
   "ios_step_3": "Scroll down and select '{{icon}}'.",
   "ios_step_4": "Tap 'Add' to place it on your home screen.",
-  "android_step_1": "Look for the 'Install' button or icon in the address bar."
+  "android_step_1": "Look for the 'Install' button or icon in the address bar.",
+  "settings": "Settings",
+  "settings_desc": "Manage your profile, preferences, and data.",
+  "user_profile": "User Profile",
+  "full_name": "Full Name",
+  "save": "Save",
+  "app_preferences": "App Preferences",
+  "language": "Language",
+  "currency_format": "Currency Format",
+  "privacy_and_data": "Privacy and Data",
+  "delete_all_data": "Delete All App Data",
+  "delete": "Delete",
+  "support_and_feedback": "Support and Feedback",
+  "send_feedback": "Send Feedback or Report a Problem",
+  "contact_support": "Contact Support"
 }

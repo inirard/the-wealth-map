@@ -219,5 +219,19 @@
   "ios_step_2": "Toque no botão '{{icon}}'.",
   "ios_step_3": "Deslize para baixo e selecione '{{icon}}'.",
   "ios_step_4": "Toque em 'Adicionar' para a colocar no seu ecrã principal.",
-  "android_step_1": "Procure o botão ou ícone de 'Instalar' na barra de endereço."
+  "android_step_1": "Procure o botão ou ícone de 'Instalar' na barra de endereço.",
+  "settings": "Configurações",
+  "settings_desc": "Faça a gestão do seu perfil, preferências e dados.",
+  "user_profile": "Perfil de Utilizador",
+  "full_name": "Nome Completo",
+  "save": "Guardar",
+  "app_preferences": "Preferências da App",
+  "language": "Idioma",
+  "currency_format": "Formato da Moeda",
+  "privacy_and_data": "Privacidade e Dados",
+  "delete_all_data": "Apagar Todos os Dados da App",
+  "delete": "Apagar",
+  "support_and_feedback": "Suporte e Feedback",
+  "send_feedback": "Enviar Feedback ou Reportar Problema",
+  "contact_support": "Contactar o Suporte"
 }
