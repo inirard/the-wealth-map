@@ -26,6 +26,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function GoalsPage() {
   const { t } = useI18n();
   const { currency, formatCurrency } = useCurrency();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const goalSchema = useMemo(() => z.object({
     id: z.string().optional(),
@@ -156,19 +157,30 @@ export default function GoalsPage() {
                   <FormItem><FormLabel>{t('current_amount')} ({currency})</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
                 )} />
                 <FormField control={form.control} name="targetDate" render={({ field }) => (
-                  <FormItem className="flex flex-col"><FormLabel>{t('target_date')}</FormLabel><Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
-                          {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                    </PopoverContent>
-                  </Popover><FormMessage /></FormItem>
+                  <FormItem className="flex flex-col"><FormLabel>{t('target_date')}</FormLabel>
+                    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
+                            {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar 
+                            mode="single" 
+                            selected={field.value} 
+                            onSelect={(date) => {
+                                field.onChange(date);
+                                setIsCalendarOpen(false);
+                            }} 
+                            initialFocus 
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
                 )} />
                 <FormField control={form.control} name="importance" render={({ field }) => (
                     <FormItem><FormLabel>{t('why_is_it_important')}</FormLabel><FormControl><Textarea placeholder={t('importance_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>

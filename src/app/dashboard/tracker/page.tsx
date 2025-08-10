@@ -27,6 +27,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 export default function TrackerPage() {
   const { t } = useI18n();
   const { currency, formatCurrency } = useCurrency();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const transactionSchema = useMemo(() => z.object({
     description: z.string().min(2, t('description_error')),
@@ -96,8 +97,8 @@ export default function TrackerPage() {
       id: transaction.id,
       date: format(new Date(transaction.date), "yyyy-MM-dd"),
       description: transaction.description,
+      amount: transaction.amount,
       type: transaction.type === 'income' ? t('income') : t('expense'),
-      amount: transaction.amount
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
   }, [transactions, t]);
@@ -159,17 +160,28 @@ export default function TrackerPage() {
                       </FormControl><FormMessage /></FormItem>
                     )} />
                     <FormField control={form.control} name="date" render={({ field }) => (
-                      <FormItem className="flex flex-col"><FormLabel>{t('date')}</FormLabel><Popover>
-                        <PopoverTrigger asChild><FormControl>
-                          <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
-                            {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl></PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                          <Calendar mode="single" selected={field.value} onSelect={field.onChange} initialFocus />
-                        </PopoverContent>
-                      </Popover><FormMessage /></FormItem>
+                      <FormItem className="flex flex-col"><FormLabel>{t('date')}</FormLabel>
+                        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                          <PopoverTrigger asChild><FormControl>
+                            <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
+                              {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl></PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar 
+                                mode="single" 
+                                selected={field.value} 
+                                onSelect={(date) => {
+                                    field.onChange(date);
+                                    setIsCalendarOpen(false);
+                                }} 
+                                initialFocus 
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
                     )} />
                     <DialogFooter><Button type="submit">{t('add_transaction')}</Button></DialogFooter>
                   </form>
