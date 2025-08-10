@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { ReactNode } from "react";
@@ -23,9 +22,9 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <Chatbot />
             </div>
           </header>
-          <div className="p-6 pt-6 sm:p-6 lg:p-8">
+          <main className="p-6 pt-0 sm:p-6 lg:p-8">
             {children}
-          </div>
+          </main>
         </SidebarInset>
       </SidebarProvider>
     </AuthProvider>
