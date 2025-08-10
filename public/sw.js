@@ -1,15 +1,49 @@
-// This is a basic service worker file. Its presence is required for PWA installation.
-// It can be expanded later to include caching strategies.
 
-self.addEventListener('install', (event) => {
-  console.log('Service Worker: Ficheiro instalado com sucesso.');
+const CACHE_NAME = 'wealth-map-cache-v1';
+const urlsToCache = [
+  '/',
+  '/dashboard',
+  '/manifest.json',
+  '/icons/favicon.svg',
+  '/icons/apple-icon-180.png',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png'
+];
+
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('Opened cache');
+        return cache.addAll(urlsToCache);
+      })
+  );
 });
 
-self.addEventListener('activate', (event) => {
-  console.log('Service Worker: Ficheiro ativado com sucesso.');
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response => {
+        if (response) {
+          return response;
+        }
+        return fetch(event.request);
+      }
+    )
+  );
 });
 
-self.addEventListener('fetch', (event) => {
-  // We are not adding any fetch logic for now.
-  // This just confirms the service worker is active.
+self.addEventListener('activate', event => {
+  const cacheWhitelist = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheWhitelist.indexOf(cacheName) === -1) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
 });
