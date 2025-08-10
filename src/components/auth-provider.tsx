@@ -11,37 +11,26 @@ interface AuthProviderProps {
 }
 
 export default function AuthProvider({ children }: AuthProviderProps) {
+  const router = useRouter();
+  const [licenseKey] = useLocalStorage<string | null>('license_key', null);
+  const [isVerified, setIsVerified] = useState(false);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
-  if (!isClient) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-background">
-        <div className="animate-pulse text-muted-foreground">A carregar...</div>
-      </div>
-    );
-  }
-
-  return <AuthChecker>{children}</AuthChecker>;
-}
-
-function AuthChecker({ children }: { children: ReactNode }) {
-  const router = useRouter();
-  const [licenseKey] = useLocalStorage<string | null>('license_key', null);
-  const [isVerified, setIsVerified] = useState(false);
-
   useEffect(() => {
-    if (licenseKey && validKeys.includes(licenseKey)) {
-      setIsVerified(true);
-    } else {
-      router.replace('/activate');
+    if (isClient) {
+      if (licenseKey && validKeys.includes(licenseKey)) {
+        setIsVerified(true);
+      } else {
+        router.replace('/activate');
+      }
     }
-  }, [licenseKey, router]);
+  }, [licenseKey, router, isClient]);
 
-  if (!isVerified) {
+  if (!isVerified || !isClient) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
         <div className="animate-pulse text-muted-foreground">A verificar acesso...</div>
