@@ -61,13 +61,11 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120.png" />
         <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76.png" />
 
-        {/* Splash screens para diferentes dispositivos (placeholders) */}
-        {/* Adicione os ficheiros de imagem reais na pasta /public/splash/ */}
+        {/* Splash screens para diferentes dispositivos */}
         <link rel="apple-touch-startup-image" href="/splash/launch-640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" />
         <link rel="apple-touch-startup-image" href="/splash/launch-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
         <link rel="apple-touch-startup-image" href="/splash/launch-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)" />
         <link rel="apple-touch-startup-image" href="/splash/launch-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
-
       </head>
       <body>
         <I18nProvider>
