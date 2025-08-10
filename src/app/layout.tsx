@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "The Wealth Map",
-    statusBarStyle: "black-translucent",
+    statusBarStyle: "default", // Alterado para 'default' para melhor compatibilidade
   },
   formatDetection: {
     telephone: false,
@@ -53,16 +53,7 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
-        {/* Manifest (Android/desktop) */}
-        <link rel="manifest" href="/manifest.json" />
-
-        {/* Use a single, high-resolution icon for Apple devices */}
-        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
-        
-        {/* PWA Configuration for iOS */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
+        {/* As meta tags e links essenciais são geridos pelo Next.js a partir do objeto 'metadata' e 'viewport' */}
       </head>
       <body>
         <I18nProvider>
