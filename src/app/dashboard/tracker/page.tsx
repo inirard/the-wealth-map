@@ -93,10 +93,8 @@ export default function TrackerPage() {
   
   const handleExport = useCallback(() => {
     const dataToExport = transactions.map(transaction => ({
-      id: transaction.id,
-      date: format(new Date(transaction.date), "yyyy-MM-dd"), // Parse ISO string for formatting
-      description: transaction.description,
-      amount: transaction.amount,
+      ...transaction,
+      date: format(new Date(transaction.date), "yyyy-MM-dd"),
       type: transaction.type === 'income' ? t('income') : t('expense'),
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
