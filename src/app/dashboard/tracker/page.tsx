@@ -94,10 +94,7 @@ export default function TrackerPage() {
   
   const handleExport = useCallback(() => {
     const dataToExport = transactions.map(transaction => ({
-      id: transaction.id,
-      date: format(new Date(transaction.date), "yyyy-MM-dd"),
-      description: transaction.description,
-      amount: transaction.amount,
+      ...transaction,
       type: transaction.type === 'income' ? t('income') : t('expense'),
     }));
     exportToCsv(`wealth-map-tracker-${new Date().toISOString().split('T')[0]}.csv`, dataToExport);
@@ -161,22 +158,23 @@ export default function TrackerPage() {
                     )} />
                     <FormField control={form.control} name="date" render={({ field }) => (
                       <FormItem className="flex flex-col"><FormLabel>{t('date')}</FormLabel>
-                        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                        <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                           <PopoverTrigger asChild><FormControl>
                             <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
                               {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
                               <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                             </Button>
                           </FormControl></PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
+                          <PopoverContent className="w-auto p-0 z-50" align="start">
                             <Calendar 
                                 mode="single" 
                                 selected={field.value} 
                                 onSelect={(date) => {
-                                    field.onChange(date);
+                                    if (date) {
+                                        field.onChange(date);
+                                    }
                                     setIsCalendarOpen(false);
                                 }} 
-                                initialFocus 
                             />
                           </PopoverContent>
                         </Popover>

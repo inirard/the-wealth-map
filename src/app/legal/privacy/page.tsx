@@ -3,8 +3,7 @@
 import React from 'react';
 
 export default function PrivacyPolicyPage() {
-  // A data estática é mais apropriada para um documento legal.
-  const lastUpdated = "10 de Agosto de 2025";
+  const lastUpdated = "10 de Agosto de 2024";
 
   return (
     <>

@@ -158,7 +158,7 @@ export default function GoalsPage() {
                 )} />
                 <FormField control={form.control} name="targetDate" render={({ field }) => (
                   <FormItem className="flex flex-col"><FormLabel>{t('target_date')}</FormLabel>
-                    <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                    <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
                       <PopoverTrigger asChild>
                         <FormControl>
                           <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
@@ -167,15 +167,16 @@ export default function GoalsPage() {
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
+                      <PopoverContent className="w-auto p-0 z-50" align="start">
                         <Calendar 
                             mode="single" 
                             selected={field.value} 
                             onSelect={(date) => {
-                                field.onChange(date);
+                                if (date) {
+                                  field.onChange(date);
+                                }
                                 setIsCalendarOpen(false);
-                            }} 
-                            initialFocus 
+                            }}
                         />
                       </PopoverContent>
                     </Popover>

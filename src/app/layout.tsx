@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "The Wealth Map",
-    statusBarStyle: "default", // Alterado para 'default' para melhor compatibilidade
+    statusBarStyle: "default",
   },
   formatDetection: {
     telephone: false,
@@ -30,10 +30,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/icons/favicon.svg',
     shortcut: '/icons/favicon.svg',
-    apple: [
-      { url: '/icons/apple-icon-180.png' },
-      { url: '/icons/apple-icon-180.png', sizes: '180x180', type: 'image/png' },
-    ],
+    apple: '/icons/apple-icon-180.png',
   },
 };
 
