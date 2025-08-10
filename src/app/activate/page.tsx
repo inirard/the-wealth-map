@@ -6,10 +6,10 @@ import Link from 'next/link';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { KeyRound } from "lucide-react";
+import { KeyRound, Clock } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { useLocalStorage } from '@/hooks/use-local-storage';
-import { validKeys } from '@/lib/keys';
+import { validKeys, trialKeys } from '@/lib/keys';
 import { useToast } from "@/hooks/use-toast";
 import { WealthMapIcon } from '@/components/icons/WealthMapIcon';
 import InstallInstructions from '@/components/install-instructions';
@@ -22,13 +22,22 @@ export default function ActivatePage() {
   const { toast } = useToast();
   
   const [licenseKey, setLicenseKey] = useLocalStorage<string | null>('license_key', null);
+  const [trialStartTime, setTrialStartTime] = useLocalStorage<number | null>('trial_start_time', null);
   const [username] = useLocalStorage<string | null>('username', '');
   
   const [status, setStatus] = useState<'checking' | 'ready'>('checking');
+  
+  const isTrialActive = () => {
+      if (!trialStartTime || !licenseKey || !trialKeys.includes(licenseKey)) return false;
+      const hoursPassed = (Date.now() - trialStartTime) / (1000 * 60 * 60);
+      return hoursPassed < 24;
+  }
 
   useEffect(() => {
     if (status === 'checking') {
-      if (licenseKey && validKeys.includes(licenseKey)) {
+      const isPermanentKeyValid = licenseKey && validKeys.includes(licenseKey);
+
+      if (isPermanentKeyValid || isTrialActive()) {
         if (username) {
             router.replace('/dashboard');
         } else {
@@ -38,7 +47,7 @@ export default function ActivatePage() {
         setStatus('ready');
       }
     }
-  }, [status, licenseKey, username, router]);
+  }, [status, licenseKey, trialStartTime, username, router]);
 
   const handleActivation = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,15 +55,28 @@ export default function ActivatePage() {
     setIsLoading(true);
 
     setTimeout(() => {
-      if (validKeys.includes(key.trim())) {
-        setLicenseKey(key.trim());
+      const trimmedKey = key.trim();
+
+      if (validKeys.includes(trimmedKey)) {
+        setLicenseKey(trimmedKey);
+        setTrialStartTime(null); // Clear any old trial data
         toast({
           title: 'Ativação bem-sucedida!',
           description: 'A preparar a sua conta...',
         });
         router.push('/welcome');
-      } else {
-        setError('Chave de licença inválida. Por favor, verifique e tente novamente.');
+      } else if (trialKeys.includes(trimmedKey)) {
+        setLicenseKey(trimmedKey);
+        setTrialStartTime(Date.now());
+        toast({
+          title: 'Acesso de 24 horas ativado!',
+          description: 'Aproveite a sua avaliação gratuita.',
+          className: 'bg-green-100 dark:bg-green-900 border-green-500 text-green-800 dark:text-green-200'
+        });
+        router.push('/welcome');
+      }
+      else {
+        setError('Chave de licença ou código de teste inválido. Por favor, verifique e tente novamente.');
         setIsLoading(false);
       }
     }, 500);
@@ -90,7 +112,7 @@ export default function ActivatePage() {
                     Ativação do Produto
                 </CardTitle>
                 <CardDescription>
-                    Por favor, insira a sua chave de licença para aceder à aplicação.
+                    Insira a sua chave de licença ou um código de teste de 24h.
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -100,7 +122,7 @@ export default function ActivatePage() {
                         type="text"
                         value={key}
                         onChange={(e) => setKey(e.target.value)}
-                        placeholder="WHP-XXXXX-XXXXX-XXXXX"
+                        placeholder="WHP-XXXXX ou TRIAL-XXXXX"
                         className="h-12 text-center text-lg"
                         required 
                     />
