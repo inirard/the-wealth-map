@@ -2,21 +2,18 @@
 "use client";
 
 import React, { useRef } from 'react';
-import { SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { DatabaseZap, Database } from 'lucide-react';
 import { useI18n } from '@/hooks/use-i18n';
 import { useToast } from "@/hooks/use-toast";
 
-const LOCAL_STORAGE_KEYS = ['username', 'goals', 'transactions', 'wealthWheel', 'reflections', 'monthlyMood', 'language', 'aiProjections', 'investments', 'aiInsight'];
+const LOCAL_STORAGE_KEYS = ['username', 'goals', 'transactions', 'wealthWheel', 'reflections', 'monthlyMood', 'language', 'currency', 'aiProjections', 'investments', 'aiInsight', 'license_key'];
 
-export default function DataManagement({ isDropdown }: { isDropdown?: boolean }) {
+export default function DataManagement() {
   const { t } = useI18n();
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
-  const ItemWrapper = isDropdown ? DropdownMenuItem : SidebarMenuItem;
-  const ButtonComp = isDropdown ? 'div' : SidebarMenuButton;
 
   const handleBackup = () => {
     try {
@@ -24,7 +21,12 @@ export default function DataManagement({ isDropdown }: { isDropdown?: boolean })
       LOCAL_STORAGE_KEYS.forEach(key => {
         const item = localStorage.getItem(key);
         if (item) {
-          backupData[key] = JSON.parse(item);
+          // Attempt to parse, but store as string if it fails
+          try {
+            backupData[key] = JSON.parse(item);
+          } catch {
+            backupData[key] = item;
+          }
         }
       });
 
@@ -49,7 +51,7 @@ export default function DataManagement({ isDropdown }: { isDropdown?: boolean })
       toast({
         variant: "destructive",
         title: t('backup_failed_title'),
-        description: t('backup_failed_desc'),
+        description: String(error),
       });
     }
   };
@@ -75,7 +77,9 @@ export default function DataManagement({ isDropdown }: { isDropdown?: boolean })
 
         Object.keys(data).forEach(key => {
           if (LOCAL_STORAGE_KEYS.includes(key)) {
-            localStorage.setItem(key, JSON.stringify(data[key]));
+             // Stringify the value before setting it, as localStorage only stores strings
+             const valueToStore = typeof data[key] === 'string' ? data[key] : JSON.stringify(data[key]);
+             localStorage.setItem(key, valueToStore);
           }
         });
         
@@ -91,7 +95,7 @@ export default function DataManagement({ isDropdown }: { isDropdown?: boolean })
         toast({
           variant: "destructive",
           title: t('restore_failed_title'),
-          description: t('restore_failed_desc'),
+          description: String(error),
         });
       } finally {
         if(fileInputRef.current) {
@@ -101,34 +105,30 @@ export default function DataManagement({ isDropdown }: { isDropdown?: boolean })
     };
     reader.readAsText(file);
   };
-  
-  const buttonProps = {
-    variant: "ghost",
-    className: "w-full justify-start",
-    tooltip: t('backup_data')
-  } as const;
 
   return (
     <>
-      <ItemWrapper>
-        <ButtonComp {...(isDropdown ? { onSelect: handleBackup, className: "flex items-center gap-2" } : { ...buttonProps, onClick: handleBackup })}>
-            <DatabaseZap />
-            <span>{t('backup_data')}</span>
-        </ButtonComp>
-      </ItemWrapper>
-      <ItemWrapper>
-         <ButtonComp {...(isDropdown ? { onSelect: handleRestoreClick, className: "flex items-center gap-2" } : { ...buttonProps, onClick: handleRestoreClick, tooltip: t('restore_data') })}>
-            <Database />
-            <span>{t('restore_data')}</span>
-        </ButtonComp>
+      <div className="flex items-center justify-between p-2 rounded-md hover:bg-muted">
+        <Label>{t('backup_data')}</Label>
+        <Button variant="outline" onClick={handleBackup}>
+          <DatabaseZap className="mr-2 h-4 w-4" />
+          {t('backup_data')}
+        </Button>
+      </div>
+      <div className="flex items-center justify-between p-2 rounded-md hover:bg-muted">
+        <Label>{t('restore_data')}</Label>
+        <Button variant="outline" onClick={handleRestoreClick}>
+          <Database className="mr-2 h-4 w-4" />
+          {t('restore_data')}
+        </Button>
         <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="application/json"
-            className="hidden"
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileChange}
+          accept="application/json"
+          className="hidden"
         />
-      </ItemWrapper>
+      </div>
     </>
   );
 }

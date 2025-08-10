@@ -15,12 +15,7 @@ import {
     Gem, 
     Bot, 
     LineChart,
-    Languages,
-    FileText,
-    ShieldCheck,
-    DatabaseZap,
-    Database,
-    CircleDollarSign
+    Settings // Alterado
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -32,27 +27,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import DataManagement from '@/components/data-management';
+
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarSeparator } from '@/components/ui/sidebar';
 import { useSidebar } from '@/components/ui/sidebar';
-import { useI18n, useCurrency } from '@/hooks/use-i18n';
-import type { Language, Currency } from '@/lib/types';
+import { useI18n } from '@/hooks/use-i18n';
 import { WealthMapIcon } from '@/components/icons/WealthMapIcon';
+import { useToast } from '@/hooks/use-toast';
+
 
 export default function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { setOpenMobile } = useSidebar();
   const [resetDialogOpen, setResetDialogOpen] = React.useState(false);
-  const { t, language, setLanguage } = useI18n();
-  const { currency, setCurrency, availableCurrencies } = useCurrency();
+  const { t } = useI18n();
   const [mounted, setMounted] = React.useState(false);
+  const { toast } = useToast();
 
   React.useEffect(() => {
     setMounted(true);
@@ -69,16 +59,16 @@ export default function AppSidebar() {
     { href: '/dashboard/quotes', icon: Quote, label: t('affirmations') },
   ];
   
-  const languages: { code: Language; name: string }[] = [
-    { code: 'en', name: 'English' },
-    { code: 'pt', name: 'Português' },
-    { code: 'es', name: 'Español' },
-    { code: 'fr', name: 'Français' },
-  ];
-
   const handleResetData = () => {
-    window.localStorage.clear();
+    // Clear all relevant keys instead of the entire localStorage
+    const keys = ['username', 'goals', 'transactions', 'wealthWheel', 'reflections', 'monthlyMood', 'aiProjections', 'investments', 'aiInsight', 'license_key', 'language', 'currency'];
+    keys.forEach(key => window.localStorage.removeItem(key));
     router.push('/activate');
+     toast({
+      title: t('data_deleted_title', {defaultValue: "Data Deleted"}),
+      description: t('data_deleted_desc', {defaultValue: "All application data has been cleared."}),
+    });
+    setResetDialogOpen(false);
   };
 
   return (
@@ -107,62 +97,9 @@ export default function AppSidebar() {
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 ))}
-            </SidebarMenu>
-
-            <SidebarSeparator className="my-3" />
-            
-            <SidebarMenu>
-                <SidebarMenuItem>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <SidebarMenuButton variant="ghost" className="w-full justify-start hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary" tooltip={t('languages')}>
-                                <Languages />
-                                <span className="group-data-[collapsible=icon]:hidden">{t('languages')}</span>
-                            </SidebarMenuButton>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent side="right" align="start">
-                            {languages.map(lang => (
-                                <DropdownMenuItem key={lang.code} onSelect={() => setLanguage(lang.code)} className={language === lang.code ? 'bg-primary/10' : ''}>
-                                    {lang.name}
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <SidebarMenuButton variant="ghost" className="w-full justify-start hover:bg-primary/10 hover:text-primary focus:bg-primary/10 focus:text-primary data-[state=open]:bg-primary/10 data-[state=open]:text-primary" tooltip={t('currency')}>
-                                <CircleDollarSign />
-                                <span className="group-data-[collapsible=icon]:hidden">{t('currency')}</span>
-                            </SidebarMenuButton>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent side="right" align="start">
-                            {availableCurrencies.map(curr => (
-                                <DropdownMenuItem key={curr.code} onSelect={() => setCurrency(curr.code)} className={currency === curr.code ? 'bg-primary/10' : ''}>
-                                    {curr.name} ({curr.symbol})
-                                </DropdownMenuItem>
-                            ))}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </SidebarMenuItem>
-                <DataManagement />
-
-                <SidebarMenuItem>
-                    <SidebarMenuButton asChild variant="ghost" tooltip={t('terms_of_service')}>
-                        <Link href="/legal/terms"><FileText /><span className="group-data-[collapsible=icon]:hidden">{t('terms_of_service')}</span></Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-                <SidebarMenuItem>
-                    <SidebarMenuButton asChild variant="ghost" tooltip={t('privacy_policy')}>
-                        <Link href="/legal/privacy"><ShieldCheck /><span className="group-data-[collapsible=icon]:hidden">{t('privacy_policy')}</span></Link>
-                    </SidebarMenuButton>
-                </SidebarMenuItem>
-            </SidebarMenu>
-            
+            </SidebarMenu>            
         </SidebarContent>
         <SidebarFooter>
-            <SidebarSeparator className="my-2" />
             <SidebarMenu>
                 <SidebarMenuItem>
                      <SidebarMenuButton
@@ -178,15 +115,21 @@ export default function AppSidebar() {
                        </Link>
                       </SidebarMenuButton>
                 </SidebarMenuItem>
+                 <SidebarSeparator className="my-1" />
+                 <SidebarMenuItem>
+                    <SidebarMenuButton asChild isActive={pathname === '/dashboard/settings'} tooltip={t('settings')}>
+                        <Link href="/dashboard/settings"><Settings /><span className="group-data-[collapsible=icon]:hidden">{t('settings')}</span></Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
                 <SidebarMenuItem>
                     <SidebarMenuButton
                         variant="ghost"
                         className="w-full justify-start text-destructive hover:bg-destructive hover:text-destructive-foreground"
                         onClick={() => setResetDialogOpen(true)}
-                        tooltip={mounted ? t('delete_data') : 'Delete Data'}
+                        tooltip={mounted ? t('delete_all_data') : 'Delete All Data'}
                     >
                         <Trash2 />
-                        <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_data'): 'Delete Data'}</span>
+                        <span className="group-data-[collapsible=icon]:hidden">{mounted ? t('delete_all_data'): 'Delete All Data'}</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>

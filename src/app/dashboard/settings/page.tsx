@@ -55,14 +55,20 @@ export default function SettingsPage() {
   const handleSaveName = () => {
     setUsername(name);
     toast({
-      title: "Perfil atualizado",
-      description: "O seu nome foi guardado com sucesso.",
+      title: t('user_profile_updated', {defaultValue: "Profile updated"}),
+      description: t('name_saved_success', {defaultValue: "Your name has been saved successfully."}),
     });
   };
 
   const handleResetData = () => {
-    window.localStorage.clear();
+    // Clear all relevant keys instead of the entire localStorage
+    const keys = ['username', 'goals', 'transactions', 'wealthWheel', 'reflections', 'monthlyMood', 'aiProjections', 'investments', 'aiInsight', 'license_key', 'language', 'currency'];
+    keys.forEach(key => window.localStorage.removeItem(key));
     router.push('/activate');
+     toast({
+      title: t('data_deleted_title', {defaultValue: "Data Deleted"}),
+      description: t('data_deleted_desc', {defaultValue: "All application data has been cleared."}),
+    });
   };
   
   const handleSendFeedback = () => {
@@ -74,7 +80,7 @@ export default function SettingsPage() {
   if (!isClient) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-background">
-        <div className="animate-pulse text-muted-foreground">A carregar...</div>
+        <div className="animate-pulse text-muted-foreground">{t('loading', {defaultValue: "Loading..."})}</div>
       </div>
     );
   }
@@ -143,7 +149,7 @@ export default function SettingsPage() {
           <CardTitle className="flex items-center gap-2"><ShieldCheck /> {t('privacy_and_data')}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-            <DataManagement isDropdown />
+            <DataManagement />
             <div className="flex items-center justify-between p-2 rounded-md hover:bg-muted">
                 <Label>{t('delete_all_data')}</Label>
                 <AlertDialog>
