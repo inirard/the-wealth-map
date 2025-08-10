@@ -50,7 +50,8 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
-        {/* As meta tags e links essenciais são geridos pelo Next.js a partir do objeto 'metadata' e 'viewport' */}
+        {/* Adiciona a tag manualmente para garantir o reconhecimento pelo iOS */}
+        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
       </head>
       <body>
         <I18nProvider>
