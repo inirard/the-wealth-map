@@ -1,14 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 export default function PrivacyPolicyPage() {
-  const [lastUpdated, setLastUpdated] = useState('');
-
-  useEffect(() => {
-    // This code runs only on the client, after the page has hydrated.
-    setLastUpdated(new Date().toLocaleDateString());
-  }, []);
+  // A data estática é mais apropriada para um documento legal.
+  const lastUpdated = "10 de Agosto de 2025";
 
   return (
     <>
