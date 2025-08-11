@@ -17,20 +17,13 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'The Wealth Map | Your Interactive Financial Planner',
   description: 'Navigate your journey to financial freedom. The Wealth Map is a modern, interactive digital planner to help you set goals, track expenses, and build wealth.',
-  manifest: '/manifest.json',
   applicationName: "The Wealth Map",
-  appleWebApp: {
-    capable: true,
-    title: "The Wealth Map",
-    statusBarStyle: "default",
-  },
   formatDetection: {
     telephone: false,
   },
   icons: {
     icon: '/icons/favicon.svg',
     shortcut: '/icons/favicon.svg',
-    apple: '/icons/apple-icon-180.png',
   },
 };
 
@@ -50,6 +43,7 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
+        <link rel="manifest" href="/manifest.json" />
         {/* Meta tags para PWA no iOS */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
