@@ -95,3 +95,17 @@
   .prose li { @apply mb-2; }
   .prose em { @apply italic text-muted-foreground; }
 }
+
+@layer utilities {
+    /* Responsive fix for PWA horizontal overflow on small screens */
+    @media (max-width: 640px) {
+        div[data-sidebar="inset"] > main {
+            width: 100%;
+            min-width: 0;
+            max-width: 100vw;
+            overflow-x: hidden;
+        }
+    }
+}
+
+    
