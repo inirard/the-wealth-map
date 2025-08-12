@@ -135,7 +135,7 @@ export default function GoalsPage() {
 
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-full overflow-x-hidden">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold font-headline">{t('goals_mapping')}</h1>
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

@@ -82,65 +82,67 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="flex flex-col gap-8">
-      <Card>
-        <div className="grid md:grid-cols-2 items-center">
-          <div className="p-6 md:p-10">
-            <h1 className="text-lg md:text-xl font-semibold text-primary whitespace-nowrap">
-              {isClient ? t("welcome_user", { name }) : <Skeleton className="h-7 w-48" />}
-            </h1>
-            <p className="mt-2 text-base text-foreground/80">{t("dashboard_subtitle")}</p>
-            <div className="mt-6">
-              <Link href="/dashboard/goals">
-                <Button size="lg" className="group hover:bg-primary/90">
-                  {t("set_first_goal")}
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </Button>
-              </Link>
-            </div>
-          </div>
-          <div className="p-4 flex items-center justify-center">
-            <Image
-              src="/images/dashboardimage.png"
-              alt="Dashboard Illustration"
- width={400}
- height={300}
-              className="w-full max-w-[400px] h-auto rounded-lg"
-              priority
-            />
-          </div>
-        </div>
-      </Card>
-
-      <div>
-        <h2 className="text-2xl font-bold font-headline mb-4">{t("your_toolkit")}</h2>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {featureCards.map((feature) => (
-            <Card
-              key={feature.title}
-              className="hover:shadow-lg transition-shadow duration-300 flex flex-col"
-            >
-              <CardHeader className="flex-row items-center gap-4">
-                <feature.icon className={`w-8 h-8 ${feature.color}`} />
-                <div>
-                  <CardTitle>{feature.title}</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <p className="text-muted-foreground">{feature.description}</p>
-              </CardContent>
-              <div className="p-6 pt-0">
-                <Link href={feature.href}>
-                  <Button
-                    variant="outline"
-                    className="w-full hover:bg-primary hover:text-primary-foreground"
-                  >
-                    {t("open")}
+    <div className="max-w-full overflow-x-hidden">
+      <div className="flex flex-col gap-8">
+        <Card>
+          <div className="grid md:grid-cols-2 items-center">
+            <div className="p-6 md:p-10">
+              <h1 className="text-lg md:text-xl font-semibold text-primary whitespace-nowrap">
+                {isClient ? t("welcome_user", { name }) : <Skeleton className="h-7 w-48" />}
+              </h1>
+              <p className="mt-2 text-base text-foreground/80">{t("dashboard_subtitle")}</p>
+              <div className="mt-6">
+                <Link href="/dashboard/goals">
+                  <Button size="lg" className="group hover:bg-primary/90">
+                    {t("set_first_goal")}
+                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
               </div>
-            </Card>
-          ))}
+            </div>
+            <div className="p-4 flex items-center justify-center">
+              <Image
+                src="/images/dashboardimage.png"
+                alt="Dashboard Illustration"
+   width={400}
+   height={300}
+                className="w-full max-w-[400px] h-auto rounded-lg"
+                priority
+              />
+            </div>
+          </div>
+        </Card>
+
+        <div>
+          <h2 className="text-2xl font-bold font-headline mb-4">{t("your_toolkit")}</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {featureCards.map((feature) => (
+              <Card
+                key={feature.title}
+                className="hover:shadow-lg transition-shadow duration-300 flex flex-col"
+              >
+                <CardHeader className="flex-row items-center gap-4">
+                  <feature.icon className={`w-8 h-8 ${feature.color}`} />
+                  <div>
+                    <CardTitle>{feature.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </CardContent>
+                <div className="p-6 pt-0">
+                  <Link href={feature.href}>
+                    <Button
+                      variant="outline"
+                      className="w-full hover:bg-primary hover:text-primary-foreground"
+                    >
+                      {t("open")}
+                    </Button>
+                  </Link>
+                </div>
+              </Card>
+            ))}
+          </div>
         </div>
       </div>
     </div>
