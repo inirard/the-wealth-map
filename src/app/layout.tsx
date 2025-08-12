@@ -44,22 +44,11 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
-        {/* Meta tags para PWA no iOS */}
+        {/* Essential PWA tags for iOS */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="The Wealth Map" />
-
-        {/* Ícones iOS */}
-        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-icon-152.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-icon-120.png" />
-        <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-icon-76.png" />
-
-        {/* Splash screens para diferentes dispositivos */}
-        <link rel="apple-touch-startup-image" href="/splash/launch-640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" />
-        <link rel="apple-touch-startup-image" href="/splash/launch-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
-        <link rel="apple-touch-startup-image" href="/splash/launch-1242x2208.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)" />
-        <link rel="apple-touch-startup-image" href="/splash/launch-1125x2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
+        <meta name="apple-mobile-web-app-title" content="WealthMap" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-icon-180.png" />
       </head>
       <body>
         <I18nProvider>
