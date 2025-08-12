@@ -205,7 +205,7 @@ export default function GoalsPage() {
             return (
               <Card key={goal.id} className="flex flex-col">
                 <CardHeader>
-                  <CardTitle className="flex items-center justify-between">
+                  <CardTitle className="flex items-center justify-between text-xl md:text-2xl">
                     <div className="flex items-center gap-3">
                         <Target className="h-6 w-6 text-primary" />
                         {goal.name}
