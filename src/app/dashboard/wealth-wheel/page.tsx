@@ -1,4 +1,3 @@
-
 "use client"
 
 import React from 'react';
@@ -42,7 +41,7 @@ export default function WealthWheelPage() {
     };
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 max-w-full overflow-x-hidden">
             <div>
                 <h1 className="text-3xl font-bold font-headline">{t('wealth_wheel_assessment')}</h1>
                 <p className="text-muted-foreground mt-2">{t('wealth_wheel_assessment_desc')}</p>

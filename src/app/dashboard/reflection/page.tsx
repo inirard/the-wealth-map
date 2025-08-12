@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -152,7 +151,7 @@ export default function ReflectionPage() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 max-w-full overflow-x-hidden">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
