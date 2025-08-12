@@ -116,7 +116,6 @@ export default function InvestmentsPage() {
     }, 100);
   };
 
-
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
@@ -213,7 +212,8 @@ export default function InvestmentsPage() {
               <CardDescription>{t('your_investments_desc')}</CardDescription>
           </CardHeader>
           <CardContent>
-             <div className="overflow-x-auto">
+            {/* Desktop Table */}
+             <div className="hidden md:block">
                 <Table>
                     <TableHeader>
                     <TableRow>
@@ -255,6 +255,46 @@ export default function InvestmentsPage() {
                     )}
                     </TableBody>
                 </Table>
+             </div>
+             
+             {/* Mobile Cards */}
+             <div className="md:hidden space-y-4">
+                {isClient && investments.length > 0 ? (
+                    investments.map(investment => (
+                        <Card key={investment.id} className="p-4">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <p className="font-bold">{investment.name}</p>
+                                    <span className="mt-1 px-2 py-1 rounded-full text-xs bg-primary/10 text-primary whitespace-nowrap">
+                                        {investmentTypes.find(i => i.value === investment.type)?.label || investment.type}
+                                    </span>
+                                </div>
+                                <div>
+                                    <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(investment)}>
+                                        <Edit className="h-4 w-4 text-muted-foreground" />
+                                    </Button>
+                                    <Button variant="ghost" size="icon" onClick={() => deleteInvestment(investment.id)}>
+                                        <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                    </Button>
+                                </div>
+                            </div>
+                            <div className="mt-4 flex justify-between items-end">
+                                <div>
+                                    <p className="text-xs text-muted-foreground">{t('quantity')}</p>
+                                    <p className="font-medium">{investment.quantity || 'N/A'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-muted-foreground text-right">{t('amount')} ({currency})</p>
+                                    <p className="font-bold text-lg text-primary text-right">{formatCurrency(investment.amount)}</p>
+                                </div>
+                            </div>
+                        </Card>
+                    ))
+                ) : (
+                    <div className="text-center text-muted-foreground py-10">
+                         {isClient ? t('no_investments_yet') : t('loading').concat('...')}
+                    </div>
+                )}
              </div>
           </CardContent>
       </Card>

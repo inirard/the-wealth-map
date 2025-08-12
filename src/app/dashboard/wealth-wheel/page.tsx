@@ -48,7 +48,7 @@ export default function WealthWheelPage() {
                 <p className="text-muted-foreground mt-2">{t('wealth_wheel_assessment_desc')}</p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-5">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
                 <Card className="lg:col-span-3">
                     <CardHeader>
                         <CardTitle>{t('your_wealth_wheel')}</CardTitle>

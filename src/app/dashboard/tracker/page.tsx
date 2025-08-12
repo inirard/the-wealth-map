@@ -55,13 +55,12 @@ export default function TrackerPage() {
   });
 
   React.useEffect(() => {
-    // Reset form with valid date every time dialog opens
     if (isDialogOpen) {
       form.reset({
           description: "",
           amount: 0,
           type: "expense",
-          date: new Date() // Always default to a valid new date
+          date: new Date()
       });
     }
   }, [isDialogOpen, form]);
@@ -70,7 +69,7 @@ export default function TrackerPage() {
     const newTransaction: Transaction = {
       id: new Date().toISOString(),
       ...values,
-      date: values.date.toISOString(), // Save as ISO string
+      date: values.date.toISOString(),
     };
     setTransactions([...transactions, newTransaction].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
     form.reset();
@@ -192,7 +191,8 @@ export default function TrackerPage() {
       {renderSummaryCards()}
 
       <Card>
-          <div className="overflow-x-auto">
+          {/* Desktop Table */}
+          <div className="hidden md:block">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -233,6 +233,37 @@ export default function TrackerPage() {
                   )}
                 </TableBody>
               </Table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="md:hidden p-4 space-y-4">
+             {isClient && transactions.length > 0 ? (
+                transactions.map(transaction => (
+                    <Card key={transaction.id} className="p-4">
+                        <div className="flex justify-between items-start">
+                            <div>
+                                <p className="font-bold">{transaction.description}</p>
+                                <p className="text-sm text-muted-foreground">{format(new Date(transaction.date), "PPP")}</p>
+                            </div>
+                            <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
+                                <Trash2 className="h-4 w-4 text-muted-foreground" />
+                            </Button>
+                        </div>
+                        <div className="mt-4 flex justify-between items-center">
+                             <span className={cn("px-2 py-1 rounded-full text-xs whitespace-nowrap", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
+                                {transaction.type === 'income' ? t('income') : t('expense')}
+                            </span>
+                            <p className={cn("text-lg font-bold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                                {formatCurrency(transaction.amount)}
+                            </p>
+                        </div>
+                    </Card>
+                ))
+             ) : (
+                <div className="text-center text-muted-foreground py-10">
+                    {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
+                </div>
+             )}
           </div>
       </Card>
     </div>
