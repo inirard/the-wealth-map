@@ -24,14 +24,14 @@ export default function UpgradePage() {
     };
 
     return (
-        <div className="flex flex-col items-center text-center">
+        <div className="flex flex-col items-center text-center p-4 sm:p-6 lg:p-8">
              <div className="p-4 rounded-full bg-primary/10 mb-4">
                 <Gem className="h-12 w-12 text-primary" />
             </div>
             <h1 className="text-4xl font-bold font-headline mb-2">{t('unlock_pro_title')}</h1>
             <p className="text-lg text-muted-foreground max-w-2xl">{t('unlock_pro_desc')}</p>
 
-             <Card className="mt-12 w-full text-left">
+             <Card className="mt-12 w-full max-w-2xl text-left">
                 <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                         <Sparkles className="text-emphasis"/>
