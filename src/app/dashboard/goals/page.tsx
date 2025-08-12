@@ -22,6 +22,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { cn } from "@/lib/utils";
 import { useI18n, useCurrency } from '@/hooks/use-i18n';
 import { Skeleton } from '@/components/ui/skeleton';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function GoalsPage() {
   const { t } = useI18n();
@@ -141,56 +142,58 @@ export default function GoalsPage() {
           <DialogTrigger asChild>
             <Button onClick={() => handleOpenDialog()}>{t('add_new_goal')}</Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="sm:max-w-[425px] grid-rows-[auto,1fr,auto] max-h-[90vh]">
             <DialogHeader>
               <DialogTitle>{editingGoal ? t('edit_goal') : t('create_new_goal')}</DialogTitle>
             </DialogHeader>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField control={form.control} name="name" render={({ field }) => (
-                  <FormItem><FormLabel>{t('goal_name')}</FormLabel><FormControl><Input placeholder={t('goal_name_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="targetAmount" render={({ field }) => (
-                  <FormItem><FormLabel>{t('target_amount')} ({currency})</FormLabel><FormControl><Input type="number" placeholder="20000" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="currentAmount" render={({ field }) => (
-                  <FormItem><FormLabel>{t('current_amount')} ({currency})</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <FormField control={form.control} name="targetDate" render={({ field }) => (
-                  <FormItem className="flex flex-col"><FormLabel>{t('target_date')}</FormLabel>
-                    <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
-                            {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 z-50" align="start">
-                        <Calendar 
-                            mode="single" 
-                            selected={field.value} 
-                            onSelect={(date) => {
-                                if (date) {
-                                  field.onChange(date);
-                                }
-                                setIsCalendarOpen(false);
-                            }}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={form.control} name="importance" render={({ field }) => (
-                    <FormItem><FormLabel>{t('why_is_it_important')}</FormLabel><FormControl><Textarea placeholder={t('importance_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
-                )} />
-                <DialogFooter>
-                  <Button type="submit">{editingGoal ? t('save_changes') : t('add_goal')}</Button>
-                </DialogFooter>
-              </form>
-            </Form>
+            <ScrollArea className="pr-4">
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+                    <FormField control={form.control} name="name" render={({ field }) => (
+                      <FormItem><FormLabel>{t('goal_name')}</FormLabel><FormControl><Input placeholder={t('goal_name_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="targetAmount" render={({ field }) => (
+                      <FormItem><FormLabel>{t('target_amount')} ({currency})</FormLabel><FormControl><Input type="number" placeholder="20000" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="currentAmount" render={({ field }) => (
+                      <FormItem><FormLabel>{t('current_amount')} ({currency})</FormLabel><FormControl><Input type="number" placeholder="5000" {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <FormField control={form.control} name="targetDate" render={({ field }) => (
+                      <FormItem className="flex flex-col"><FormLabel>{t('target_date')}</FormLabel>
+                        <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
+                                {field.value ? (format(new Date(field.value), "PPP")) : (<span>{t('pick_a_date')}</span>)}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0 z-50" align="start">
+                            <Calendar 
+                                mode="single" 
+                                selected={field.value} 
+                                onSelect={(date) => {
+                                    if (date) {
+                                      field.onChange(date);
+                                    }
+                                    setIsCalendarOpen(false);
+                                }}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )} />
+                    <FormField control={form.control} name="importance" render={({ field }) => (
+                        <FormItem><FormLabel>{t('why_is_it_important')}</FormLabel><FormControl><Textarea placeholder={t('importance_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
+                    )} />
+                    <DialogFooter>
+                      <Button type="submit">{editingGoal ? t('save_changes') : t('add_goal')}</Button>
+                    </DialogFooter>
+                  </form>
+                </Form>
+            </ScrollArea>
           </DialogContent>
         </Dialog>
       </div>
