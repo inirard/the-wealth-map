@@ -40,16 +40,10 @@ export default function RootLayout({
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
       <head>
-        {/* Meta tags para PWA no iOS */}
+        {/* Meta tags for PWA on iOS */}
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="WealthMap" />
-
-        {/* Ícones iOS em todos os tamanhos recomendados */}
-        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon.png" />
-        <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
       </head>
       <body>
