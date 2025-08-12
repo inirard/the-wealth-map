@@ -22,6 +22,14 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+  appleWebApp: {
+    capable: true,
+    title: "WealthMap",
+    statusBarStyle: "default",
+  },
+  icons: {
+    apple: '/icons/apple-touch-icon.png',
+  },
 };
 
 export const viewport: Viewport = {
@@ -39,13 +47,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
-      <head>
-        {/* Meta tags para PWA no iOS */}
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-title" content="WealthMap" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
-      </head>
+      <head />
       <body>
         <I18nProvider>
           <AppLifecycle />
