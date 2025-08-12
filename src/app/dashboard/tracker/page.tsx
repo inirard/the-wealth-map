@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
@@ -67,7 +68,9 @@ export default function TrackerPage() {
   function onSubmit(values: z.infer<typeof transactionSchema>) {
     const newTransaction: Transaction = {
       id: new Date().toISOString(),
-      ...values,
+      description: values.description,
+      amount: values.amount,
+      type: values.type,
       date: values.date.toISOString(),
     };
     setTransactions([...transactions, newTransaction].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
@@ -189,49 +192,49 @@ export default function TrackerPage() {
       
       {renderSummaryCards()}
       
-       <div className="overflow-x-auto w-full">
-            <Table className="min-w-full">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>{t('date')}</TableHead>
-                  <TableHead>{t('description')}</TableHead>
-                  <TableHead>{t('type')}</TableHead>
-                  <TableHead className="text-right">{t('amount')}</TableHead>
-                  <TableHead className="w-[50px]"></TableHead>
+      <div className="overflow-x-auto w-full">
+        <Table className="min-w-full">
+          <TableHeader>
+            <TableRow>
+              <TableHead>{t('date')}</TableHead>
+              <TableHead>{t('description')}</TableHead>
+              <TableHead>{t('type')}</TableHead>
+              <TableHead className="text-right">{t('amount')}</TableHead>
+              <TableHead className="w-[50px]"></TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {isClient && transactions.length > 0 ? (
+              transactions.map(transaction => (
+                <TableRow key={transaction.id}>
+                  <TableCell className="whitespace-nowrap">{format(new Date(transaction.date), "PPP")}</TableCell>
+                  <TableCell className="font-medium whitespace-normal break-words">{transaction.description}</TableCell>
+                  <TableCell>
+                      <span className={cn("inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold sm:whitespace-nowrap whitespace-normal break-words", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
+                          {transaction.type === 'income' ? <ArrowUpCircle className="mr-1 h-3 w-3" /> : <ArrowDownCircle className="mr-1 h-3 w-3" />}
+                          {t(transaction.type)}
+                    </span>
+                  </TableCell>
+                  <TableCell className={cn("text-right font-semibold whitespace-nowrap", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                    {formatCurrency(transaction.amount)}
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
+                      <Trash2 className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {isClient && transactions.length > 0 ? (
-                  transactions.map(transaction => (
-                    <TableRow key={transaction.id}>
-                      <TableCell className="whitespace-nowrap">{format(new Date(transaction.date), "PPP")}</TableCell>
-                      <TableCell className="font-medium whitespace-normal break-words">{transaction.description}</TableCell>
-                      <TableCell>
-                         <span className={cn("inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold sm:whitespace-nowrap whitespace-normal break-words", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
-                             {transaction.type === 'income' ? <ArrowUpCircle className="mr-1 h-3 w-3" /> : <ArrowDownCircle className="mr-1 h-3 w-3" />}
-                             {t(transaction.type)}
-                        </span>
-                      </TableCell>
-                      <TableCell className={cn("text-right font-semibold whitespace-nowrap", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                        {formatCurrency(transaction.amount)}
-                      </TableCell>
-                      <TableCell>
-                        <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
-                          <Trash2 className="h-4 w-4 text-muted-foreground" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center">
-                      {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
-                      </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-       </div>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="h-24 text-center">
+                  {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
+                  </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
