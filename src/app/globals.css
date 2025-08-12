@@ -115,4 +115,9 @@
             overflow-x: hidden;
         }
     }
+    
+    table {
+        table-layout: auto !important;
+        max-width: 100%;
+    }
 }

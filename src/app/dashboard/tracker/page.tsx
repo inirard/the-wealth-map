@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
@@ -7,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Trash2, TrendingUp, TrendingDown, Wallet, Download } from "lucide-react";
+import { Calendar as CalendarIcon, Trash2, TrendingUp, TrendingDown, Wallet, Download, PlusCircle, ArrowUpCircle, ArrowDownCircle } from "lucide-react";
 
 import type { Transaction } from '@/lib/types';
 import { exportToCsv } from '@/lib/csv';
@@ -128,15 +127,15 @@ export default function TrackerPage() {
   };
 
   return (
-    <div className="space-y-8">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 max-w-full overflow-x-hidden">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
-        <div className="flex gap-2">
-            <Button variant="outline" onClick={handleExport} disabled={!isClient || transactions.length === 0} className="hover:bg-primary hover:text-primary-foreground">
+        <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={handleExport} disabled={!isClient || transactions.length === 0}>
                 <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
             </Button>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild><Button>{t('add_transaction')}</Button></DialogTrigger>
+              <DialogTrigger asChild><Button><PlusCircle className="mr-2 h-4 w-4" />{t('add_transaction')}</Button></DialogTrigger>
               <DialogContent>
                 <DialogHeader><DialogTitle>{t('add_new_transaction')}</DialogTitle></DialogHeader>
                 <Form {...form}>
@@ -190,11 +189,8 @@ export default function TrackerPage() {
       
       {renderSummaryCards()}
       
-      <Card>
-        {/* Desktop Table */}
-        <div className="hidden md:block">
-          <div className="overflow-x-auto">
-            <Table>
+       <div className="overflow-x-auto w-full">
+            <Table className="min-w-full">
               <TableHeader>
                 <TableRow>
                   <TableHead>{t('date')}</TableHead>
@@ -209,10 +205,11 @@ export default function TrackerPage() {
                   transactions.map(transaction => (
                     <TableRow key={transaction.id}>
                       <TableCell className="whitespace-nowrap">{format(new Date(transaction.date), "PPP")}</TableCell>
-                      <TableCell className="font-medium">{transaction.description}</TableCell>
+                      <TableCell className="font-medium whitespace-normal break-words">{transaction.description}</TableCell>
                       <TableCell>
-                        <span className={cn("px-2 py-1 rounded-full text-xs whitespace-nowrap", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
-                          {transaction.type === 'income' ? t('income') : t('expense')}
+                         <span className={cn("inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold sm:whitespace-nowrap whitespace-normal break-words", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
+                             {transaction.type === 'income' ? <ArrowUpCircle className="mr-1 h-3 w-3" /> : <ArrowDownCircle className="mr-1 h-3 w-3" />}
+                             {t(transaction.type)}
                         </span>
                       </TableCell>
                       <TableCell className={cn("text-right font-semibold whitespace-nowrap", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
@@ -234,40 +231,7 @@ export default function TrackerPage() {
                 )}
               </TableBody>
             </Table>
-          </div>
-        </div>
-
-        {/* Mobile Cards */}
-        <div className="md:hidden space-y-4 p-4">
-            {isClient && transactions.length > 0 ? (
-              transactions.map(transaction => (
-                  <Card key={transaction.id} className="p-4">
-                      <div className="flex justify-between items-start">
-                          <div>
-                              <p className="font-bold">{transaction.description}</p>
-                              <p className="text-sm text-muted-foreground">{format(new Date(transaction.date), "PPP")}</p>
-                          </div>
-                          <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
-                              <Trash2 className="h-4 w-4 text-muted-foreground" />
-                          </Button>
-                      </div>
-                      <div className="mt-4 flex justify-between items-center">
-                            <span className={cn("px-2 py-1 rounded-full text-xs whitespace-nowrap", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
-                              {transaction.type === 'income' ? t('income') : t('expense')}
-                          </span>
-                          <p className={cn("text-lg font-bold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                              {formatCurrency(transaction.amount)}
-                          </p>
-                      </div>
-                  </Card>
-              ))
-            ) : (
-              <div className="text-center text-muted-foreground py-10">
-                  {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
-              </div>
-            )}
-        </div>
-      </Card>
+       </div>
     </div>
   );
 }
