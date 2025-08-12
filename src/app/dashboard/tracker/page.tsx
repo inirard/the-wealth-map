@@ -236,7 +236,7 @@ export default function TrackerPage() {
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden p-4 space-y-4">
+          <div className="md:hidden space-y-4 p-0 sm:p-4">
              {isClient && transactions.length > 0 ? (
                 transactions.map(transaction => (
                     <Card key={transaction.id} className="p-4">

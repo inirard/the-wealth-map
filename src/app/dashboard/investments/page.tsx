@@ -265,7 +265,7 @@ export default function InvestmentsPage() {
                             <div className="flex justify-between items-start">
                                 <div>
                                     <p className="font-bold">{investment.name}</p>
-                                    <span className="mt-1 px-2 py-1 rounded-full text-xs bg-primary/10 text-primary whitespace-nowrap">
+                                    <span className="mt-1 inline-block px-2 py-1 rounded-full text-xs bg-primary/10 text-primary whitespace-nowrap">
                                         {investmentTypes.find(i => i.value === investment.type)?.label || investment.type}
                                     </span>
                                 </div>
