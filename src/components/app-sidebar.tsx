@@ -15,7 +15,7 @@ import {
     Gem, 
     Bot, 
     LineChart,
-    Settings // Alterado
+    Settings
 } from 'lucide-react';
 import {
   AlertDialog,
@@ -71,6 +71,11 @@ export default function AppSidebar() {
     setResetDialogOpen(false);
   };
 
+  const handleNavigation = (path: string) => {
+    setOpenMobile(false);
+    router.push(path);
+  }
+
   return (
     <>
       <Sidebar>
@@ -117,8 +122,12 @@ export default function AppSidebar() {
                 </SidebarMenuItem>
                  <SidebarSeparator className="my-1" />
                  <SidebarMenuItem>
-                    <SidebarMenuButton asChild isActive={pathname === '/dashboard/settings'} tooltip={t('settings')}>
-                        <Link href="/dashboard/settings"><Settings /><span className="group-data-[collapsible=icon]:hidden">{t('settings')}</span></Link>
+                    <SidebarMenuButton 
+                        isActive={pathname === '/dashboard/settings'} 
+                        tooltip={t('settings')}
+                        onClick={() => handleNavigation('/dashboard/settings')}
+                    >
+                        <Settings /><span className="group-data-[collapsible=icon]:hidden">{t('settings')}</span>
                     </SidebarMenuButton>
                 </SidebarMenuItem>
                 <SidebarMenuItem>
