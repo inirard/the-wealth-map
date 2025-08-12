@@ -44,7 +44,13 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="WealthMap" />
-        <link rel="apple-touch-icon" href="/icons/apple-icon-180.png" />
+
+        {/* Ícones iOS em todos os tamanhos recomendados */}
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/icons/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
       </head>
       <body>
         <I18nProvider>
