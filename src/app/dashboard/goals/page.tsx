@@ -188,7 +188,7 @@ export default function GoalsPage() {
                     <FormField control={form.control} name="importance" render={({ field }) => (
                         <FormItem><FormLabel>{t('why_is_it_important')}</FormLabel><FormControl><Textarea placeholder={t('importance_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
-                    <DialogFooter className="pr-4">
+                    <DialogFooter className="pr-4 pt-4">
                       <Button type="submit">{editingGoal ? t('save_changes') : t('add_goal')}</Button>
                     </DialogFooter>
                   </form>

@@ -53,8 +53,8 @@ export default function WealthWheelPage() {
                     <CardHeader>
                         <CardTitle>{t('your_wealth_wheel')}</CardTitle>
                     </CardHeader>
-                    <CardContent className="h-[400px]">
-                        <ChartContainer config={chartConfig} className="w-full h-full">
+                    <CardContent className="h-[400px] w-full">
+                        <ChartContainer config={chartConfig} className="w-full h-full mx-auto">
                             <RadarChart
                                 data={wheelData}
                                 margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
