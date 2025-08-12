@@ -193,6 +193,7 @@ export default function TrackerPage() {
       <Card>
           {/* Desktop Table */}
           <div className="hidden md:block">
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -233,10 +234,11 @@ export default function TrackerPage() {
                   )}
                 </TableBody>
               </Table>
+            </div>
           </div>
 
           {/* Mobile Cards */}
-          <div className="md:hidden space-y-4 p-0 sm:p-4">
+          <div className="md:hidden space-y-4 p-4 sm:p-6">
              {isClient && transactions.length > 0 ? (
                 transactions.map(transaction => (
                     <Card key={transaction.id} className="p-4">
