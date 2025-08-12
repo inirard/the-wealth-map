@@ -46,11 +46,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable}`}>
+    <html lang="pt-PT" suppressHydrationWarning className={`${poppins.variable} h-full`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
       </head>
-      <body>
+      <body className="h-full">
         <I18nProvider>
           <AppLifecycle />
           {children}
