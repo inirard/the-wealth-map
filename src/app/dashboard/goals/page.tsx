@@ -146,9 +146,9 @@ export default function GoalsPage() {
             <DialogHeader>
               <DialogTitle>{editingGoal ? t('edit_goal') : t('create_new_goal')}</DialogTitle>
             </DialogHeader>
-            <ScrollArea className="pr-4">
+            <ScrollArea className="pr-4 -mr-4">
                 <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4 pr-4">
                     <FormField control={form.control} name="name" render={({ field }) => (
                       <FormItem><FormLabel>{t('goal_name')}</FormLabel><FormControl><Input placeholder={t('goal_name_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
@@ -188,7 +188,7 @@ export default function GoalsPage() {
                     <FormField control={form.control} name="importance" render={({ field }) => (
                         <FormItem><FormLabel>{t('why_is_it_important')}</FormLabel><FormControl><Textarea placeholder={t('importance_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
                     )} />
-                    <DialogFooter>
+                    <DialogFooter className="pr-4">
                       <Button type="submit">{editingGoal ? t('save_changes') : t('add_goal')}</Button>
                     </DialogFooter>
                   </form>
@@ -255,5 +255,3 @@ export default function GoalsPage() {
     </div>
   );
 }
-
-    
