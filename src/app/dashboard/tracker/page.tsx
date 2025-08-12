@@ -190,84 +190,88 @@ export default function TrackerPage() {
       
       {renderSummaryCards()}
 
-      <Card>
-          {/* Desktop Table */}
-          <div className="hidden md:block">
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
+      {/* Desktop Table */}
+      <div className="hidden md:block">
+        <Card>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{t('date')}</TableHead>
+                  <TableHead>{t('description')}</TableHead>
+                  <TableHead>{t('type')}</TableHead>
+                  <TableHead className="text-right">{t('amount')}</TableHead>
+                  <TableHead className="w-[50px]"></TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isClient && transactions.length > 0 ? (
+                  transactions.map(transaction => (
+                    <TableRow key={transaction.id}>
+                      <TableCell className="whitespace-nowrap">{format(new Date(transaction.date), "PPP")}</TableCell>
+                      <TableCell className="font-medium">{transaction.description}</TableCell>
+                      <TableCell>
+                        <span className={cn("px-2 py-1 rounded-full text-xs whitespace-nowrap", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
+                          {transaction.type === 'income' ? t('income') : t('expense')}
+                        </span>
+                      </TableCell>
+                      <TableCell className={cn("text-right font-semibold whitespace-nowrap", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                        {formatCurrency(transaction.amount)}
+                      </TableCell>
+                      <TableCell>
+                        <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
+                          <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
                   <TableRow>
-                    <TableHead>{t('date')}</TableHead>
-                    <TableHead>{t('description')}</TableHead>
-                    <TableHead>{t('type')}</TableHead>
-                    <TableHead className="text-right">{t('amount')}</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
+                    <TableCell colSpan={5} className="h-24 text-center">
+                      {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
+                      </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isClient && transactions.length > 0 ? (
-                    transactions.map(transaction => (
-                      <TableRow key={transaction.id}>
-                        <TableCell className="whitespace-nowrap">{format(new Date(transaction.date), "PPP")}</TableCell>
-                        <TableCell className="font-medium">{transaction.description}</TableCell>
-                        <TableCell>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </Card>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden space-y-4">
+          {isClient && transactions.length > 0 ? (
+            transactions.map(transaction => (
+                <Card key={transaction.id} className="p-4">
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <p className="font-bold">{transaction.description}</p>
+                            <p className="text-sm text-muted-foreground">{format(new Date(transaction.date), "PPP")}</p>
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
+                            <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                    </div>
+                    <div className="mt-4 flex justify-between items-center">
                           <span className={cn("px-2 py-1 rounded-full text-xs whitespace-nowrap", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
                             {transaction.type === 'income' ? t('income') : t('expense')}
-                          </span>
-                        </TableCell>
-                        <TableCell className={cn("text-right font-semibold whitespace-nowrap", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                          {formatCurrency(transaction.amount)}
-                        </TableCell>
-                        <TableCell>
-                          <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
-                            <Trash2 className="h-4 w-4 text-muted-foreground" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center">
-                        {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
-                        </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-
-          {/* Mobile Cards */}
-          <div className="md:hidden space-y-4 p-4 sm:p-6">
-             {isClient && transactions.length > 0 ? (
-                transactions.map(transaction => (
-                    <Card key={transaction.id} className="p-4">
-                        <div className="flex justify-between items-start">
-                            <div>
-                                <p className="font-bold">{transaction.description}</p>
-                                <p className="text-sm text-muted-foreground">{format(new Date(transaction.date), "PPP")}</p>
-                            </div>
-                            <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
-                                <Trash2 className="h-4 w-4 text-muted-foreground" />
-                            </Button>
-                        </div>
-                        <div className="mt-4 flex justify-between items-center">
-                             <span className={cn("px-2 py-1 rounded-full text-xs whitespace-nowrap", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
-                                {transaction.type === 'income' ? t('income') : t('expense')}
-                            </span>
-                            <p className={cn("text-lg font-bold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                                {formatCurrency(transaction.amount)}
-                            </p>
-                        </div>
-                    </Card>
-                ))
-             ) : (
-                <div className="text-center text-muted-foreground py-10">
-                    {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
-                </div>
-             )}
-          </div>
-      </Card>
+                        </span>
+                        <p className={cn("text-lg font-bold", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                            {formatCurrency(transaction.amount)}
+                        </p>
+                    </div>
+                </Card>
+            ))
+          ) : (
+            <Card>
+              <div className="text-center text-muted-foreground py-10">
+                  {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
+              </div>
+            </Card>
+          )}
+      </div>
     </div>
   );
 }
+
+    
