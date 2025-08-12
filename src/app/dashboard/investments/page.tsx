@@ -212,48 +212,48 @@ export default function InvestmentsPage() {
               <CardDescription>{t('your_investments_desc')}</CardDescription>
           </CardHeader>
           <CardContent>
-            {/* Desktop Table */}
+             {/* Desktop Table */}
              <div className="hidden md:block">
                 <div className="overflow-x-auto">
                     <Table>
                         <TableHeader>
-                        <TableRow>
-                            <TableHead>{t('name')}</TableHead>
-                            <TableHead>{t('type')}</TableHead>
-                            <TableHead>{t('quantity')}</TableHead>
-                            <TableHead className="text-right">{t('amount')} ({currency})</TableHead>
-                            <TableHead className="w-[100px]"></TableHead>
-                        </TableRow>
+                            <TableRow>
+                                <TableHead>{t('name')}</TableHead>
+                                <TableHead>{t('type')}</TableHead>
+                                <TableHead>{t('quantity')}</TableHead>
+                                <TableHead className="text-right">{t('amount')} ({currency})</TableHead>
+                                <TableHead className="w-[100px]"></TableHead>
+                            </TableRow>
                         </TableHeader>
                         <TableBody>
-                        {isClient && investments.length > 0 ? (
-                            investments.map(investment => (
-                            <TableRow key={investment.id}>
-                                <TableCell className="font-medium">{investment.name}</TableCell>
-                                <TableCell>
-                                    <span className="px-2 py-1 rounded-full text-xs bg-primary/10 text-primary whitespace-nowrap">
-                                        {investmentTypes.find(i => i.value === investment.type)?.label || investment.type}
-                                    </span>
-                                </TableCell>
-                                <TableCell>{investment.quantity || 'N/A'}</TableCell>
-                                <TableCell className="text-right font-semibold">{formatCurrency(investment.amount)}</TableCell>
-                                <TableCell className="text-right">
-                                     <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(investment)}>
-                                        <Edit className="h-4 w-4 text-muted-foreground" />
-                                    </Button>
-                                    <Button variant="ghost" size="icon" onClick={() => deleteInvestment(investment.id)}>
-                                        <Trash2 className="h-4 w-4 text-muted-foreground" />
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                            ))
-                        ) : (
-                            <TableRow>
-                            <TableCell colSpan={5} className="h-24 text-center">
-                                {isClient ? t('no_investments_yet') : t('loading').concat('...')}
-                                </TableCell>
-                            </TableRow>
-                        )}
+                            {isClient && investments.length > 0 ? (
+                                investments.map(investment => (
+                                    <TableRow key={investment.id}>
+                                        <TableCell className="font-medium">{investment.name}</TableCell>
+                                        <TableCell>
+                                            <span className="px-2 py-1 rounded-full text-xs bg-primary/10 text-primary whitespace-nowrap">
+                                                {investmentTypes.find(i => i.value === investment.type)?.label || investment.type}
+                                            </span>
+                                        </TableCell>
+                                        <TableCell>{investment.quantity || 'N/A'}</TableCell>
+                                        <TableCell className="text-right font-semibold">{formatCurrency(investment.amount)}</TableCell>
+                                        <TableCell className="text-right">
+                                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(investment)}>
+                                                <Edit className="h-4 w-4 text-muted-foreground" />
+                                            </Button>
+                                            <Button variant="ghost" size="icon" onClick={() => deleteInvestment(investment.id)}>
+                                                <Trash2 className="h-4 w-4 text-muted-foreground" />
+                                            </Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="h-24 text-center">
+                                        {isClient ? t('no_investments_yet') : t('loading').concat('...')}
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </div>
