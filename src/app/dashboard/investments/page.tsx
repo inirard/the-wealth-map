@@ -212,6 +212,7 @@ export default function InvestmentsPage() {
               <CardDescription>{t('your_investments_desc')}</CardDescription>
           </CardHeader>
           <CardContent>
+            <div>
               {/* Desktop Table */}
               <div className="hidden md:block">
                   <div className="overflow-x-auto">
@@ -298,6 +299,7 @@ export default function InvestmentsPage() {
                       </div>
                   )}
               </div>
+            </div>
           </CardContent>
       </Card>
 
