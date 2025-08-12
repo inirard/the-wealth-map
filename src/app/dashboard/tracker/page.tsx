@@ -190,9 +190,9 @@ export default function TrackerPage() {
       
       {renderSummaryCards()}
       
-      <div>
+      <Card>
         {/* Desktop Table */}
-        <Card className="hidden md:block">
+        <div className="hidden md:block">
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
@@ -235,10 +235,10 @@ export default function TrackerPage() {
               </TableBody>
             </Table>
           </div>
-        </Card>
+        </div>
 
         {/* Mobile Cards */}
-        <div className="md:hidden space-y-4">
+        <div className="md:hidden space-y-4 p-4">
             {isClient && transactions.length > 0 ? (
               transactions.map(transaction => (
                   <Card key={transaction.id} className="p-4">
@@ -262,16 +262,12 @@ export default function TrackerPage() {
                   </Card>
               ))
             ) : (
-              <Card>
-                <div className="text-center text-muted-foreground py-10">
-                    {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
-                </div>
-              </Card>
+              <div className="text-center text-muted-foreground py-10">
+                  {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
+              </div>
             )}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
-
-    
