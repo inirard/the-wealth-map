@@ -1,3 +1,4 @@
+
 "use client";
 
 import React from 'react';
@@ -23,20 +24,7 @@ export default function UpgradePage() {
     };
 
     return (
-        <div
-            className="
-                max-w-full 
-                overflow-x-hidden 
-                min-h-screen 
-                flex flex-col 
-                items-center 
-                text-center 
-                p-[max(1rem,env(safe-area-inset-top))] 
-                pb-[max(1rem,env(safe-area-inset-bottom))] 
-                sm:p-6 
-                lg:p-8
-            "
-        >
+        <div className="max-w-full overflow-x-hidden min-h-screen flex flex-col items-center text-center">
             <div className="p-4 rounded-full bg-primary/10 mb-4">
                 <Gem className="h-12 w-12 text-primary" />
             </div>
