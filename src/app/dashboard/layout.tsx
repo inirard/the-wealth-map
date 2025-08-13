@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </Button>
               </div>
             </header>
-            <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 max-w-full overflow-x-hidden">
               {children}
             </main>
           </div>
