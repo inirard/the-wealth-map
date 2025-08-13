@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -102,10 +101,11 @@ export default function DashboardPage() {
             </div>
             <div className="p-4 flex items-center justify-center">
               <Image
-                src="/images/dashboardimage.png"
+                src="https://placehold.co/400x300.png"
                 alt="Dashboard Illustration"
-   width={400}
-   height={300}
+                width={400}
+                height={300}
+                data-ai-hint="financial planning illustration"
                 className="w-full max-w-[400px] h-auto rounded-lg"
                 priority
               />

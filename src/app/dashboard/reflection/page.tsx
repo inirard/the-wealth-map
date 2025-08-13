@@ -142,11 +142,13 @@ export default function ReflectionPage() {
 
     if (isInitialLoad) {
         return (
-            <div className="space-y-8">
-                <Skeleton className="h-12 w-1/2" />
-                <Skeleton className="h-8 w-3/4" />
-                <Card><CardContent className="p-6"><Skeleton className="h-48 w-full" /></CardContent></Card>
-                <Card><CardContent className="p-6"><Skeleton className="h-24 w-full" /></CardContent></Card>
+            <div className="max-w-full overflow-x-hidden">
+                <div className="space-y-8">
+                    <Skeleton className="h-12 w-1/2" />
+                    <Skeleton className="h-8 w-3/4" />
+                    <Card><CardContent className="p-6"><Skeleton className="h-48 w-full" /></CardContent></Card>
+                    <Card><CardContent className="p-6"><Skeleton className="h-24 w-full" /></CardContent></Card>
+                </div>
             </div>
         );
     }
