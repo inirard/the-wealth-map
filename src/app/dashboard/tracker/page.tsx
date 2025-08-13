@@ -130,154 +130,155 @@ export default function TrackerPage() {
   };
 
   return (
-    <div className="space-y-8 max-w-full overflow-x-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
-        <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={handleExport} disabled={!isClient || transactions.length === 0}>
-                <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
-            </Button>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild><Button><PlusCircle className="mr-2 h-4 w-4" />{t('add_transaction')}</Button></DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle>{t('add_new_transaction')}</DialogTitle></DialogHeader>
-                <Form {...form}>
-                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                    <FormField control={form.control} name="description" render={({ field }) => (
-                      <FormItem><FormLabel>{t('description')}</FormLabel><FormControl><Input placeholder={t('description_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="amount" render={({ field }) => (
-                      <FormItem><FormLabel>{t('amount')} ({currency})</FormLabel><FormControl><Input type="number" step="0.01" placeholder="55.75" {...field} /></FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="type" render={({ field }) => (
-                      <FormItem className="space-y-3"><FormLabel>{t('type')}</FormLabel><FormControl>
-                        <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex space-x-4">
-                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="income" /></FormControl><FormLabel className="font-normal">{t('income')}</FormLabel></FormItem>
-                          <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="expense" /></FormControl><FormLabel className="font-normal">{t('expense')}</FormLabel></FormItem>
-                        </RadioGroup>
-                      </FormControl><FormMessage /></FormItem>
-                    )} />
-                    <FormField control={form.control} name="date" render={({ field }) => (
-                      <FormItem className="flex flex-col"><FormLabel>{t('date')}</FormLabel>
-                        <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
-                          <PopoverTrigger asChild><FormControl>
-                            <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
-                              {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
-                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+    <div className="max-w-full overflow-x-hidden">
+      <div className="space-y-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
+          <div className="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={handleExport} disabled={!isClient || transactions.length === 0}>
+                  <Download className="mr-2 h-4 w-4" /> {t('export_csv')}
+              </Button>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild><Button><PlusCircle className="mr-2 h-4 w-4" />{t('add_transaction')}</Button></DialogTrigger>
+                <DialogContent>
+                  <DialogHeader><DialogTitle>{t('add_new_transaction')}</DialogTitle></DialogHeader>
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                      <FormField control={form.control} name="description" render={({ field }) => (
+                        <FormItem><FormLabel>{t('description')}</FormLabel><FormControl><Input placeholder={t('description_placeholder')} {...field} /></FormControl><FormMessage /></FormItem>
+                      )} />
+                      <FormField control={form.control} name="amount" render={({ field }) => (
+                        <FormItem><FormLabel>{t('amount')} ({currency})</FormLabel><FormControl><Input type="number" step="0.01" placeholder="55.75" {...field} /></FormControl><FormMessage /></FormItem>
+                      )} />
+                      <FormField control={form.control} name="type" render={({ field }) => (
+                        <FormItem className="space-y-3"><FormLabel>{t('type')}</FormLabel><FormControl>
+                          <RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex space-x-4">
+                            <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="income" /></FormControl><FormLabel className="font-normal">{t('income')}</FormLabel></FormItem>
+                            <FormItem className="flex items-center space-x-2 space-y-0"><FormControl><RadioGroupItem value="expense" /></FormControl><FormLabel className="font-normal">{t('expense')}</FormLabel></FormItem>
+                          </RadioGroup>
+                        </FormControl><FormMessage /></FormItem>
+                      )} />
+                      <FormField control={form.control} name="date" render={({ field }) => (
+                        <FormItem className="flex flex-col"><FormLabel>{t('date')}</FormLabel>
+                          <Popover modal={true} open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+                            <PopoverTrigger asChild><FormControl>
+                              <Button variant={"outline"} className={cn("w-full pl-3 text-left font-normal hover:bg-primary/10 hover:text-primary", !field.value && "text-muted-foreground")}>
+                                {field.value ? (format(field.value, "PPP")) : (<span>{t('pick_a_date')}</span>)}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl></PopoverTrigger>
+                            <PopoverContent className="w-auto p-0 z-50" align="start">
+                              <Calendar 
+                                  mode="single" 
+                                  selected={field.value} 
+                                  onSelect={(date) => {
+                                      if (date) {
+                                          field.onChange(date);
+                                      }
+                                      setIsCalendarOpen(false);
+                                  }} 
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )} />
+                      <DialogFooter><Button type="submit">{t('add_transaction')}</Button></DialogFooter>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+          </div>
+        </div>
+        
+        {renderSummaryCards()}
+        
+        {/* Desktop Table */}
+        <div className="hidden md:block">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('transactions_title')}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto w-full">
+                <Table className="min-w-full">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{t('date')}</TableHead>
+                      <TableHead>{t('description')}</TableHead>
+                      <TableHead>{t('type')}</TableHead>
+                      <TableHead className="text-right">{t('amount')}</TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {isClient && transactions.length > 0 ? (
+                      transactions.map(transaction => (
+                        <TableRow key={transaction.id}>
+                          <TableCell className="whitespace-nowrap">{format(new Date(transaction.date), "PPP")}</TableCell>
+                          <TableCell className="font-medium whitespace-normal break-words">{transaction.description}</TableCell>
+                          <TableCell>
+                              <span className={cn("inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
+                                  {transaction.type === 'income' ? <ArrowUpCircle className="mr-1 h-3 w-3" /> : <ArrowDownCircle className="mr-1 h-3 w-3" />}
+                                  {t(transaction.type)}
+                            </span>
+                          </TableCell>
+                          <TableCell className={cn("text-right font-semibold whitespace-nowrap", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                            {formatCurrency(transaction.amount)}
+                          </TableCell>
+                          <TableCell>
+                            <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
+                              <Trash2 className="h-4 w-4 text-muted-foreground" />
                             </Button>
-                          </FormControl></PopoverTrigger>
-                          <PopoverContent className="w-auto p-0 z-50" align="start">
-                            <Calendar 
-                                mode="single" 
-                                selected={field.value} 
-                                onSelect={(date) => {
-                                    if (date) {
-                                        field.onChange(date);
-                                    }
-                                    setIsCalendarOpen(false);
-                                }} 
-                            />
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )} />
-                    <DialogFooter><Button type="submit">{t('add_transaction')}</Button></DialogFooter>
-                  </form>
-                </Form>
-              </DialogContent>
-            </Dialog>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={5} className="h-24 text-center">
+                          {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
+                          </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Mobile Cards */}
+        <div className="md:hidden space-y-4">
+          {isClient && transactions.length > 0 ? (
+            transactions.map(transaction => (
+              <Card key={transaction.id} className="p-4 overflow-hidden break-words">
+                <div className="flex justify-between items-start">
+                    <p className="font-bold break-words pr-2">{transaction.description}</p>
+                    <Button variant="ghost" size="icon" className="-mr-2 -mt-2 flex-shrink-0" onClick={() => deleteTransaction(transaction.id)}>
+                        <Trash2 className="h-4 w-4 text-muted-foreground" />
+                    </Button>
+                </div>
+                <div className="flex justify-between items-end mt-2">
+                  <div>
+                     <p className="text-sm text-muted-foreground">{format(new Date(transaction.date), "PPP")}</p>
+                     <span className={cn("mt-1 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
+                        {transaction.type === 'income' ? <ArrowUpCircle className="mr-1 h-3 w-3" /> : <ArrowDownCircle className="mr-1 h-3 w-3" />}
+                        {t(transaction.type)}
+                    </span>
+                  </div>
+                  <p className={cn("font-bold text-lg text-right", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
+                    {formatCurrency(transaction.amount)}
+                  </p>
+                </div>
+              </Card>
+            ))
+          ) : (
+             <Card className="text-center text-muted-foreground py-10">
+              {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
+            </Card>
+          )}
         </div>
       </div>
-      
-      {renderSummaryCards()}
-      
-      {/* Desktop Table */}
-      <div className="hidden md:block">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t('transactions_title')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="overflow-x-auto w-full">
-              <Table className="min-w-full">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>{t('date')}</TableHead>
-                    <TableHead>{t('description')}</TableHead>
-                    <TableHead>{t('type')}</TableHead>
-                    <TableHead className="text-right">{t('amount')}</TableHead>
-                    <TableHead className="w-[50px]"></TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isClient && transactions.length > 0 ? (
-                    transactions.map(transaction => (
-                      <TableRow key={transaction.id}>
-                        <TableCell className="whitespace-nowrap">{format(new Date(transaction.date), "PPP")}</TableCell>
-                        <TableCell className="font-medium whitespace-normal break-words">{transaction.description}</TableCell>
-                        <TableCell>
-                            <span className={cn("inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
-                                {transaction.type === 'income' ? <ArrowUpCircle className="mr-1 h-3 w-3" /> : <ArrowDownCircle className="mr-1 h-3 w-3" />}
-                                {t(transaction.type)}
-                          </span>
-                        </TableCell>
-                        <TableCell className={cn("text-right font-semibold whitespace-nowrap", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                          {formatCurrency(transaction.amount)}
-                        </TableCell>
-                        <TableCell>
-                          <Button variant="ghost" size="icon" onClick={() => deleteTransaction(transaction.id)}>
-                            <Trash2 className="h-4 w-4 text-muted-foreground" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  ) : (
-                    <TableRow>
-                      <TableCell colSpan={5} className="h-24 text-center">
-                        {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
-                        </TableCell>
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Mobile Cards */}
-      <div className="md:hidden space-y-4">
-        {isClient && transactions.length > 0 ? (
-          transactions.map(transaction => (
-            <Card key={transaction.id} className="p-4 overflow-hidden break-words">
-              <div className="flex justify-between items-start">
-                  <p className="font-bold break-words pr-2">{transaction.description}</p>
-                  <Button variant="ghost" size="icon" className="-mr-2 -mt-2 flex-shrink-0" onClick={() => deleteTransaction(transaction.id)}>
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                  </Button>
-              </div>
-              <div className="flex justify-between items-end mt-2">
-                <div>
-                   <p className="text-sm text-muted-foreground">{format(new Date(transaction.date), "PPP")}</p>
-                   <span className={cn("mt-1 inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold", transaction.type === 'income' ? 'bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300')}>
-                      {transaction.type === 'income' ? <ArrowUpCircle className="mr-1 h-3 w-3" /> : <ArrowDownCircle className="mr-1 h-3 w-3" />}
-                      {t(transaction.type)}
-                  </span>
-                </div>
-                <p className={cn("font-bold text-lg text-right", transaction.type === 'income' ? 'text-green-600' : 'text-destructive')}>
-                  {formatCurrency(transaction.amount)}
-                </p>
-              </div>
-            </Card>
-          ))
-        ) : (
-           <Card className="text-center text-muted-foreground py-10">
-            {isClient ? t('no_transactions_yet') : t('loading').concat('...')}
-          </Card>
-        )}
-      </div>
-
     </div>
   );
 }

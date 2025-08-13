@@ -241,52 +241,54 @@ export default function ProjectionsPage() {
     }
 
     return (
-        <div className="space-y-6 max-w-full overflow-x-hidden">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold font-headline">{t('ai_projections_title')}</h1>
-                    <p className="text-muted-foreground mt-2">{t('ai_projections_description')}</p>
+        <div className="max-w-full overflow-x-hidden">
+            <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold font-headline">{t('ai_projections_title')}</h1>
+                        <p className="text-muted-foreground mt-2">{t('ai_projections_description')}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        {isClient && aiPredictions && !aiError && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button onClick={handleDownloadPdf} disabled={isDownloading} variant="outline" size="icon">
+                                            <Download className="h-5 w-5" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                         <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate} variant="outline" size="icon">
+                                            <RefreshCw className="h-5 w-5" />
+                                        </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                        <p>{isLoading ? t('ai_coach_loading') : t('regenerate_projections_button')}</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
+                    </div>
                 </div>
-                <div className="flex items-center gap-2">
-                    {isClient && aiPredictions && !aiError && (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button onClick={handleDownloadPdf} disabled={isDownloading} variant="outline" size="icon">
-                                        <Download className="h-5 w-5" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>
-                                </TooltipContent>
-                            </Tooltip>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                     <Button onClick={handleGeneratePredictions} disabled={isLoading || !canGenerate} variant="outline" size="icon">
-                                        <RefreshCw className="h-5 w-5" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>{isLoading ? t('ai_coach_loading') : t('regenerate_projections_button')}</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
+
+                {renderContent()}
+
+                <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
+                     {isClient && aiPredictions && (
+                        <ProjectionsReport 
+                            ref={reportRef}
+                            data={{
+                                username,
+                                aiPredictions,
+                            }}
+                        />
                     )}
                 </div>
-            </div>
-
-            {renderContent()}
-
-            <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
-                 {isClient && aiPredictions && (
-                    <ProjectionsReport 
-                        ref={reportRef}
-                        data={{
-                            username,
-                            aiPredictions,
-                        }}
-                    />
-                )}
             </div>
         </div>
     );
