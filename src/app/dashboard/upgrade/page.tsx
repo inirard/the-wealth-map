@@ -1,4 +1,3 @@
-
 "use client";
 
 import React from 'react';
@@ -25,14 +24,17 @@ export default function UpgradePage() {
 
     return (
         <div className="max-w-full overflow-x-hidden">
-            <div className="min-h-screen flex flex-col items-center text-center p-4 pt-[calc(1rem+env(safe-area-inset-top))] pb-[calc(1rem+env(safe-area-inset-bottom))] sm:px-6 lg:p-8">
-                <div className="p-4 rounded-full bg-primary/10 mb-4">
+            <div className="space-y-8 flex flex-col items-center text-center">
+
+                <div className="p-4 rounded-full bg-primary/10">
                     <Gem className="h-12 w-12 text-primary" />
                 </div>
-                <h1 className="text-4xl font-bold font-headline mb-2">{t('unlock_pro_title')}</h1>
-                <p className="text-lg text-muted-foreground max-w-2xl">{t('unlock_pro_desc')}</p>
+                <div className="space-y-2">
+                    <h1 className="text-4xl font-bold font-headline">{t('unlock_pro_title')}</h1>
+                    <p className="text-lg text-muted-foreground max-w-2xl">{t('unlock_pro_desc')}</p>
+                </div>
 
-                <Card className="mt-12 w-full max-w-2xl text-left">
+                <Card className="w-full max-w-2xl text-left">
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <Sparkles className="text-emphasis" />
@@ -50,7 +52,7 @@ export default function UpgradePage() {
                     </CardContent>
                 </Card>
 
-                <div className="text-center mt-12">
+                <div className="text-center">
                     <Button size="lg" className="text-lg" onClick={handleNotifyClick}>
                         {t('notify_me')}
                     </Button>
