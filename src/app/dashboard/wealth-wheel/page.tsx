@@ -1,3 +1,4 @@
+
 "use client"
 
 import React from 'react';
@@ -41,69 +42,71 @@ export default function WealthWheelPage() {
     };
 
     return (
-        <div className="space-y-8 max-w-full overflow-x-hidden">
-            <div>
-                <h1 className="text-3xl font-bold font-headline">{t('wealth_wheel_assessment')}</h1>
-                <p className="text-muted-foreground mt-2">{t('wealth_wheel_assessment_desc')}</p>
-            </div>
+        <div className="max-w-full overflow-x-hidden">
+            <div className="space-y-8">
+                <div>
+                    <h1 className="text-3xl font-bold font-headline">{t('wealth_wheel_assessment')}</h1>
+                    <p className="text-muted-foreground mt-2">{t('wealth_wheel_assessment_desc')}</p>
+                </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                <Card className="lg:col-span-3">
-                    <CardHeader>
-                        <CardTitle>{t('your_wealth_wheel')}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[400px] w-full">
-                        <ChartContainer config={chartConfig} className="w-full h-full mx-auto">
-                            <RadarChart
-                                data={wheelData}
-                                margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
-                            >
-                                <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
-                                <PolarGrid />
-                                <PolarAngleAxis dataKey="label" tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
-                                <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
-                                <Radar name="Score" dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
-                            </RadarChart>
-                        </ChartContainer>
-                    </CardContent>
-                </Card>
+                <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                    <Card className="lg:col-span-3">
+                        <CardHeader>
+                            <CardTitle>{t('your_wealth_wheel')}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="h-[400px] w-full">
+                            <ChartContainer config={chartConfig} className="w-full h-full mx-auto">
+                                <RadarChart
+                                    data={wheelData}
+                                    margin={{ top: 20, right: 30, bottom: 20, left: 30 }}
+                                >
+                                    <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dot" />} />
+                                    <PolarGrid />
+                                    <PolarAngleAxis dataKey="label" tick={{ fill: 'hsl(var(--foreground))', fontSize: 12 }} />
+                                    <PolarRadiusAxis angle={30} domain={[0, 10]} tick={false} axisLine={false} />
+                                    <Radar name="Score" dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.6} />
+                                </RadarChart>
+                            </ChartContainer>
+                        </CardContent>
+                    </Card>
 
-                <Card className="lg:col-span-2">
-                    <CardHeader>
-                        <CardTitle>{t('rate_your_areas')}</CardTitle>
-                        <CardDescription>{t('rate_your_areas_desc')}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6 pt-2">
-                        <TooltipProvider>
-                            {wheelData.map((item) => (
-                                <div key={item.id} className="space-y-2">
-                                    <div className="flex justify-between">
-                                        <div className="flex items-center gap-2">
-                                            <Label htmlFor={item.id}>{item.label}</Label>
-                                            <Tooltip>
-                                                <TooltipTrigger asChild>
-                                                    <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
-                                                </TooltipTrigger>
-                                                <TooltipContent>
-                                                    <p>{item.description}</p>
-                                                </TooltipContent>
-                                            </Tooltip>
+                    <Card className="lg:col-span-2">
+                        <CardHeader>
+                            <CardTitle>{t('rate_your_areas')}</CardTitle>
+                            <CardDescription>{t('rate_your_areas_desc')}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6 pt-2">
+                            <TooltipProvider>
+                                {wheelData.map((item) => (
+                                    <div key={item.id} className="space-y-2">
+                                        <div className="flex justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <Label htmlFor={item.id}>{item.label}</Label>
+                                                <Tooltip>
+                                                    <TooltipTrigger asChild>
+                                                        <Info className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                                    </TooltipTrigger>
+                                                    <TooltipContent>
+                                                        <p>{item.description}</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </div>
+                                            <span className="font-bold text-primary">{item.value}</span>
                                         </div>
-                                        <span className="font-bold text-primary">{item.value}</span>
+                                        <Slider
+                                            id={item.id}
+                                            min={0}
+                                            max={10}
+                                            step={1}
+                                            value={[item.value]}
+                                            onValueChange={(value) => handleSliderChange(item.id, value)}
+                                        />
                                     </div>
-                                    <Slider
-                                        id={item.id}
-                                        min={0}
-                                        max={10}
-                                        step={1}
-                                        value={[item.value]}
-                                        onValueChange={(value) => handleSliderChange(item.id, value)}
-                                    />
-                                </div>
-                            ))}
-                        </TooltipProvider>
-                    </CardContent>
-                </Card>
+                                ))}
+                            </TooltipProvider>
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
     );

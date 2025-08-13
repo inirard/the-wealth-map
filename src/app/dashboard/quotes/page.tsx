@@ -29,33 +29,35 @@ export default function QuotesPage() {
     }, [getNewQuote]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-[70vh] text-center gap-8">
-            <div>
-                <h1 className="text-3xl font-bold font-headline">{t('quotes_affirmations')}</h1>
-                <p className="text-muted-foreground mt-2">{t('quotes_affirmations_desc')}</p>
-            </div>
-            
-            <Card className="max-w-3xl w-full shadow-xl min-h-[200px]">
-                <CardContent className="p-8 md:p-12 flex items-center justify-center">
-                    {quote.quote ? (
-                        <blockquote className="text-2xl md:text-3xl font-light italic text-foreground">
-                            “{quote.quote}”
-                        </blockquote>
-                    ) : (
-                        <div className="animate-pulse-slow text-muted-foreground">{t('loading')}...</div>
+        <div className="max-w-full overflow-x-hidden">
+            <div className="space-y-8 flex flex-col items-center justify-center min-h-[70vh] text-center">
+                <div>
+                    <h1 className="text-3xl font-bold font-headline">{t('quotes_affirmations')}</h1>
+                    <p className="text-muted-foreground mt-2">{t('quotes_affirmations_desc')}</p>
+                </div>
+                
+                <Card className="max-w-3xl w-full shadow-xl min-h-[200px]">
+                    <CardContent className="p-8 md:p-12 flex items-center justify-center">
+                        {quote.quote ? (
+                            <blockquote className="text-2xl md:text-3xl font-light italic text-foreground">
+                                “{quote.quote}”
+                            </blockquote>
+                        ) : (
+                            <div className="animate-pulse-slow text-muted-foreground">{t('loading')}...</div>
+                        )}
+                    </CardContent>
+                    {quote.author && (
+                        <CardFooter className="flex flex-col items-end p-6 bg-muted/50">
+                            <p className="text-lg font-medium text-primary">— {quote.author}</p>
+                        </CardFooter>
                     )}
-                </CardContent>
-                {quote.author && (
-                    <CardFooter className="flex flex-col items-end p-6 bg-muted/50">
-                        <p className="text-lg font-medium text-primary">— {quote.author}</p>
-                    </CardFooter>
-                )}
-            </Card>
+                </Card>
 
-            <Button onClick={getNewQuote} size="lg">
-                <RefreshCw className="mr-2 h-4 w-4" />
-                {t('new_quote')}
-            </Button>
+                <Button onClick={getNewQuote} size="lg">
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                    {t('new_quote')}
+                </Button>
+            </div>
         </div>
     );
 }

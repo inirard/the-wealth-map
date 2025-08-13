@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -151,144 +152,146 @@ export default function ReflectionPage() {
     }
 
     return (
-        <div className="space-y-6 max-w-full overflow-x-hidden">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
-                    <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
-                </div>
-                <div className="flex items-center gap-2">
-                     <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                 <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="outline" size="icon">
-                                    <Download className="h-5 w-5" />
-                                 </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                               <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                </div>
-            </div>
-
-            <div>
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{t('how_did_you_feel')}</CardTitle>
-                        <CardDescription>{t('how_did_you_feel_desc')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex flex-wrap gap-4">
-                            {emotionalStates.map((state) => (
-                                <Button
-                                    key={state.label}
-                                    variant={mood === state.emoji ? "default" : "outline"}
-                                    className={cn(
-                                        "flex-grow sm:flex-grow-0 text-2xl h-20 w-24 flex flex-col items-center justify-center gap-2 transition-all duration-200",
-                                        mood === state.emoji ? "border-primary border-2" : "border",
-                                        mood !== state.emoji && "hover:bg-primary/90 hover:text-primary-foreground"
-                                    )}
-                                    onClick={() => setMood(state.emoji)}
-                                >
-                                    <span>{state.emoji}</span>
-                                    <span className="text-sm font-normal">{t(state.label)}</span>
-                                </Button>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
-
-            <div>
-                <MonthlySummary goals={goals} transactions={transactions} wheelData={wheelData} />
-            </div>
-            
-            <div className="grid gap-6 md:grid-cols-2">
-                {reflections.map((reflection) => (
-                    <Card key={reflection.id} className="flex flex-col">
-                        <CardHeader>
-                            <CardTitle className="text-base font-semibold">{reflection.prompt}</CardTitle>
-                        </CardHeader>
-                        <CardContent className="flex-grow">
-                            <Label htmlFor={reflection.id} className="sr-only">{reflection.prompt}</Label>
-                            <Textarea
-                                id={reflection.id}
-                                value={reflection.content}
-                                onChange={(e) => handleContentChange(reflection.id, e.target.value)}
-                                placeholder={t('write_reflections_placeholder')}
-                                className="min-h-[150px] text-sm"
-                            />
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-
-            <div>
-                <Card className="bg-primary/5">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2 text-lg">
-                            <Sparkles className="h-6 w-6 text-primary" />
-                            {t('ai_coach_title')}
-                        </CardTitle>
-                        <CardDescription>
-                            {t('ai_coach_description')}
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        {isLoading ? (
-                            <div className="space-y-2">
-                                <Skeleton className="h-4 w-full" />
-                                <Skeleton className="h-4 w-full" />
-                                <Skeleton className="h-4 w-3/4" />
-                            </div>
-                        ) : aiError ? (
-                             <div className="flex items-start gap-3 text-destructive">
-                                <TriangleAlert className="h-5 w-5 flex-shrink-0" />
-                                <p className="text-sm font-medium">{aiError}</p>
-                            </div>
-                        ) : aiInsight ? (
-                            <div className="flex items-start gap-4">
-                                <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
-                                <p className="text-sm text-foreground/90 italic">{aiInsight.analysis}</p>
-                            </div>
-                        ) : (
-                            <p className="text-sm text-muted-foreground">{t('ai_coach_prompt')}</p>
-                        )}
-                    </CardContent>
-                    <CardFooter>
-                        <TooltipProvider>
+        <div className="max-w-full overflow-x-hidden">
+            <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold font-headline">{t('reflection_motivation')}</h1>
+                        <p className="text-muted-foreground mt-2">{t('reflection_motivation_desc')}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
-                                        {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
-                                    </Button>
+                                     <Button onClick={handleDownloadPdf} disabled={!hasDataToReport || isDownloading} variant="outline" size="icon">
+                                        <Download className="h-5 w-5" />
+                                     </Button>
                                 </TooltipTrigger>
-                                {!canGenerate && (
-                                    <TooltipContent>
-                                        <p>{t('ai_coach_disabled_tooltip')}</p>
-                                    </TooltipContent>
-                                )}
+                                <TooltipContent>
+                                   <p>{isDownloading ? t('downloading') : t('download_pdf')}</p>
+                                </TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
-                    </CardFooter>
-                </Card>
-            </div>
-            
-             <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
-                 <FinancialReport 
-                    ref={reportRef}
-                    data={{
-                        username,
-                        goals,
-                        transactions,
-                        wheelData,
-                        reflections,
-                        mood,
-                        aiInsight,
-                    }}
-                />
+                    </div>
+                </div>
+
+                <div>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>{t('how_did_you_feel')}</CardTitle>
+                            <CardDescription>{t('how_did_you_feel_desc')}</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="flex flex-wrap gap-4">
+                                {emotionalStates.map((state) => (
+                                    <Button
+                                        key={state.label}
+                                        variant={mood === state.emoji ? "default" : "outline"}
+                                        className={cn(
+                                            "flex-grow sm:flex-grow-0 text-2xl h-20 w-24 flex flex-col items-center justify-center gap-2 transition-all duration-200",
+                                            mood === state.emoji ? "border-primary border-2" : "border",
+                                            mood !== state.emoji && "hover:bg-primary/90 hover:text-primary-foreground"
+                                        )}
+                                        onClick={() => setMood(state.emoji)}
+                                    >
+                                        <span>{state.emoji}</span>
+                                        <span className="text-sm font-normal">{t(state.label)}</span>
+                                    </Button>
+                                ))}
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+
+                <div>
+                    <MonthlySummary goals={goals} transactions={transactions} wheelData={wheelData} />
+                </div>
+                
+                <div className="grid gap-6 md:grid-cols-2">
+                    {reflections.map((reflection) => (
+                        <Card key={reflection.id} className="flex flex-col">
+                            <CardHeader>
+                                <CardTitle className="text-base font-semibold">{reflection.prompt}</CardTitle>
+                            </CardHeader>
+                            <CardContent className="flex-grow">
+                                <Label htmlFor={reflection.id} className="sr-only">{reflection.prompt}</Label>
+                                <Textarea
+                                    id={reflection.id}
+                                    value={reflection.content}
+                                    onChange={(e) => handleContentChange(reflection.id, e.target.value)}
+                                    placeholder={t('write_reflections_placeholder')}
+                                    className="min-h-[150px] text-sm"
+                                />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+
+                <div>
+                    <Card className="bg-primary/5">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2 text-lg">
+                                <Sparkles className="h-6 w-6 text-primary" />
+                                {t('ai_coach_title')}
+                            </CardTitle>
+                            <CardDescription>
+                                {t('ai_coach_description')}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            {isLoading ? (
+                                <div className="space-y-2">
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-full" />
+                                    <Skeleton className="h-4 w-3/4" />
+                                </div>
+                            ) : aiError ? (
+                                 <div className="flex items-start gap-3 text-destructive">
+                                    <TriangleAlert className="h-5 w-5 flex-shrink-0" />
+                                    <p className="text-sm font-medium">{aiError}</p>
+                                </div>
+                            ) : aiInsight ? (
+                                <div className="flex items-start gap-4">
+                                    <Bot className="h-8 w-8 text-primary flex-shrink-0 mt-1" />
+                                    <p className="text-sm text-foreground/90 italic">{aiInsight.analysis}</p>
+                                </div>
+                            ) : (
+                                <p className="text-sm text-muted-foreground">{t('ai_coach_prompt')}</p>
+                            )}
+                        </CardContent>
+                        <CardFooter>
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <Button onClick={handleGenerateInsights} disabled={isLoading || !canGenerate}>
+                                            {isLoading ? t('ai_coach_loading') : t('ai_coach_button')}
+                                        </Button>
+                                    </TooltipTrigger>
+                                    {!canGenerate && (
+                                        <TooltipContent>
+                                            <p>{t('ai_coach_disabled_tooltip')}</p>
+                                        </TooltipContent>
+                                    )}
+                                </Tooltip>
+                            </TooltipProvider>
+                        </CardFooter>
+                    </Card>
+                </div>
+                
+                 <div className="fixed -left-[9999px] top-0 print-only" aria-hidden="true">
+                     <FinancialReport 
+                        ref={reportRef}
+                        data={{
+                            username,
+                            goals,
+                            transactions,
+                            wheelData,
+                            reflections,
+                            mood,
+                            aiInsight,
+                        }}
+                    />
+                </div>
             </div>
         </div>
     );
