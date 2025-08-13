@@ -24,7 +24,7 @@ export default function UpgradePage() {
     };
 
     return (
-        <div className="max-w-full overflow-x-hidden min-h-screen flex flex-col items-center text-center">
+        <div className="safe-container min-h-[100dvh] max-w-full overflow-x-hidden flex flex-col items-center text-center sm:px-6 lg:px-8">
             <div className="p-4 rounded-full bg-primary/10 mb-4">
                 <Gem className="h-12 w-12 text-primary" />
             </div>
