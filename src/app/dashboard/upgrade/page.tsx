@@ -25,38 +25,39 @@ export default function UpgradePage() {
 
     return (
         <div className="max-w-full overflow-x-hidden">
-            <div className="space-y-8 flex flex-col items-center text-center">
+            <div className="space-y-8">
+                <div className="flex flex-col items-center text-center">
+                    <div className="p-4 rounded-full bg-primary/10">
+                        <Gem className="h-12 w-12 text-primary" />
+                    </div>
+                    <div className="space-y-2 mt-4">
+                        <h1 className="text-4xl font-bold font-headline">{t('unlock_pro_title')}</h1>
+                        <p className="text-lg text-muted-foreground max-w-2xl">{t('unlock_pro_desc')}</p>
+                    </div>
 
-                <div className="p-4 rounded-full bg-primary/10">
-                    <Gem className="h-12 w-12 text-primary" />
-                </div>
-                <div className="space-y-2">
-                    <h1 className="text-4xl font-bold font-headline">{t('unlock_pro_title')}</h1>
-                    <p className="text-lg text-muted-foreground max-w-2xl">{t('unlock_pro_desc')}</p>
-                </div>
+                    <Card className="mt-8 w-full max-w-2xl text-left">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Sparkles className="text-emphasis" />
+                                {t('pro_features_title')}
+                            </CardTitle>
+                            <CardDescription>{t('pro_features_desc')}</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                                <li>{t('pro_feature_cloud_sync_title')}</li>
+                                <li>{t('pro_feature_bank_integration_title')}</li>
+                                <li>{t('pro_feature_advanced_reports_title')}</li>
+                                <li>{t('pro_feature_smart_alerts_title')}</li>
+                            </ul>
+                        </CardContent>
+                    </Card>
 
-                <Card className="w-full max-w-2xl text-left">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                            <Sparkles className="text-emphasis" />
-                            {t('pro_features_title')}
-                        </CardTitle>
-                        <CardDescription>{t('pro_features_desc')}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                            <li>{t('pro_feature_cloud_sync_title')}</li>
-                            <li>{t('pro_feature_bank_integration_title')}</li>
-                            <li>{t('pro_feature_advanced_reports_title')}</li>
-                            <li>{t('pro_feature_smart_alerts_title')}</li>
-                        </ul>
-                    </CardContent>
-                </Card>
-
-                <div className="text-center">
-                    <Button size="lg" className="text-lg" onClick={handleNotifyClick}>
-                        {t('notify_me')}
-                    </Button>
+                    <div className="text-center mt-8">
+                        <Button size="lg" className="text-lg" onClick={handleNotifyClick}>
+                            {t('notify_me')}
+                        </Button>
+                    </div>
                 </div>
             </div>
         </div>
