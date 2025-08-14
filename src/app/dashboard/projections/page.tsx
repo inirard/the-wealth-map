@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from 'react';
@@ -13,7 +12,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import ProjectionsReport from './report';
-
 
 export default function ProjectionsPage() {
     const { t, language } = useI18n();
@@ -93,7 +91,6 @@ export default function ProjectionsPage() {
     
     const handleDownloadPdf = () => {
         setIsDownloading(true);
-        // Timeout to allow state to update and show loading state
         setTimeout(() => {
             window.print();
             setIsDownloading(false);
@@ -241,7 +238,10 @@ export default function ProjectionsPage() {
     }
 
     return (
-        <div className="max-w-full overflow-x-hidden min-h-[100dvh]">
+        <div
+            className="max-w-full overflow-x-hidden min-h-[100dvh]"
+            style={{ minHeight: '-webkit-fill-available' }}
+        >
             <div className="space-y-6">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div>
