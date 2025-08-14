@@ -199,62 +199,60 @@ export default function GoalsPage() {
           </Dialog>
         </div>
 
-        <div className="max-w-full overflow-x-hidden">
-            {!isClient ? renderSkeletons() : goals.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {goals.map((goal) => {
-                const progress = (goal.targetAmount > 0) ? (goal.currentAmount / goal.targetAmount) * 100 : 0;
-                return (
-                    <Card key={goal.id} className="flex flex-col">
-                    <CardHeader>
-                        <CardTitle className="flex items-center justify-between text-xl md:text-2xl">
-                        <div className="flex items-center gap-3">
-                            <Target className="h-6 w-6 text-primary" />
-                            {goal.name}
-                        </div>
-                        <div className="flex items-center">
-                            <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(goal)}>
-                                <Edit className="h-4 w-4 text-muted-foreground" />
-                            </Button>
-                            <Button variant="ghost" size="icon" onClick={() => deleteGoal(goal.id)}>
-                                <Trash2 className="h-4 w-4 text-muted-foreground" />
-                            </Button>
-                        </div>
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex-grow space-y-4">
-                        <div>
-                        <p className="text-sm text-muted-foreground">{t('progress')}</p>
-                        <p className="text-2xl font-bold">{formatCurrency(goal.currentAmount)} / <span className="text-lg font-medium text-muted-foreground">{formatCurrency(goal.targetAmount)}</span></p>
-                        </div>
-                        <Progress value={progress} />
-                        {goal.importance && (
-                        <div className="pt-2">
-                            <p className="text-sm font-semibold flex items-center gap-2"><Heart className="h-4 w-4 text-pink-500" /> {t('my_motivation')}</p>
-                            <p className="text-sm text-muted-foreground italic mt-1">"{goal.importance}"</p>
-                        </div>
-                        )}
-                        <div>
-                        <p className="text-sm text-muted-foreground">{t('target_date')}</p>
-                        <p className="font-medium">{format(new Date(goal.targetDate), "PPP")}</p>
-                        </div>
-                    </CardContent>
-                    </Card>
-                );
-                })}
-            </div>
-            ) : (
-            <Card className="flex flex-col items-center justify-center p-12 text-center">
+        {!isClient ? renderSkeletons() : goals.length > 0 ? (
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {goals.map((goal) => {
+            const progress = (goal.targetAmount > 0) ? (goal.currentAmount / goal.targetAmount) * 100 : 0;
+            return (
+                <Card key={goal.id} className="flex flex-col">
                 <CardHeader>
-                    <CardTitle>{t('no_goals_yet')}</CardTitle>
-                    <CardDescription>{t('no_goals_yet_desc')}</CardDescription>
+                    <CardTitle className="flex items-center justify-between text-xl md:text-2xl">
+                    <div className="flex items-center gap-3">
+                        <Target className="h-6 w-6 text-primary" />
+                        {goal.name}
+                    </div>
+                    <div className="flex items-center">
+                        <Button variant="ghost" size="icon" onClick={() => handleOpenDialog(goal)}>
+                            <Edit className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                        <Button variant="ghost" size="icon" onClick={() => deleteGoal(goal.id)}>
+                            <Trash2 className="h-4 w-4 text-muted-foreground" />
+                        </Button>
+                    </div>
+                    </CardTitle>
                 </CardHeader>
-                <CardContent>
-                    <Button onClick={() => handleOpenDialog()} size="lg">{t('add_new_goal')}</Button>
+                <CardContent className="flex-grow space-y-4">
+                    <div>
+                    <p className="text-sm text-muted-foreground">{t('progress')}</p>
+                    <p className="text-2xl font-bold">{formatCurrency(goal.currentAmount)} / <span className="text-lg font-medium text-muted-foreground">{formatCurrency(goal.targetAmount)}</span></p>
+                    </div>
+                    <Progress value={progress} />
+                    {goal.importance && (
+                    <div className="pt-2">
+                        <p className="text-sm font-semibold flex items-center gap-2"><Heart className="h-4 w-4 text-pink-500" /> {t('my_motivation')}</p>
+                        <p className="text-sm text-muted-foreground italic mt-1">"{goal.importance}"</p>
+                    </div>
+                    )}
+                    <div>
+                    <p className="text-sm text-muted-foreground">{t('target_date')}</p>
+                    <p className="font-medium">{format(new Date(goal.targetDate), "PPP")}</p>
+                    </div>
                 </CardContent>
-            </Card>
-            )}
+                </Card>
+            );
+            })}
         </div>
+        ) : (
+        <Card className="flex flex-col items-center justify-center p-12 text-center">
+            <CardHeader>
+                <CardTitle>{t('no_goals_yet')}</CardTitle>
+                <CardDescription>{t('no_goals_yet_desc')}</CardDescription>
+            </CardHeader>
+            <CardContent>
+                <Button onClick={() => handleOpenDialog()} size="lg">{t('add_new_goal')}</Button>
+            </CardContent>
+        </Card>
+        )}
       </div>
     </div>
   );
