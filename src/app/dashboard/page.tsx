@@ -85,32 +85,29 @@ export default function DashboardPage() {
     <div className="max-w-full overflow-x-hidden">
       <div className="space-y-8">
         <Card>
-          <div className="grid md:grid-cols-2 items-center">
-            <div className="p-6 md:p-10">
-              <h1 className="text-lg md:text-xl font-semibold text-primary whitespace-nowrap">
-                {isClient ? t("welcome_user", { name }) : <Skeleton className="h-7 w-48" />}
-              </h1>
-              <p className="mt-2 text-base text-foreground/80">{t("dashboard_subtitle")}</p>
-              <div className="mt-6">
-                <Link href="/dashboard/goals">
-                  <Button size="lg" className="group hover:bg-primary/90">
-                    {t("set_first_goal")}
-                    <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Button>
-                </Link>
-              </div>
+          <div className="p-6 md:p-10">
+            <h1 className="text-lg md:text-xl font-semibold text-primary whitespace-nowrap">
+              {isClient ? t("welcome_user", { name }) : <Skeleton className="h-7 w-48" />}
+            </h1>
+            <p className="mt-2 text-base text-foreground/80">{t("dashboard_subtitle")}</p>
+            <div className="mt-6">
+              <Link href="/dashboard/goals">
+                <Button size="lg" className="group hover:bg-primary/90">
+                  {t("set_first_goal")}
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Button>
+              </Link>
             </div>
-            <div className="p-4 flex items-center justify-center">
-              <Image
-                src="/images/dashboardimage.png"
-                alt="Dashboard Illustration"
-                width={400}
-                height={300}
-                data-ai-hint="financial planning illustration"
-                className="w-full max-w-[400px] h-auto rounded-lg"
-                priority
-              />
-            </div>
+          </div>
+          <div className="relative w-full aspect-[4/3] max-w-[400px] mx-auto p-4">
+            <Image
+              src="/images/dashboardimage.png"
+              alt="Dashboard Illustration"
+              fill
+              data-ai-hint="financial planning illustration"
+              className="object-contain rounded-lg"
+              priority
+            />
           </div>
         </Card>
 
