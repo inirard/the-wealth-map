@@ -24,7 +24,9 @@ export default function UpgradePage() {
     };
 
     return (
-        <div className="max-w-full overflow-x-hidden min-h-[100dvh]">
+        <div 
+          className="max-w-full overflow-x-hidden min-h-[100dvh] pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]"
+        >
             <div className="space-y-8">
                 <div className="flex flex-col items-center text-center">
                     <div className="p-4 rounded-full bg-primary/10">
