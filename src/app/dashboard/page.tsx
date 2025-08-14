@@ -82,7 +82,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="max-w-full overflow-x-hidden">
+    <div className="max-w-full overflow-x-hidden min-h-[100dvh]">
       <div className="space-y-8">
         <Card>
           <div className="p-6 md:p-10">

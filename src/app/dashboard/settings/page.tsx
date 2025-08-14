@@ -86,7 +86,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="max-w-full overflow-x-hidden">
+    <div className="max-w-full overflow-x-hidden min-h-[100dvh]">
       <div className="space-y-8">
         <div className="max-w-4xl mx-auto">
           <div>

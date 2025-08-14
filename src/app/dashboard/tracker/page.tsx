@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
@@ -130,7 +129,7 @@ export default function TrackerPage() {
   };
 
   return (
-    <div className="max-w-full overflow-x-hidden">
+    <div className="max-w-full overflow-x-hidden min-h-[100dvh]">
       <div className="space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-3xl font-bold font-headline">{t('monthly_tracker')}</h1>
@@ -140,7 +139,7 @@ export default function TrackerPage() {
               </Button>
               <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                 <DialogTrigger asChild><Button><PlusCircle className="mr-2 h-4 w-4" />{t('add_transaction')}</Button></DialogTrigger>
-                <DialogContent>
+                <DialogContent className="sm:max-w-[425px] max-h-[calc(100dvh-2rem)] overflow-y-auto">
                   <DialogHeader><DialogTitle>{t('add_new_transaction')}</DialogTitle></DialogHeader>
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

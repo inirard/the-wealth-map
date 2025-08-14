@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useMemo, useEffect } from 'react';
@@ -135,7 +134,7 @@ export default function GoalsPage() {
 
 
   return (
-    <div className="max-w-full overflow-x-hidden">
+    <div className="max-w-full overflow-x-hidden min-h-[100dvh]">
       <div className="space-y-8">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold font-headline">{t('goals_mapping')}</h1>
@@ -143,11 +142,11 @@ export default function GoalsPage() {
             <DialogTrigger asChild>
               <Button onClick={() => handleOpenDialog()}>{t('add_new_goal')}</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px] grid-rows-[auto,1fr,auto] max-h-[90vh]">
+            <DialogContent className="sm:max-w-[425px] grid-rows-[auto,1fr,auto] max-h-[calc(100dvh-2rem)] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{editingGoal ? t('edit_goal') : t('create_new_goal')}</DialogTitle>
               </DialogHeader>
-              <ScrollArea className="pr-4 -mr-4">
+              <ScrollArea className="pr-4">
                   <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4 pr-4">
                       <FormField control={form.control} name="name" render={({ field }) => (
